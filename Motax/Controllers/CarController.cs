@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Motax.Models;
 using Motax.ViewModels;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Motax.Controllers
@@ -147,5 +148,74 @@ namespace Motax.Controllers
             };
             return View(result);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCompare(int carId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var existingComparison = await db.Compares
+                    .Where(c => c.UserId == int.Parse(userId))
+                    .ToListAsync();
+
+                if (existingComparison.Count >= 3)
+                {
+                    TempData["error"] = "You can only compare up to 3 cars.";
+                    return RedirectToAction("Index", "Car");
+                }
+
+                var compare = new Compare
+                {
+                    CarId = carId,
+                    UserId = int.Parse(userId),
+                    CompareDate = DateTime.Now
+                };
+
+                db.Compares.Add(compare);
+                await db.SaveChangesAsync();
+
+                TempData["success"] = "Car added to comparison.";
+                return RedirectToAction("Index", "Car");
+            }
+
+            return RedirectToAction("Login", "Secure");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Compare()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var carsToCompare = await db.Compares
+                    .Include(c => c.Car)
+                    .Where(c => c.UserId == int.Parse(userId))
+                    .ToListAsync();
+
+                return View(carsToCompare);
+            }
+
+            return RedirectToAction("Login", "Secure");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveFromCompare(int compareId)
+        {
+            var compare = await db.Compares.FindAsync(compareId);
+            if (compare != null)
+            {
+                db.Compares.Remove(compare);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Compare");
+        }
+
+
     }
 }

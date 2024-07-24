@@ -56,8 +56,8 @@ namespace Motax.Controllers
                 {
                     Username = name,
                     Email = email,
-                    ExternalId = externalId,
-                    RoleId = 2,// Default role
+                    ExternalId = externalId, // Store as string
+                    RoleId = 2, // Default role
                 };
                 db.Accounts.Add(user);
                 await db.SaveChangesAsync();
@@ -99,7 +99,7 @@ namespace Motax.Controllers
                 {
                     Username = name,
                     Email = email,
-                    ExternalId = externalId,
+                    ExternalId = externalId, // Store as string
                     RoleId = 2, // Default role
                 };
                 db.Accounts.Add(user);

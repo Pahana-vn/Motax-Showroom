@@ -14,11 +14,15 @@
                     <span class="car-status status-1">@item.Condition</span>
                 }
                 <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">
-                        <img src="~/Images/Car/Single/@item.ImageSingle" alt="@item.Name">
-                    </a>
+                    <img src="~/Images/Car/Single/@item.ImageSingle" alt="@item.Name">
+                </a>
                 <div class="car-btns">
                     <a href="#"><i class="far fa-heart"></i></a>
-                    <a href="#"><i class="far fa-arrows-repeat"></i></a>
+                    <form asp-action="AddToCompare" asp-controller="Car" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="carId" value="@item.Id" />
+                        <button type="submit" class="btn btn-link p-0"><i class="far fa-arrows-repeat"></i></button>
+                    </form>
                 </div>
             </div>
             <div class="car-content">

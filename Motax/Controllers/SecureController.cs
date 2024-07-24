@@ -14,6 +14,7 @@ namespace Motax.Controllers
     {
         private readonly MotaxContext db;
         private readonly IWebHostEnvironment webHostEnvironment;
+
         public SecureController(MotaxContext context, IWebHostEnvironment hc)
         {
             db = context;
@@ -82,41 +83,22 @@ namespace Motax.Controllers
             if (ModelState.IsValid)
             {
                 var user = await db.Accounts
-                                   .Where(x => x.Username == acc.UserName)
-                                   .SingleOrDefaultAsync();
+                                   .FirstOrDefaultAsync(x => x.Username == acc.UserName);
 
                 if (user != null && BCrypt.Net.BCrypt.Verify(acc.Password, user.Password))
                 {
-                    if (user.RoleId != null)
-                    {
-                        var role = await db.Roles
-                                           .Where(x => x.Id == user.RoleId)
-                                           .SingleOrDefaultAsync();
-
-                        if (role != null)
-                        {
-                            var claims = new List<Claim>
+                    var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(ClaimTypes.Name, user.Username ?? ""),
-                        new Claim(ClaimTypes.Email, user.Email ?? ""),
-                        new Claim(ClaimTypes.Role, role.Title)
+                        new Claim(ClaimTypes.Name, user.Username),
+                        new Claim(ClaimTypes.Email, user.Email),
+                        new Claim(ClaimTypes.Role, user.Role?.Title ?? "user")
                     };
 
-                            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                            return RedirectToAction("Index", "Home");
-                        }
-                        else
-                        {
-                            TempData["error"] = "User role not found.";
-                        }
-                    }
-                    else
-                    {
-                        TempData["error"] = "User role is not assigned.";
-                    }
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -291,76 +273,17 @@ namespace Motax.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult CompleteProfile(string email, string name, string externalId)
-        {
-            var model = new CompleteProfileViewModel
-            {
-                Email = email,
-                Username = name,
-                ExternalId = externalId
-            };
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CompleteProfile(CompleteProfileViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                string filename = "";
-                if (model.Image != null)
-                {
-                    string uploadFolder = Path.Combine(webHostEnvironment.WebRootPath, "Images/Account/Avatar");
-                    filename = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
-                    string filePath = Path.Combine(uploadFolder, filename);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await model.Image.CopyToAsync(fileStream);
-                    }
-                }
-
-                var user = new Account
-                {
-                    Username = model.Username,
-                    Email = model.Email,
-                    Address = model.Address,
-                    Phone = model.Phone,
-                    Dob = model.Dob,
-                    Gender = model.Gender,
-                    ExternalId = model.ExternalId,
-                    RoleId = 2, // Default role
-                    Image = filename
-                };
-
-                db.Accounts.Add(user);
-                await db.SaveChangesAsync();
-
-                await SignInUser(user);
-
-                return RedirectToAction("Index", "Home");
-            }
-            return View(model);
-        }
-
         private async Task SignInUser(Account user)
         {
             var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(ClaimTypes.Name, user.Username ?? ""),
-        new Claim(ClaimTypes.Email, user.Email ?? "")
-    };
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username ?? ""),
+                new Claim(ClaimTypes.Email, user.Email ?? "")
+            };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-        }
-
-
-        public IActionResult Compare()
-        {
-            return View();
         }
     }
 }

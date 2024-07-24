@@ -1,0 +1,151 @@
+﻿@model IEnumerable<Motax.Models.Compare>
+
+<div class="site-breadcrumb" style="background: url(/assets/img/breadcrumb/01.jpg)">
+    <div class="container">
+        <h2 class="breadcrumb-title">Compare</h2>
+        <ul class="breadcrumb-menu">
+            <li><a href="/">Home</a></li>
+            <li class="active">Compare</li>
+        </ul>
+    </div>
+</div>
+
+<div class="compare-area py-120">
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-bordered compare-table">
+                <tbody>
+                    <tr>
+                        <th></th>
+                        @foreach (var item in Model)
+                        {
+                            <td><img class="compare-img" src="~/Images/Car/Single/@item.Car.ImageSingle" alt="product"></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Title</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><h5 class="compare-title">@item.Car.Name</h5></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Condition</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span class="badge @(item.Car.Condition == "New" ? "new" : "used")">@item.Car.Condition</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Body Type</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span>@item.Car.BodyType</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Make Brand</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span>@item.Car.Brand?.Name</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Build Year</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span>@item.Car.Year</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Fuel Type</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span>@item.Car.FuelType</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Color</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span>@item.Car.Color</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Mileage</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span>@item.Car.Mileage</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Price</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span class="compare-price">$@item.Car.Price</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Price Type</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span>@item.Car.PriceType</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Review</th>
+                        @foreach (var item in Model)
+                        {
+                            <td>
+                                <div class="compare-rate">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span>5.0 (5k Review)</span>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Transmission</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span>@item.Car.Transmission</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Driver's Airbag</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span>@item.Car.DriverAirbag</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Engine Size</th>
+                        @foreach (var item in Model)
+                        {
+                            <td><span>@item.Car.EngineSize</span></td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>Action</th>
+                        @foreach (var item in Model)
+                        {
+                            <td>
+                                <form asp-action="RemoveFromCompare" asp-controller="Car" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="compareId" value="@item.Id" />
+                                    <button type="submit" class="theme-btn compare-btn">
+                                        <span class="far fa-circle-xmark"></span> Remove
+                                    </button>
+                                </form>
+                            </td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

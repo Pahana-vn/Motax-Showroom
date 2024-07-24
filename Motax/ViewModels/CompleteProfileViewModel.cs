@@ -24,7 +24,7 @@ namespace Motax.ViewModels
         [Required(ErrorMessage = "Please select your gender")]
         public string? Gender { get; set; }
 
-        public string? ExternalId { get; set; }
+        public int? ExternalId { get; set; }
 
         public IFormFile? Image { get; set; }
     }
