@@ -1,0 +1,51 @@
+﻿
+
+@if(TempData["success"]!=null){
+
+   
+        <!--Page Widget Error-->
+        <div class="card border-0 mb-4 bg-success-transparent alert p-0 alert-success">
+            <div class="card-header d-flex align-items-center text-success fw-bold">
+                <i class="me-2 far fa-check-circle"></i> Success Data
+                <button type="button" class="btn-close ms-auto p-0" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>
+            </div>
+            <div class="card-body text-success">
+            <strong>Well done!</strong> @TempData["success"]
+            </div>
+        </div>
+        <!--Page Widget Error-->
+   
+}
+
+@if(TempData["error"]!=null){
+
+   
+        <!--Page Widget Error-->
+        <div class="card border-0 mb-4 bg-danger-transparent alert p-0 alert-danger">
+            <div class="card-header d-flex align-items-center text-danger fw-bold">
+                <i class="me-2 far fa-times-circle"></i> Error Data
+                <button type="button" class="btn-close ms-auto p-0" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>
+            </div>
+            <div class="card-body text-danger">
+            <strong>Oh snap!</strong> @TempData["error"]
+            </div>
+        </div>
+        <!--Page Widget Error-->
+   
+
+}
+
+@if (TempData["warning"] != null)
+{
+    <!--Page Widget Warning-->
+    <div class="card border-0 mb-4 bg-warning-transparent alert p-0 alert-warning">
+        <div class="card-header d-flex align-items-center text-warning fw-bold">
+            <i class="me-2 far fa-exclamation-circle"></i> Warning Data
+            <button type="button" class="btn-close ms-auto p-0" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>
+        </div>
+        <div class="card-body text-warning">
+            <strong>Heads up!</strong> @TempData["warning"]
+        </div>
+    </div>
+    <!--Page Widget Warning-->
+}

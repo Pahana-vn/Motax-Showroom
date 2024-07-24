@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Motax.ViewModels.CarVM>
+
+@foreach (var item in Model)
+{
+    <div class="col-md-6 col-lg-4">
+        <div class="car-item">
+            <div class="car-img">
+                @if (item.Condition == "New")
+                {
+                    <span class="car-status status-2">@item.Condition</span>
+                }
+                else
+                {
+                    <span class="car-status status-1">@item.Condition</span>
+                }
+                <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">
+                        <img src="~/Images/Car/Single/@item.ImageSingle" alt="@item.Name">
+                    </a>
+                <div class="car-btns">
+                    <a href="#"><i class="far fa-heart"></i></a>
+                    <a href="#"><i class="far fa-arrows-repeat"></i></a>
+                </div>
+            </div>
+            <div class="car-content">
+                <div class="car-top">
+                    <h4><a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">@item.Name</a></h4>
+                    <div class="car-rate">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span>5.0 (58.5k Review)</span>
+                    </div>
+                </div>
+                <ul class="car-list">
+                    <li><i class="far fa-steering-wheel"></i>@item.Transmission</li>
+                    <li><i class="far fa-road"></i>@item.Mileage</li>
+                    <li><i class="far fa-car"></i>Model: @item.Year</li>
+                    <li><i class="far fa-gas-pump"></i>@item.FuelType</li>
+                </ul>
+                <div class="car-footer">
+                    <span class="car-price">$@item.Price</span>
+                    <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id" class="theme-btn"><span class="far fa-eye"></span>Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

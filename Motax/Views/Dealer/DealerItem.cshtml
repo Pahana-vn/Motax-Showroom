@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Motax.ViewModels.DealerVM>
+
+@foreach (var item in Model)
+{
+    <div class="col-md-6 col-lg-4">
+        <div class="dealer-item">
+            <div class="dealer-img">
+                <span class="dealer-listing">@item.Quantity</span>
+                <a asp-action="Detail" asp-controller="Dealer" asp-route-id="@item.Id">
+                <img src="~/Images/Dealers/Dealer/@item.ImageBackground" alt="@item.Name">
+                </a>
+            </div>
+            <div class="dealer-content">
+                <h4><a asp-action="Detail" asp-controller="Dealer" asp-route-id="@item.Id">@item.Name</a></h4>
+                <ul>
+                    <li><i class="far fa-location-dot"></i> @item.Address</li>
+                    <li><i class="far fa-phone"></i> <a href="tel:+21236547898">@item.Phone</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}

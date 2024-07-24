@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewData["Title"] = "Calculate Result";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="calculator-result py-120">
+    <div class="container">
+        <h2 class="breadcrumb-title">Calculation Result</h2>
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="result-widget">
+                    <h4 class="result-widget-title">Financing Details</h4>
+                    <ul>
+                        <li><strong>Monthly Payment:</strong> <span>@ViewBag.MonthlyPayment.ToString("C")</span></li>
+                        <li><strong>Total Payment:</strong> <span>@ViewBag.TotalPayment.ToString("C")</span></li>
+                    </ul>
+                </div>
+                <div class="text-end mt-40">
+                    <a href="@Url.Action("Index", "Home")" class="theme-btn">Back to Home<i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

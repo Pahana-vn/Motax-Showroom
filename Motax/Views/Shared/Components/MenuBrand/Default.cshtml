@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Motax.ViewModels.MenuBrandVM>
+
+<div class="car-widget">
+    <h4 class="car-widget-title">Brands</h4>
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>
+                <div class="" style="display: flex; justify-content: space-between; align-items: center;">
+                    <a asp-action="Index" asp-controller="Car" asp-route-brand="@item.Id" class="">@item.Name</a>
+                    <span>(@item.Quantity)</span>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

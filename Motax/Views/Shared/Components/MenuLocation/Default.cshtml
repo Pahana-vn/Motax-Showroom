@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Motax.ViewModels.DealerVM>
+
+<div class="car-widget">
+    <h4 class="car-widget-title">Top Location</h4>
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <a asp-action="Index" asp-controller="Dealer" asp-route-location="@item.City" class="">@item.City</a>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

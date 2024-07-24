@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Motax.ViewModels.DealerAdminVM>
+@{
+    ViewData["Title"] = "Index Dealer";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">List Dealer </div> -------
+                <div class="card-title">
+                    <a class="btn btn-success label-btn" asp-action="Create" asp-controller="Dealer"> <i class="ri-chat-smile-line label-btn-icon me-2"></i> Add Dealer</a>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name Dealer</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>Message</th>
+                                <th>Detail</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="~/Images/Dealers/Dealer/@item.ImageBackgroundPath" width="150px" height="100px" />
+                                    </td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Phone</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.Address</td>
+                                    <td>
+                                        <a asp-action="Messages" asp-controller="Dealer" asp-route-id="@item.Id">
+                                            @if (item.MessageCount > 0)
+                                            {
+                                                <span class="badge bg-danger">@item.MessageCount</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">0</span>
+                                            }
+                                            Messages
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        <a class="" asp-action="Detail" asp-controller="Dealer" asp-route-id="@item.Id"> <span class="btn btn-primary">Detail</span> </a>
+                                    </td>
+
+                                    <td>
+                                        <a class="btn btn-icon btn-sm btn-info-transparent rounded-pill" asp-action="Edit" asp-controller="Dealer" asp-route-id="@item.Id"> <i class="ri-edit-line"></i> </a>
+
+                                        <form asp-action="Delete" asp-controller="Dealer" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-icon btn-sm btn-danger-transparent rounded-pill" onclick="return confirm('Are you sure you want to delete this category?');">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

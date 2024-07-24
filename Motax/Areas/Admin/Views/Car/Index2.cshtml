@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Motax.Models.Car>
+@{
+    ViewData["Title"] = "Index2 car admin";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">List Car </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name Car</th>
+                                <th>Code Vin</th>
+                                <th>Condition</th>
+                                <th>Price</th>
+                                <th>Price Type</th>
+                                <th>Availability</th>
+                                <th>CarRegistration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="~/Images/Car/Single/@item.ImageSingle" width="150px" height="100px" />
+                                    </td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Vin</td>
+                                    <td>@item.Condition</td>
+                                    <td>@item.Price</td>
+                                    <td>@item.PriceType</td>
+                                    <td>
+                                        @if (item.IsAvailable)
+                                        {
+                                            <span class="text text-success">Available</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text text-danger">Not Available</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary" asp-action="Register" asp-controller="CarRegistration" asp-route-carId="@item.Id">Register</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

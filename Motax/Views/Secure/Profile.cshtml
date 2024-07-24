@@ -1,0 +1,176 @@
+﻿@model Motax.ViewModels.ProfileUpdateViewModel
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .avatar-img {
+        width: 110px; /* Thay đổi giá trị này để điều chỉnh chiều rộng */
+        height: 110px; /* Thay đổi giá trị này để điều chỉnh chiều cao */
+        object-fit: cover; /* Giữ tỉ lệ của ảnh, cắt nếu cần */
+        border-radius: 30%; /* Tạo hình tròn cho ảnh */
+    }
+</style>
+
+<div class="site-breadcrumb" style="background: url(/Frontend/assets/img/breadcrumb/01.jpg)">
+    <div class="container">
+        <h2 class="breadcrumb-title">My Profile</h2>
+        <ul class="breadcrumb-menu">
+            <li><a href="/">Home</a></li>
+            <li class="active">My Profile</li>
+        </ul>
+    </div>
+</div>
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success">@TempData["success"]</div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger">@TempData["error"]</div>
+}
+<div class="user-profile py-120">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-3">
+                <div class="user-profile-sidebar">
+                    <div class="user-profile-sidebar-top">
+                        <div class="user-profile-img">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                var imagePath = ViewData["UserAvatar"] as string;
+                                if (!string.IsNullOrEmpty(imagePath))
+                                {
+                                    <img src="@Url.Content("~/Images/Account/Avatar/" + imagePath)" alt="User Avatar" class="avatar-img">
+                                }
+                                else
+                                {
+                                    <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
+                                }
+                            }
+                            else
+                            {
+                                <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
+                            }
+
+                            @* <img src="~/Images/Account/Avatar/@Model.Image" alt="User Avatar" id="avatar">
+                            <button type="button" class="profile-img-btn"><i class="far fa-camera"></i></button>
+                            <input type="file" class="profile-img-file" id="profile-img-input"> *@
+                        </div>
+                        <h5>@Model.Username</h5>
+                        <p>Email: @Model.Email</p>
+                    </div>
+                    <ul class="user-profile-sidebar-list">
+                        <li><a asp-action="Profile" asp-controller="Secure"><i class="far fa-user"></i> My Profile</a></li>
+                        <li><a href="profile-favorite.html"><i class="far fa-heart"></i> My Favorites</a></li>
+                        <li><a href="profile-listing.html"><i class="far fa-layer-group"></i> My Compare</a></li>
+                        <li><a href="profile-message.html"><i class="far fa-envelope"></i> Messages <span class="badge badge-danger">02</span></a></li>
+                        <li><a asp-action="Logout" asp-controller="Secure"><i class="far fa-sign-out"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="user-profile-wrapper">
+                    <div class="row">
+                        <div class="user-profile-card">
+                            <h4 class="user-profile-card-title">Profile Info</h4>
+                            <div class="user-profile-form">
+                                <form asp-action="UpdateProfile" asp-controller="Secure" method="post" enctype="multipart/form-data">
+                                    @Html.AntiForgeryToken()
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="Id" />
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>User Name</label>
+                                                <input asp-for="Username" class="form-control" placeholder="User Name">
+                                                <span asp-validation-for="Username" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <input asp-for="Email" class="form-control" placeholder="Date of birth">
+                                                <span asp-validation-for="Email" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Date of birth</label>
+                                                <input asp-for="Dob" class="form-control" placeholder="Email">
+                                                <span asp-validation-for="Dob" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Phone</label>
+                                                <input asp-for="Phone" class="form-control" placeholder="Phone">
+                                                <span asp-validation-for="Phone" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Gender</label>
+                                                <input asp-for="Gender" class="form-control" placeholder="Gender">
+                                                <span asp-validation-for="Gender" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Password</label>
+                                                <input asp-for="Password" type="password" class="form-control" placeholder="Password">
+                                                <span asp-validation-for="Password" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Confirm Password</label>
+                                                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password">
+                                            </div>
+                                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Address</label>
+                                                <input asp-for="Address" class="form-control" placeholder="Address">
+                                                <span asp-validation-for="Address" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Profile Image</label>
+                                                <input asp-for="Image" type="file" class="form-control" id="profile-img-input">
+                                                <span asp-validation-for="Image" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="theme-btn my-3"><span class="far fa-user"></span> Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('profile-img-input').addEventListener('change', function (e) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('avatar').src = e.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        });
+    </script>
+}

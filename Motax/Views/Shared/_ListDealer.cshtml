@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewData["Title"] = "_ListDealer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@RenderSection("BreadCum", required: false)
+
+<div class="car-area bg py-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="car-sidebar">
+                    <div class="car-widget">
+                        <div class="car-search-form">
+                            <h4 class="car-widget-title">Search Dealer/h4>
+                            <form asp-action="Search" asp-controller="Dealer">
+                                <div class="form-group">
+                                    <input type="text" name="query" class="form-control" placeholder="Search">
+                                    <button><i class="far fa-search"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    @await Component.InvokeAsync("MenuLocation")
+
+                    @await Component.InvokeAsync("MenuBrand")
+
+                   
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="col-md-12">
+                    <div class="car-sort">
+                        <h6>Showing 1-10 of 50 Results</h6>
+                        <div class="col-md-3 car-sort-box">
+                            <select class="select">
+                                <option value="1">Sort By Default</option>
+                                <option value="5">Sort By Featured</option>
+                                <option value="2">Sort By Latest</option>
+                                <option value="3">Sort By Popular</option>
+                                <option value="4">Sort By Most Rated</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    @RenderBody()
+
+                </div>
+
+                <div class="pagination-area">
+                    <div aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="far fa-arrow-left"></i></span>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true"><i class="far fa-arrow-right"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

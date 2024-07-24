@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewData["Title"] = "_ListCar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .price-range-box {
+        display: flex;
+        align-items: center;
+    }
+
+        .price-range-box input {
+            width: 100px;
+            margin-right: 5px;
+        }
+
+        .price-range-box .delimiter {
+            margin-right: 5px;
+        }
+
+    .car-sort-list-grid {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+        .car-sort-list-grid a {
+            margin-right: 10px;
+        }
+
+    .car-sort-box {
+        margin-top: 10px;
+    }
+
+</style>
+@RenderSection("BreadCum",required:false)
+
+<div class="car-area grid bg py-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="car-sidebar">
+                    <div class="car-widget">
+                        <div class="car-search-form">
+                            <h4 class="car-widget-title">Search Car</h4>
+                            <form asp-action="Search" asp-controller="Car">
+                                <div class="form-group">
+                                    <input type="text" name="query" class="form-control" placeholder="Search">
+                                    <button ><i class="far fa-search"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    @await Component.InvokeAsync("MenuBrand")
+
+                    @await Component.InvokeAsync("MenuDealer")
+
+                    
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="col-md-12">
+                    <div class="car-sort">
+
+                            <h5 class="car-widget-title">Price Range</h5>
+                        <form class="price-range-box" asp-action="FindFilter" asp-controller="Car" method="get">
+                            <input type="number" name="min" class="" placeholder="$min">
+                            <span class="delimiter">-</span>
+                            <input type="number" name="max" class="" placeholder="$max">
+                            <button type="submit" class="btn btn-primary">Go</button>
+                        </form>
+
+                        <div class="car-sort-list-grid">
+                            <a class="car-sort-grid active" href="listing-grid.html"><i class="far fa-grid-2"></i></a>
+                            <a class="car-sort-list" href="listing-list.html"><i class="far fa-list-ul"></i></a>
+                        </div>
+
+                        <div class="col-md-3 car-sort-box">
+                            <select class="select">
+                                <option value="1">Sort By Default</option>
+                                <option value="5">Sort By Featured</option>
+                                <option value="2">Sort By Latest</option>
+                                <option value="3">Sort By Low Price</option>
+                                <option value="4">Sort By High Price</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                   @RenderBody()
+                </div>
+
+                <div class="pagination-area">
+                    <div aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="far fa-arrow-left"></i></span>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true"><i class="far fa-arrow-right"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

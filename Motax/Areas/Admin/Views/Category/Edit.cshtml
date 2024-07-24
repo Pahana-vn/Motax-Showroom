@@ -1,0 +1,85 @@
+﻿ @model Motax.ViewModels.CategoryAdminVM
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<div class="col-xl-12" style="margin-top:20px;">
+    <div class="card custom-card">
+
+        <div class="card-header justify-content-between">
+            <div class="card-title">
+                Edit Category
+            </div>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Edit" asp-controller="Category" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row mb-3">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Name" class="form-control">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Description</label>
+                    <div class="col-sm-10">
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Status</label>
+                    <div class="col-sm-10">
+                        <select asp-for="Status" class="form-control">
+                            <option value="1">Show</option>
+                            <option value="0">Hide</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Image</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Image" class="form-control" type="file">
+                        <span asp-validation-for="Image" class="text-danger"></span>
+                        <td> <img src="~/Images/Category/Car/@Model.ExistingImage" width="120px" /> </td>
+                        
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Edit</button>
+                    </div>
+                </div>
+            </form>
+            <a class="btn" style="color:blue; margin-top:5px;" asp-action="Index" asp-controller="Category">Back to list Category</a>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+
+    <script>
+        CKEDITOR.replace('Description', {
+            versionCheck: false,
+        });
+    </script>
+}
+

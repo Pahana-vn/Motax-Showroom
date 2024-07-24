@@ -1,0 +1,37 @@
+﻿@model Motax.ViewModels.DealerDetailAdminVM
+@{
+    ViewData["Title"] = "Dealer Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">Dealer Detail</div>
+            </div>
+
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-2">Consultant Name</dt>
+                    <dd class="col-sm-10">@Model.ConsultantName</dd>
+
+                    <dt class="col-sm-2">Cover Image</dt>
+                    <dd class="col-sm-10">
+                        <img src="~/Images/Dealers/DealerDetail/Cover/@Model.ExistingCoverImage" width="200px" height="120px" />
+                    </dd>
+
+                    <dt class="col-sm-2">Avatar Image</dt>
+                    <dd class="col-sm-10">
+                        <img src="~/Images/Dealers/DealerDetail/Avatar/@Model.ExistingAvatarImage" width="120px" height="120px" />
+                    </dd>
+
+                    <dt class="col-sm-2">Consultant Avatar</dt>
+                    <dd class="col-sm-10">
+                        <img src="~/Images/Dealers/DealerDetail/Consultant/@Model.ExistingConsultantAvatar" width="120px" height="120px" />
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

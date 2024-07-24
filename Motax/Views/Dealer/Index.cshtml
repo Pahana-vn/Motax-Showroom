@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Motax.ViewModels.DealerVM>
+@{
+    ViewData["Title"] = "Index Dealer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "_ListDealer";
+}
+@section BreadCum{
+<div class="site-breadcrumb" style="background: url(/Frontend/assets/img/breadcrumb/01.jpg)">
+    <div class="container">
+        <h2 class="breadcrumb-title">Dealer</h2>
+        <ul class="breadcrumb-menu">
+            <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+            <li class="active">Dealer</li>
+        </ul>
+    </div>
+</div>
+}
+
+<h4> Have <b> @Model.Count() </b>dealer</h4>
+
+@await Html.PartialAsync("DealerItem", Model)

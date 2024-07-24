@@ -1,0 +1,148 @@
+﻿@model Motax.ViewModels.CarRegistrationDetailVM
+@{
+    ViewData["Title"] = "Car Registration Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="main-content-body-invoice">
+            <div class="card card-invoice">
+                <div class="card-body">
+                    <div class="invoice-header">
+                        <h2 class="invoice-title">Invoice</h2>
+                        <div class="billed-from">
+                            <h6>@Model.Car.Dealer.Name</h6>
+                            <p>
+                                @Model.Car.Dealer.Address<br>
+                                Tel No: @Model.Car.Dealer.Phone<br>
+                                Email: @Model.Car.Dealer.Email
+                            </p>
+                        </div><!-- billed-from -->
+                    </div><!-- invoice-header -->
+                    <div class="row mt-4">
+                        <div class="col-md">
+                            <label class="text-gray-6">Billed To</label>
+                            <div class="billed-to">
+                                <h6 class="fs-14 fw-semibold">@Model.CustomerName</h6>
+                                <p>
+                                    @Model.CustomerAddress<br>
+                                    Tel No: @Model.CustomerPhone<br>
+                                    Email: @Model.CustomerEmail
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <label class="text-gray-6">Invoice Information</label>
+                            <p class="invoice-info-row"><span>Invoice Code</span> <span>@Model.OrderCode</span></p>
+                            <p class="invoice-info-row"><span>Issue Date:</span> <span>@Model.OrderCreateDate</span></p>
+                            <p class="invoice-info-row"><span>Due Date:</span> <span>@Model.OrderExpiryDate</span></p>
+                            <p class="invoice-info-row"><span>Order Total Amount:</span> <span>$@(Model.OrderTotalAmount + Model.Car.Price * 0.01)</span></p>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive mt-4">
+                        <table class="table border">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Body Type</th>
+                                    <th>Mileage</th>
+                                    <th>Transmission</th>
+                                    <th>Condition</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.Car.Name</td>
+                                    <td>@Model.Car.BodyType</td>
+                                    <td>@Model.Car.Mileage</td>
+                                    <td>@Model.Car.Transmission</td>
+                                    <td>@Model.Car.Condition</td>
+                                </tr>
+                            </tbody>
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Fuel Type</th>
+                                    <th>Color</th>
+                                    <th>Doors</th>
+                                    <th>Cylinders</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.Car.Year</td>
+                                    <td>@Model.Car.FuelType</td>
+                                    <td>@Model.Car.Color</td>
+                                    <td>@Model.Car.Doors</td>
+                                    <td>@Model.Car.Cylinders</td>
+                                </tr>
+                            </tbody>
+                            <thead>
+                                <tr>
+                                    <th>Engine Size</th>
+                                    <th>Price</th>
+                                    <th>Price Type</th>
+                                    <th>VIN</th>
+                                    <th>IsAvailable</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.Car.EngineSize</td>
+                                    <td>@Model.Car.Price</td>
+                                    <td>@Model.Car.PriceType</td>
+                                    <td>@Model.Car.Vin</td>
+                                    <td>@Model.Car.IsAvailable</td>
+                                </tr>
+                            </tbody>
+                            <tr>
+                                <td class="align-top" colspan="2" rowspan="4">
+                                    <div class="invoice-notes">
+                                        @* <label class="main-content-label fs-13">Image Car --------------------------------------> </label> *@
+                                        <img style="border-radius:15px" src="~/Images/Car/Single/@Model.Car.ImageSingle" width="130px" height="100px" />
+                                    </div><!-- invoice-notes -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="align-top" colspan="2" rowspan="4">
+                                    <div class="invoice-notes">
+                                        <label class="main-content-label fs-13">Notes</label>
+                                        <p class="fw-normal fs-13">@Model.Notes</p>
+                                    </div><!-- invoice-notes -->
+                                </td>
+                                <td style="color:navy"><b>Sub-Total</b></td>
+                                <td colspan="2">$@(Model.OrderTotalAmount)</td>
+                            </tr>
+                            <tr>
+                                <td style="color:navy"><b>Tax (10%)</b></td>
+                                <td colspan="2">$@Model.TaxAmount</td>
+                            </tr>
+                            <tr>
+                                <td style="color:navy"><b>Registration Fee (2%)</b></td>
+                                <td colspan="2">$@Model.RegistrationFee</td>
+                            </tr>
+                            <tr>
+                                <td class="text-uppercase tx-inverse"><b>Total Invoice</b></td>
+                                <td colspan="2">
+                                    <h4 class="text-primary">$@(Model.OrderTotalAmount + Model.TaxAmount + Model.RegistrationFee)</h4>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <a class="btn btn-purple float-end mt-3 ms-2" href="">
+                        <i class="mdi mdi-currency-usd me-1"></i>Pay Now
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-danger float-end mt-3 ms-2" onclick="javascript:window.print();">
+                        <i class="mdi mdi-printer me-1"></i>Print
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-success float-end mt-3">
+                        <i class="mdi mdi-telegram me-1"></i>Send Invoice
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div><!-- COL-END -->
+</div>

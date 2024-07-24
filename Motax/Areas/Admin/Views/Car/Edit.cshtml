@@ -1,0 +1,201 @@
+﻿@model Motax.ViewModels.CarAdminVM
+@{
+    ViewData["Title"] = "Edit car";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<div class="col-xl-12" style="margin-top:20px;">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title">
+                Edit Car
+            </div>
+        </div>
+        <div class="card-body" style="margin:10px;">
+            <form asp-action="Edit" asp-controller="Car" class="row g-3 mt-0" enctype="multipart/form-data">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="col-md-3">
+                    <label class="form-label">Name Car</label>
+                    <input asp-for="Name" class="form-control">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Body Type</label>
+                    <input asp-for="BodyType" class="form-control">
+                    <span asp-validation-for="BodyType" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Mileage</label>
+                    <input asp-for="Mileage" class="form-control">
+                    <span asp-validation-for="Mileage" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Transmission</label>
+                    <select asp-for="Transmission" class="form-control">
+                        <option value="None">--Choose Transmission--</option>
+                        <option value="Automatic">Automatic</option>
+                        <option value="Manual">Manual</option>
+                    </select>
+                    <span asp-validation-for="Transmission" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Condition</label>
+                    <select asp-for="Condition" class="form-control">
+                        <option value="None">--Choose condition--</option>
+                        <option value="New">New</option>
+                        <option value="Used">Used</option>
+                    </select>
+                    <span asp-validation-for="Condition" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Year</label>
+                    <input asp-for="Year" class="form-control">
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">FuelType</label>
+                    <select asp-for="FuelType" class="form-control">
+                        <option value="None">--Choose condition--</option>
+                        <option value="Gas">Gas</option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Eletric">Eletric</option>
+                    </select>
+                    <span asp-validation-for="FuelType" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Color</label>
+                    <input asp-for="Color" class="form-control">
+                    <span asp-validation-for="Color" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Doors</label>
+                    <input asp-for="Doors" class="form-control">
+                    <span asp-validation-for="Doors" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Cylinders</label>
+                    <input asp-for="Cylinders" class="form-control">
+                    <span asp-validation-for="Cylinders" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">EngineSize</label>
+                    <input asp-for="EngineSize" class="form-control">
+                    <span asp-validation-for="EngineSize" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Price</label>
+                    <input asp-for="Price" class="form-control">
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">PriceType</label>
+                    <select asp-for="PriceType" class="form-control">
+                        <option value="None">--Choose condition--</option>
+                        <option value="Fixed">Fixed</option>
+                        <option value="Negotiable">Negotiable</option>
+                    </select>
+                    <span asp-validation-for="PriceType" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">DriverAirbag</label>
+                    <input asp-for="DriverAirbag" class="form-control">
+                    <span asp-validation-for="DriverAirbag" class="text-danger"></span>
+                </div>
+
+                <div id="editor" class="col-md-6">
+                    <label class="form-label">CarFeatures</label>
+                    <textarea asp-for="CarFeatures" class="form-control"></textarea>
+                    <span asp-validation-for="CarFeatures" class="text-danger"></span>
+                </div>
+
+                <div id="editor" class="col-md-6">
+                    <label class="form-label">Title</label>
+                    <textarea asp-for="Title" class="form-control"></textarea>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <select asp-for="BrandId" class="form-control" asp-items="ViewBag.Brands">
+                        <option value="0">--Choose a Brand--</option>
+                    </select>
+                    <span asp-validation-for="BrandId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <select asp-for="DealerId" class="form-control" asp-items="ViewBag.dealers">
+                        <option value="0">--Choose a Dealer--</option>
+                    </select>
+                    <span asp-validation-for="DealerId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Image Single</label>
+                    <input asp-for="ImageSingle" type="file" class="form-control">
+                    <span asp-validation-for="ImageSingle" class="text-danger"></span>
+                    <td>
+                        <img src="~/Images/Car/Single/@Model.ExistingImageSingle" width="130px" height="100px" />
+                    </td>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Image Multiple</label>
+                    <input asp-for="ImageMultiple" type="file" class="form-control" multiple>
+                    <span asp-validation-for="ImageMultiple" class="text-danger"></span>
+                    @* <img id="imgpreview2" class="pt-2" /> *@
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Status</label>
+                    <select asp-for="Status" class="form-control">
+                        <option value="1">Show</option>
+                        <option value="0">Hide</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                </div>
+            </form>
+            <a class="btn" style="color:blue; margin-top:5px;" asp-action="Index" asp-controller="Car">Back to list Brand</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script>
+        $("#ImageSingle").change(function () {
+            readURL(this);
+        });
+    </script>
+    <script>
+        CKEDITOR.replace('Title', {
+            versionCheck: false,
+        });
+        CKEDITOR.replace('CarFeatures', {
+            versionCheck: false,
+        });
+    </script>
+}
+

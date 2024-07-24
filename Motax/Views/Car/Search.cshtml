@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Motax.ViewModels.CarVM>
+@{
+    ViewData["Title"] = "Search car";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "_ListCar";
+}
+
+<h4> <b> @Model.Count() </b>vehicle was found </h4>
+
+@await Html.PartialAsync("CarItem", Model)

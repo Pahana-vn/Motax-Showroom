@@ -1,0 +1,131 @@
+﻿@model Motax.ViewModels.CarRegistrationVM
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<div class="col-xl-12" style="margin-top:20px;">
+    <div class="card custom-card">
+
+        <div class="card-header justify-content-between">
+            <div class="card-title">
+                Register Car (CarId: @Model.CarId)
+            </div>
+        </div>
+
+        <div class="card-body" style="margin:10px;">
+
+            <form asp-action="Register" asp-controller="CarRegistration" method="post" class="row g-3 mt-0">
+                <input type="hidden" asp-for="CarId" />
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="CarPrice" />
+
+                <div class="col-md-4">
+                    <label asp-for="CustomerName" class="form-label"></label>
+                    <input asp-for="CustomerName" class="form-control" />
+                    <span asp-validation-for="CustomerName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="CustomerAddress" class="form-label"></label>
+                    <input asp-for="CustomerAddress" class="form-control" />
+                    <span asp-validation-for="CustomerAddress" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="CustomerPhone" class="form-label"></label>
+                    <input asp-for="CustomerPhone" class="form-control" />
+                    <span asp-validation-for="CustomerPhone" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="CustomerEmail" class="form-label"></label>
+                    <input asp-for="CustomerEmail" class="form-control" />
+                    <span asp-validation-for="CustomerEmail" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="LicensePlate" class="form-label"></label>
+                    <input asp-for="LicensePlate" class="form-control" />
+                    <span asp-validation-for="LicensePlate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="RegistrationNumber" class="form-label"></label>
+                    <input asp-for="RegistrationNumber" class="form-control" />
+                    <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="PaymentStatus" class="form-label"></label>
+                    <select asp-for="PaymentStatus" class="form-control">
+                        <option value="None">--Choose PaymentStatus--</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Unpaid">Unpaid</option>
+                    </select>
+                    <span asp-validation-for="PaymentStatus" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="InsuranceDetails" class="form-label"></label>
+                    <input asp-for="InsuranceDetails" class="form-control" />
+                    <span asp-validation-for="InsuranceDetails" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="InspectionDate" class="form-label"></label>
+                    <input asp-for="InspectionDate" class="form-control" />
+                    <span asp-validation-for="InspectionDate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="DriverLicenseNumber" class="form-label"></label>
+                    <input asp-for="DriverLicenseNumber" class="form-control" />
+                    <span asp-validation-for="DriverLicenseNumber" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Notes" class="form-label"></label>
+                    <input asp-for="Notes" class="form-control" />
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Car Price</label>
+                    <input value="@Model.CarPrice" class="form-control" readonly />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Registration Fee</label>
+                    <input value="@Model.RegistrationFee" class="form-control" readonly />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Tax Amount</label>
+                    <input value="@Model.TaxAmount" class="form-control" readonly />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Total Amount</label>
+                    <input value="@Model.TotalAmount" class="form-control" readonly />
+                </div>
+
+                <div class="col-md-12">
+                    <label asp-for="OrderStatusId" class="form-label"></label>
+                    <select asp-for="OrderStatusId" class="form-control">
+                        <option value="">--Choose Order Status--</option>
+                        @foreach (var status in Model.OrderStatusList)
+                        {
+                            <option value="@status.Id">@status.Status</option>
+                        }
+                    </select>
+                    <span asp-validation-for="OrderStatusId" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

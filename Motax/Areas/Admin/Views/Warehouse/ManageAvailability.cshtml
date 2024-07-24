@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Motax.Models.Car>
+
+@{
+    ViewData["Title"] = "Manage Car Availability";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<h2>Manage Car Availability</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Availability</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>@car.Name</td>
+                <td>@car.IsAvailable</td>
+                <td>
+                    <form asp-action="UpdateAvailability" method="post" asp-area="Admin" asp-controller="Warehouse">
+                        <input type="hidden" name="carId" value="@car.Id" />
+                        <input type="hidden" name="isAvailable" value="@(car.IsAvailable ? "false" : "true")" />
+                        <button type="submit" class="btn btn-primary">@(car.IsAvailable ? "Unavailable" : "available")</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
