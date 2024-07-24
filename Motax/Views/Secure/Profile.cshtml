@@ -55,17 +55,14 @@
                                 <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
                             }
 
-                            @* <img src="~/Images/Account/Avatar/@Model.Image" alt="User Avatar" id="avatar">
-                            <button type="button" class="profile-img-btn"><i class="far fa-camera"></i></button>
-                            <input type="file" class="profile-img-file" id="profile-img-input"> *@
                         </div>
                         <h5>@Model.Username</h5>
                         <p>Email: @Model.Email</p>
                     </div>
                     <ul class="user-profile-sidebar-list">
                         <li><a asp-action="Profile" asp-controller="Secure"><i class="far fa-user"></i> My Profile</a></li>
-                        <li><a href="profile-favorite.html"><i class="far fa-heart"></i> My Favorites</a></li>
-                        <li><a href="profile-listing.html"><i class="far fa-layer-group"></i> My Compare</a></li>
+                        <li><a asp-action="Wislist" asp-controller="Car"><i class="far fa-heart"></i> My Favorites</a></li>
+                        <li><a asp-action="Compare" asp-controller="Car"><i class="far fa-layer-group"></i> My Compare</a></li>
                         <li><a href="profile-message.html"><i class="far fa-envelope"></i> Messages <span class="badge badge-danger">02</span></a></li>
                         <li><a asp-action="Logout" asp-controller="Secure"><i class="far fa-sign-out"></i> Logout</a></li>
                     </ul>

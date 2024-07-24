@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Motax.Models;
 using Motax.ViewModels;
@@ -151,6 +152,7 @@ namespace Motax.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> AddToCompare(int carId)
         {
             if (User.Identity.IsAuthenticated)
@@ -216,6 +218,70 @@ namespace Motax.Controllers
             return RedirectToAction("Compare");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> AddToWishlist(int carId)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var existingWishlist = await db.Wishlists
+                .Where(w => w.UserId == userId && w.CarId == carId)
+                .FirstOrDefaultAsync();
+
+            if (existingWishlist != null)
+            {
+                TempData["error"] = "Car is already in your wishlist.";
+                return RedirectToAction("Index");
+            }
+
+            var wishlistItem = new Wishlist
+            {
+                UserId = userId,
+                CarId = carId,
+                SelectDate = DateTime.Now
+            };
+
+            db.Wishlists.Add(wishlistItem);
+            await db.SaveChangesAsync();
+
+            TempData["success"] = "Car added to wishlist.";
+            return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Wishlist()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var wishlist = await db.Wishlists
+                .Where(w => w.UserId == userId)
+                .Include(w => w.Car)
+                .ToListAsync();
+
+            return View(wishlist);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> RemoveFromWishlist(int wishlistId)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var wishlistItem = await db.Wishlists.FirstOrDefaultAsync(w => w.Id == wishlistId && w.UserId == userId);
+
+            if (wishlistItem != null)
+            {
+                db.Wishlists.Remove(wishlistItem);
+                await db.SaveChangesAsync();
+                TempData["success"] = "Car removed from wishlist.";
+            }
+            else
+            {
+                TempData["error"] = "Car not found in your wishlist.";
+            }
+
+            return RedirectToAction("Wishlist");
+        }
 
     }
 }

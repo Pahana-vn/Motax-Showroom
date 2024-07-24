@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Motax.Models.Wishlist>
+
+<div class="site-breadcrumb" style="background: url(assets/img/breadcrumb/01.jpg)">
+    <div class="container">
+        <h2 class="breadcrumb-title">My Favorites</h2>
+        <ul class="breadcrumb-menu">
+            <li><a href="/">Home</a></li>
+            <li class="active">My Favorites</li>
+        </ul>
+    </div>
+</div>
+
+<div class="user-profile py-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="user-profile-sidebar">
+                    <!-- Sidebar content here -->
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="user-profile-wrapper">
+                    <div class="user-profile-card profile-favorite">
+                        <h4 class="user-profile-card-title">My Favorites</h4>
+                        <div class="row">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="car-item">
+                                        <div class="car-img">
+                                            <span class="car-status @(item.Car.Condition == "New" ? "status-2" : "status-1")">@item.Car.Condition</span>
+                                            <img src="~/Images/Car/Single/@item.Car.ImageSingle" alt="@item.Car.Name">
+                                            <div class="car-btns">
+                                                <form asp-action="RemoveFromWishlist" asp-controller="Car" method="post" class="d-inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="wishlistId" value="@item.Id" />
+                                                    <button type="submit" class="btn btn-link p-0"><i class="far fa-xmark"></i></button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="car-content">
+                                            <div class="car-top">
+                                                <h4><a asp-action="Detail" asp-controller="Car" asp-route-id="@item.CarId">@item.Car.Name</a></h4>
+                                                <div class="car-rate">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <span>5.0 (58.5k Review)</span>
+                                                </div>
+                                            </div>
+                                            <ul class="car-list">
+                                                <li><i class="far fa-steering-wheel"></i>@item.Car.Transmission</li>
+                                                <li><i class="far fa-car"></i>Model: @item.Car.Year</li>
+                                                <li><i class="far fa-road"></i>@item.Car.Mileage</li>
+                                                <li><i class="far fa-gas-pump"></i>@item.Car.FuelType</li>
+                                            </ul>
+                                            <div class="car-footer">
+                                                <span class="car-price">$@item.Car.Price</span>
+                                                <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.CarId" class="theme-btn"><span class="far fa-eye"></span>Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <!-- Pagination here if needed -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

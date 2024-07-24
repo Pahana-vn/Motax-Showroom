@@ -30,11 +30,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.AppId = "1685959258607865";
         options.AppSecret = "18cee327c0c9da060db8123289d7781d";
+        options.Fields.Add("picture.type(large)"); // Add this line to get the picture
     })
     .AddGoogle(options =>
     {
         options.ClientId = "908460529684-mkhdgbf7uclr15gel8tm2sbuogi8pvo0.apps.googleusercontent.com";
         options.ClientSecret = "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";
+        options.Scope.Add("profile"); // Add this line to get the profile information including the picture
     });
 
 //Cấu hình phân quyền
