@@ -289,5 +289,72 @@ namespace Motax.Controllers
             return RedirectToAction("Wishlist");
         }
 
+        public IActionResult AdvancedSearch(string? condition, string? brand, string? transmission, int? year, int? doors, string? price, string? bodyType)
+        {
+            var cars = db.Cars.AsQueryable();
+
+            if (!string.IsNullOrEmpty(condition) && condition != "All")
+            {
+                cars = cars.Where(p => p.Condition == condition);
+            }
+
+            if (!string.IsNullOrEmpty(brand) && brand != "All")
+            {
+                cars = cars.Where(p => p.Brand.Name == brand);
+            }
+
+            if (!string.IsNullOrEmpty(transmission) && transmission != "All")
+            {
+                cars = cars.Where(p => p.Transmission == transmission);
+            }
+
+            if (year.HasValue && year.Value != 0)
+            {
+                cars = cars.Where(p => p.Year == year.Value);
+            }
+
+            if (doors.HasValue && doors.Value != 0)
+            {
+                cars = cars.Where(p => p.Doors == doors.Value);
+            }
+
+            // Fetch the data into memory to handle the price filtering
+            var carList = cars.ToList();
+
+            if (!string.IsNullOrEmpty(price))
+            {
+                var priceRange = price.Split('-');
+                if (priceRange.Length == 2 &&
+                    double.TryParse(priceRange[0], out double minPrice) &&
+                    double.TryParse(priceRange[1], out double maxPrice))
+                {
+                    carList = carList.Where(p => p.Price >= minPrice && p.Price <= maxPrice).ToList();
+                }
+            }
+
+            if (!string.IsNullOrEmpty(bodyType) && bodyType != "All")
+            {
+                carList = carList.Where(p => p.BodyType == bodyType).ToList();
+            }
+
+            var result = carList.Select(p => new CarVM
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Condition = p.Condition,
+                FuelType = p.FuelType,
+                Mileage = p.Mileage,
+                Transmission = p.Transmission,
+                Year = p.Year,
+                Price = p.Price,
+                ImageSingle = p.ImageSingle,
+                NameBrand = p.Brand != null ? p.Brand.Name : null,
+                IsAvailable = p.IsAvailable
+            }).ToList();
+
+            return View("Index", result);
+        }
+
+
     }
 }

@@ -1,0 +1,101 @@
+﻿@model Motax.ViewModels.AccessoriesAdminVM
+@{
+    ViewData["Title"] = "Create Accessory";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<div class="col-xl-12" style="margin-top:20px;">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title">
+                Create Accessory
+            </div>
+        </div>
+        <div class="card-body" style="margin:10px;">
+            <form asp-action="Create" asp-controller="Accessories" class="row g-3 mt-0" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Name Accessory</label>
+                    <input asp-for="Name" class="form-control">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+
+                <div class="col-md-6">
+                    <label class="form-label">Price</label>
+                    <input asp-for="Price" class="form-control">
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Category</label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.categories">
+                        <option value="0">--Choose a Category--</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Brand</label>
+                    <select asp-for="BrandId" class="form-control" asp-items="ViewBag.brands">
+                        <option value="0">--Choose a Brand--</option>
+                    </select>
+                    <span asp-validation-for="BrandId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label">Status</label>
+                    <select asp-for="Status" class="form-control">
+                        <option value="1">Show</option>
+                        <option value="0">Hide</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Image Single</label>
+                    <input asp-for="ImageSingle" type="file" class="form-control">
+                    <span asp-validation-for="ImageSingle" class="text-danger"></span>
+                    <img id="imgpreview" class="pt-2" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Image Multiple</label>
+                    <input asp-for="ImageMultiple" type="file" class="form-control" multiple>
+                    <span asp-validation-for="ImageMultiple" class="text-danger"></span>
+                    @* <img id="imgpreview2" class="pt-2" /> *@
+                </div>
+
+                <div id="editor" class="col-md-12">
+                    <label class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+            <a class="btn" style="color:blue; margin-top:5px;" asp-action="Index" asp-controller="Car">Back to list Brand</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script>
+        $("#ImageSingle").change(function () {
+            readURL(this);
+        });
+    </script>
+    <script>
+        CKEDITOR.replace('Description', {
+            versionCheck: false,
+        });
+    </script>
+} 
