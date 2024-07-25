@@ -1,4 +1,47 @@
 ﻿@model IEnumerable<Motax.Models.Wishlist>
+<style>
+    .avatar-img {
+        width: 110px; /* Thay đổi giá trị này để điều chỉnh chiều rộng */
+        height: 110px; /* Thay đổi giá trị này để điều chỉnh chiều cao */
+        object-fit: cover; /* Giữ tỉ lệ của ảnh, cắt nếu cần */
+        border-radius: 30%; /* Tạo hình tròn cho ảnh */
+    }
+
+    .car-btns {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .car-btns .btn {
+            background-color: #ff0000; /* Màu nền đỏ */
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none; /* Loại bỏ gạch chân */
+        }
+
+            .car-btns .btn i {
+                font-size: 15px;
+                color: #ffffff; /* Màu trắng cho icon */
+            }
+
+            .car-btns .btn:hover {
+                background-color: #d9534f; /* Màu khi hover */
+            }
+
+        .car-btns a {
+            text-decoration: none; /* Loại bỏ gạch chân cho các liên kết */
+</style>
 
 <div class="site-breadcrumb" style="background: url(assets/img/breadcrumb/01.jpg)">
     <div class="container">
@@ -13,9 +56,39 @@
 <div class="user-profile py-120">
     <div class="container">
         <div class="row">
+
             <div class="col-lg-3">
                 <div class="user-profile-sidebar">
-                    <!-- Sidebar content here -->
+                    <div class="user-profile-sidebar-top">
+                        <div class="user-profile-img">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                var imagePath = ViewData["UserAvatar"] as string;
+                                if (!string.IsNullOrEmpty(imagePath))
+                                {
+                                    <img src="@Url.Content("~/Images/Account/Avatar/" + imagePath)" alt="User Avatar" class="avatar-img">
+                                }
+                                else
+                                {
+                                    <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
+                                }
+                            }
+                            else
+                            {
+                                <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
+                            }
+
+                        </div>
+                        @*  <h5>@Model.Username</h5>
+                        <p>Email: @Model.Email</p> *@
+                    </div>
+                    <ul class="user-profile-sidebar-list">
+                        <li><a asp-action="Profile" asp-controller="Secure"><i class="far fa-user"></i> My Profile</a></li>
+                        <li><a asp-action="Wishlist" asp-controller="Car"><i class="far fa-heart"></i> My Favorites</a></li>
+                        <li><a asp-action="Compare" asp-controller="Car"><i class="far fa-layer-group"></i> My Compare</a></li>
+                        <li><a href="profile-message.html"><i class="far fa-envelope"></i> Messages <span class="badge badge-danger">02</span></a></li>
+                        <li><a asp-action="Logout" asp-controller="Secure"><i class="far fa-sign-out"></i> Logout</a></li>
+                    </ul>
                 </div>
             </div>
             <div class="col-lg-9">
@@ -72,3 +145,8 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

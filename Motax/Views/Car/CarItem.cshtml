@@ -4,22 +4,59 @@
     var successMessage = TempData["success"] as string;
     var errorMessage = TempData["error"] as string;
 }
+<style>
+    .car-btns {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .car-btns .btn {
+            background-color: #ff0000; /* Màu nền đỏ */
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none; /* Loại bỏ gạch chân */
+        }
+
+            .car-btns .btn i {
+                font-size: 15px;
+                color: #ffffff; /* Màu trắng cho icon */
+            }
+
+            .car-btns .btn:hover {
+                background-color: #d9534f; /* Màu khi hover */
+            }
+
+        .car-btns a {
+            text-decoration: none; /* Loại bỏ gạch chân cho các liên kết */
+</style>
+
 
 @if (!string.IsNullOrEmpty(successMessage))
 {
-    <div class="alert alert-success">@successMessage</div>
+    <div class="alert alert-success">@Html.Raw(successMessage)</div>
 }
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div class="alert alert-danger">@errorMessage</div>
+    <div class="alert alert-danger">@Html.Raw(errorMessage)</div>
 }
 
 @foreach (var item in Model)
 {
     <div class="col-md-6 col-lg-4">
         <div class="car-item">
-            <div class="car-img">
+            <div  class="car-img">
                 @if (item.Condition == "New")
                 {
                     <span class="car-status status-2">@item.Condition</span>
@@ -35,13 +72,18 @@
                     <form asp-action="AddToWishlist" asp-controller="Car" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="carId" value="@item.Id" />
-                        <button type="submit" class="btn btn-link p-0"><i class="far fa-heart"></i></button>
+                        <button type="submit" class="btn btn-link p-0">
+                            <i class="far fa-heart"></i>
+                        </button>
                     </form>
                     <form asp-action="AddToCompare" asp-controller="Car" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="carId" value="@item.Id" />
-                        <button type="submit" class="btn btn-link p-0"><i class="far fa-arrows-repeat"></i></button>
+                        <button type="submit" class="btn btn-link p-0">
+                            <i class="far fa-arrows-repeat"></i>
+                        </button>
                     </form>
+
                 </div>
             </div>
             <div class="car-content">

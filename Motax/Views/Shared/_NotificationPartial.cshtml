@@ -10,7 +10,7 @@
                 <button type="button" class="btn-close ms-auto p-0" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>
             </div>
             <div class="card-body text-success">
-            <strong>Well done!</strong> @TempData["success"]
+            <strong>Well done!</strong> @Html.Raw(TempData["success"])
             </div>
         </div>
         <!--Page Widget Error-->
@@ -27,7 +27,7 @@
                 <button type="button" class="btn-close ms-auto p-0" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>
             </div>
             <div class="card-body text-danger">
-            <strong>Oh snap!</strong> @TempData["error"]
+            <strong>Oh snap!</strong> @Html.Raw(TempData["error"])
             </div>
         </div>
         <!--Page Widget Error-->
@@ -44,7 +44,7 @@
             <button type="button" class="btn-close ms-auto p-0" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>
         </div>
         <div class="card-body text-warning">
-            <strong>Heads up!</strong> @TempData["warning"]
+            <strong>Heads up!</strong> @Html.Raw(TempData["warning"])
         </div>
     </div>
     <!--Page Widget Warning-->

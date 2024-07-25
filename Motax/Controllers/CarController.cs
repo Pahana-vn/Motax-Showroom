@@ -165,8 +165,14 @@ namespace Motax.Controllers
 
                 if (existingComparison.Count >= 3)
                 {
-                    TempData["error"] = "You can only compare up to 3 cars.";
+                    TempData["error"] = "You can only compare up to 3 cars. <a href='/Car/Compare'><b style=\"color:blue\">Click My Compare</b></a>";
                     return RedirectToAction("Index", "Car");
+                }
+                if (existingComparison != null)
+                {
+                    TempData["error"] = "Car is already in your compare. <a href='/Car/Compare'><b style=\"color:blue\">Click My Compare</b></a>";
+                    return RedirectToAction("Index", "Car");
+
                 }
 
                 var compare = new Compare
@@ -179,7 +185,7 @@ namespace Motax.Controllers
                 db.Compares.Add(compare);
                 await db.SaveChangesAsync();
 
-                TempData["success"] = "Car added to comparison.";
+                TempData["success"] = "Car added to comparison. <a href='/Car/Compare'><b style=\"color:blue\">Click My Compare</b></a>";
                 return RedirectToAction("Index", "Car");
             }
 
@@ -214,7 +220,7 @@ namespace Motax.Controllers
                 db.Compares.Remove(compare);
                 await db.SaveChangesAsync();
             }
-
+            TempData["success"] = "Car removed from Compare.";
             return RedirectToAction("Compare");
         }
 
@@ -231,7 +237,7 @@ namespace Motax.Controllers
 
             if (existingWishlist != null)
             {
-                TempData["error"] = "Car is already in your wishlist.";
+                TempData["error"] = "Car is already in your wishlist. <a href='/Car/Wishlist'><b style=\"color:blue\">Click My Wishlist</b></a>";
                 return RedirectToAction("Index");
             }
 
@@ -245,7 +251,7 @@ namespace Motax.Controllers
             db.Wishlists.Add(wishlistItem);
             await db.SaveChangesAsync();
 
-            TempData["success"] = "Car added to wishlist.";
+            TempData["success"] = "Car added to wishlist. <a href='/Car/Wishlist'><b style=\"color:blue\">Click My Wishlist</b></a>";
             return RedirectToAction("Index");
         }
 

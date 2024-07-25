@@ -1,5 +1,49 @@
 ﻿@model IEnumerable<Motax.Models.Compare>
 
+<style>
+    .avatar-img {
+        width: 110px; /* Thay đổi giá trị này để điều chỉnh chiều rộng */
+        height: 110px; /* Thay đổi giá trị này để điều chỉnh chiều cao */
+        object-fit: cover; /* Giữ tỉ lệ của ảnh, cắt nếu cần */
+        border-radius: 30%; /* Tạo hình tròn cho ảnh */
+    }
+
+    .car-btns {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .car-btns .btn {
+            background-color: #ff0000; /* Màu nền đỏ */
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none; /* Loại bỏ gạch chân */
+        }
+
+            .car-btns .btn i {
+                font-size: 15px;
+                color: #ffffff; /* Màu trắng cho icon */
+            }
+
+            .car-btns .btn:hover {
+                background-color: #d9534f; /* Màu khi hover */
+            }
+
+        .car-btns a {
+            text-decoration: none; /* Loại bỏ gạch chân cho các liên kết */
+</style>
+
 <div class="site-breadcrumb" style="background: url(/assets/img/breadcrumb/01.jpg)">
     <div class="container">
         <h2 class="breadcrumb-title">Compare</h2>
@@ -10,142 +54,197 @@
     </div>
 </div>
 
-<div class="compare-area py-120">
+<div class="user-profile py-120">
     <div class="container">
-        <div class="table-responsive">
-            <table class="table table-bordered compare-table">
-                <tbody>
-                    <tr>
-                        <th></th>
-                        @foreach (var item in Model)
-                        {
-                            <td><img class="compare-img" src="~/Images/Car/Single/@item.Car.ImageSingle" alt="product"></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Title</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><h5 class="compare-title">@item.Car.Name</h5></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Condition</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span class="badge @(item.Car.Condition == "New" ? "new" : "used")">@item.Car.Condition</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Body Type</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span>@item.Car.BodyType</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Door</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span>@item.Car.Doors</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Build Year</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span>@item.Car.Year</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Fuel Type</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span>@item.Car.FuelType</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Color</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span>@item.Car.Color</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Mileage</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span>@item.Car.Mileage</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Price</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span class="compare-price">$@item.Car.Price</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Price Type</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span>@item.Car.PriceType</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Review</th>
-                        @foreach (var item in Model)
-                        {
-                            <td>
-                                <div class="compare-rate">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <span>5.0 (5k Review)</span>
-                                </div>
-                            </td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Transmission</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span>@item.Car.Transmission</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Driver's Airbag</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span>@item.Car.DriverAirbag</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Engine Size</th>
-                        @foreach (var item in Model)
-                        {
-                            <td><span>@item.Car.EngineSize</span></td>
-                        }
-                    </tr>
-                    <tr>
-                        <th>Action</th>
-                        @foreach (var item in Model)
-                        {
-                            <td>
-                                <form asp-action="RemoveFromCompare" asp-controller="Car" method="post">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="compareId" value="@item.Id" />
-                                    <button type="submit" class="theme-btn compare-btn">
-                                        <span class="far fa-circle-xmark"></span> Remove
-                                    </button>
-                                </form>
-                            </td>
-                        }
-                    </tr>
-                </tbody>
-            </table>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="user-profile-sidebar">
+                    <div class="user-profile-sidebar-top">
+                        <div class="user-profile-img">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                var imagePath = ViewData["UserAvatar"] as string;
+                                if (!string.IsNullOrEmpty(imagePath))
+                                {
+                                    <img src="@Url.Content("~/Images/Account/Avatar/" + imagePath)" alt="User Avatar" class="avatar-img">
+                                }
+                                else
+                                {
+                                    <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
+                                }
+                            }
+                            else
+                            {
+                                <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
+                            }
+
+                        </div>
+                        @* <h5>@Model.Username</h5>
+                        <p>Email: @Model.Email</p> *@
+                    </div>
+                    <ul class="user-profile-sidebar-list">
+                        <li><a asp-action="Profile" asp-controller="Secure"><i class="far fa-user"></i> My Profile</a></li>
+                        <li><a asp-action="Wishlist" asp-controller="Car"><i class="far fa-heart"></i> My Favorites</a></li>
+                        <li><a asp-action="Compare" asp-controller="Car"><i class="far fa-layer-group"></i> My Compare</a></li>
+                        <li><a href="profile-message.html"><i class="far fa-envelope"></i> Messages <span class="badge badge-danger">02</span></a></li>
+                        <li><a asp-action="Logout" asp-controller="Secure"><i class="far fa-sign-out"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="table-responsive">
+                    <table class="table table-bordered compare-table">
+                        <tbody>
+                            <tr>
+                                <th></th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><img class="compare-img" src="~/Images/Car/Single/@item.Car.ImageSingle" alt="product"></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Title</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><h5 class="compare-title">@item.Car.Name</h5></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Condition</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span class="badge @(item.Car.Condition == "New" ? "new" : "used")">@item.Car.Condition</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Body Type</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span>@item.Car.BodyType</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Door</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span>@item.Car.Doors</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Build Year</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span>@item.Car.Year</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Fuel Type</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span>@item.Car.FuelType</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Color</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span>@item.Car.Color</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Mileage</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span>@item.Car.Mileage</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Price</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span class="compare-price">$@item.Car.Price</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Price Type</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span>@item.Car.PriceType</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Review</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td>
+                                        <div class="compare-rate">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <span>5.0 (5k Review)</span>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Transmission</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span>@item.Car.Transmission</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Driver's Airbag</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span>@item.Car.DriverAirbag</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Engine Size</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td><span>@item.Car.EngineSize</span></td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>Action</th>
+                                @foreach (var item in Model)
+                                {
+                                    <td>
+                                        <form asp-action="RemoveFromCompare" asp-controller="Car" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="compareId" value="@item.Id" />
+                                            <button type="submit" class="theme-btn compare-btn">
+                                                <span class="far fa-circle-xmark"></span> Remove
+                                            </button>
+                                        </form>
+                                    </td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById('profile-img-input').addEventListener('change', function (e) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('avatar').src = e.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        });
+    </script>
+}
