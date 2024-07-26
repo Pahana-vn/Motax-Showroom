@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewData["Title"] = "_ListAccessories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@RenderSection("BreadCum", required: false)
+
+
+<div class="shop-area bg py-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="shop-sidebar">
+                    <div class="shop-widget">
+                        <div class="shop-search-form">
+                            <h4 class="shop-widget-title">Search Accessories</h4>
+                            <form asp-action="Search" asp-controller="Accessories">
+                                <div class="form-group">
+                                    <input type="text" name="query" class="form-control" placeholder="Search">
+                                    <button><i class="far fa-search"></i></button>
+                                </div>
+                            </form> 
+                        </div>
+                    </div>
+
+                    @await Component.InvokeAsync("MenuCategory")
+                    @await Component.InvokeAsync("MenuBrand")
+
+                    <div class="shop-widget">
+                        <h4 class="shop-widget-title">Popular Tags</h4>
+                        <div class="shop-tags">
+                            <a asp-action="Index" asp-controller="Car">Car</a>
+                            <a asp-action="Index" asp-controller="Dealer">Dealer</a>
+                            <a asp-action="Index" asp-controller="Accessories">Accessories</a>
+                            <a asp-action="Index" asp-controller="Service">Service</a>
+                            <a asp-action="Index" asp-controller="Blog">Blog</a>
+                        </div>
+                    </div>
+                    <div class="widget-banner mt-30 mb-50" style="background-image:url(/Frontend/assets/img/shop/banner.jpg)">
+                        <div class="banner-content">
+                            <h3>Get <span>35% Off</span> On All Our Products</h3>
+                            <a href="#" class="theme-btn">Buy Now<i class="fas fa-arrow-right-long"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="col-md-12">
+                    <div class="shop-sort">
+                        <h5 class="car-widget-title">Price Range</h5>
+                        <form class="price-range-box" asp-action="FindFilter" asp-controller="Accessories" method="get">
+                            <input type="number" name="min" class="" placeholder="$min">
+                            <span class="delimiter">-</span>
+                            <input type="number" name="max" class="" placeholder="$max">
+                            <button type="submit" class="btn btn-primary">Go</button>
+                        </form>
+                        <div class="shop-sort-box">
+                            <select class="select">
+                                <option value="1">Sort By Default</option>
+                                <option value="5">Sort By Featured</option>
+                                <option value="2">Sort By Latest</option>
+                                <option value="3">Sort By Low Price</option>
+                                <option value="4">Sort By High Price</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="shop-item-wrapper">
+                    <div class="row align-items-center">
+                        @RenderBody()
+                    </div>
+                </div>
+                <div class="pagination-area mt-4">
+                    <div aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="far fa-arrow-left"></i></span>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true"><i class="far fa-arrow-right"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

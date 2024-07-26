@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Motax.ViewModels.AccessoriesVM>
+
+@{
+    var successMessage = TempData["success"] as string;
+    var errorMessage = TempData["error"] as string;
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@Html.Raw(successMessage)</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@Html.Raw(errorMessage)</div>
+}
+@foreach (var item in Model)
+{
+    <div class="col-md-6 col-lg-4">
+        <div class="shop-item">
+            <div class="shop-item-img">
+                <a asp-action="Detail" asp-controller="Accessories" asp-route-id="@item.Id">
+                    <img src="~/Images/Accessories/Single/@item.ImageSingle" alt="">
+                </a>
+                <div class="shop-item-meta">
+                    <a href="#"><i class="far fa-heart"></i></a>
+                    <a href="#"><i class="far fa-eye"></i></a>
+                    <a href="#"><i class="far fa-shopping-cart"></i></a>
+                </div>
+            </div>
+
+            <div class="shop-item-info">
+                <div class="shop-item-rate">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <a asp-action="Detail" asp-controller="Accessories" asp-route-id="@item.Id">
+                    <h4 class="shop-item-title">@item.Name</h4>
+                </a>
+                <div class="shop-item-price"> $@item.Price</div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

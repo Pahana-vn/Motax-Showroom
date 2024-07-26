@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Motax.ViewModels.AccessoriesVM>
+@{
+    ViewData["Title"] = "Search Accessories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "_ListAccessories";
+}
+
+<h4> <b> @Model.Count() </b>Accessories was found </h4>
+
+@await Html.PartialAsync("AccessoriesItem", Model)

@@ -11,7 +11,7 @@ public partial class Comment
 
     public int AccessoriesId { get; set; }
 
-    public int CustomerId { get; set; }
+    public int AccountId { get; set; }
 
     public int Rating { get; set; }
 
@@ -22,5 +22,6 @@ public partial class Comment
     public virtual Accessory Accessories { get; set; } = null!;
 
     public virtual Car Car { get; set; } = null!;
+    public virtual Account Account { get; set; } = null!;
 
 }
