@@ -35,14 +35,27 @@ namespace Motax.Controllers
         public async Task<IActionResult> FacebookResponse()
         {
             var result = await HttpContext.AuthenticateAsync("Facebook");
-            var claims = result.Principal.Identities
-                .FirstOrDefault().Claims.Select(claim => new
-                {
-                    claim.Issuer,
-                    claim.OriginalIssuer,
-                    claim.Type,
-                    claim.Value
-                });
+            if (result?.Principal == null || result.Principal.Identities == null || !result.Principal.Identities.Any())
+            {
+                // Handle the case where authentication failed or no identities were found
+                TempData["error"] = "Authentication failed.";
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var identity = result.Principal.Identities.FirstOrDefault();
+            if (identity == null)
+            {
+                TempData["error"] = "No identity found.";
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var claims = identity.Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value
+            }).ToList();
 
             var email = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
@@ -54,8 +67,8 @@ namespace Motax.Controllers
             {
                 user = new Account
                 {
-                    Username = name,
-                    Email = email,
+                    Username = name ?? string.Empty,
+                    Email = email ?? string.Empty,
                     ExternalId = externalId, // Store as string
                     RoleId = 2, // Default role
                 };
@@ -63,29 +76,47 @@ namespace Motax.Controllers
                 await db.SaveChangesAsync();
             }
 
-            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-            identity.AddClaim(new Claim(ClaimTypes.Name, user.Username));
-            identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
+            var userClaims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Name, user.Username ?? string.Empty),
+        new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+        new Claim(ClaimTypes.Role, user.Role?.Title ?? "user")
+    };
 
-            var principal = new ClaimsPrincipal(identity);
+            var claimsIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(claimsIdentity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return RedirectToAction("Index", "Home");
         }
+
 
         [Route("google-response")]
         public async Task<IActionResult> GoogleResponse()
         {
             var result = await HttpContext.AuthenticateAsync("Google");
-            var claims = result.Principal.Identities
-                .FirstOrDefault().Claims.Select(claim => new
-                {
-                    claim.Issuer,
-                    claim.OriginalIssuer,
-                    claim.Type,
-                    claim.Value
-                });
+            if (result?.Principal == null || result.Principal.Identities == null || !result.Principal.Identities.Any())
+            {
+                // Handle the case where authentication failed or no identities were found
+                TempData["error"] = "Authentication failed.";
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var identity = result.Principal.Identities.FirstOrDefault();
+            if (identity == null)
+            {
+                TempData["error"] = "No identity found.";
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var claims = identity.Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value
+            }).ToList();
 
             var email = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
@@ -97,8 +128,8 @@ namespace Motax.Controllers
             {
                 user = new Account
                 {
-                    Username = name,
-                    Email = email,
+                    Username = name ?? string.Empty,
+                    Email = email ?? string.Empty,
                     ExternalId = externalId, // Store as string
                     RoleId = 2, // Default role
                 };
@@ -106,15 +137,20 @@ namespace Motax.Controllers
                 await db.SaveChangesAsync();
             }
 
-            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-            identity.AddClaim(new Claim(ClaimTypes.Name, user.Username));
-            identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
+            var userClaims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Name, user.Username ?? string.Empty),
+        new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+        new Claim(ClaimTypes.Role, user.Role?.Title ?? "user")
+    };
 
-            var principal = new ClaimsPrincipal(identity);
+            var claimsIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(claimsIdentity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return RedirectToAction("Index", "Home");
         }
+
     }
 }

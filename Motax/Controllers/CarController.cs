@@ -18,6 +18,7 @@ namespace Motax.Controllers
             db = context;
         }
 
+        #region Index
         public IActionResult Index(int? brand, int? dealer)
         {
             var cars = db.Cars.AsQueryable();
@@ -48,7 +49,9 @@ namespace Motax.Controllers
             });
             return View(result);
         }
+        #endregion
 
+        #region Search and FindFilter
         public IActionResult Search(string? query)
         {
             var cars = db.Cars.AsQueryable();
@@ -90,7 +93,9 @@ namespace Motax.Controllers
             }).ToList();
             return View("Index", result);
         }
+        #endregion
 
+        #region Detail
         public IActionResult Detail(int id)
         {
             var data = db.Cars
@@ -149,15 +154,23 @@ namespace Motax.Controllers
             };
             return View(result);
         }
+        #endregion
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> AddToCompare(int carId)
         {
-            if (User.Identity.IsAuthenticated)
+            var user = User;
+            if (user?.Identity != null && user.Identity.IsAuthenticated)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    TempData["error"] = "User ID is invalid.";
+                    return RedirectToAction("Index", "Car");
+                }
 
                 var existingComparison = await db.Compares
                     .Where(c => c.UserId == int.Parse(userId))
@@ -168,11 +181,12 @@ namespace Motax.Controllers
                     TempData["error"] = "You can only compare up to 3 cars. <a href='/Car/Compare'><b style=\"color:blue\">Click My Compare</b></a>";
                     return RedirectToAction("Index", "Car");
                 }
-                if (existingComparison != null)
+
+                var carAlreadyInCompare = existingComparison.Any(c => c.CarId == carId);
+                if (carAlreadyInCompare)
                 {
                     TempData["error"] = "Car is already in your compare. <a href='/Car/Compare'><b style=\"color:blue\">Click My Compare</b></a>";
                     return RedirectToAction("Index", "Car");
-
                 }
 
                 var compare = new Compare
@@ -192,12 +206,21 @@ namespace Motax.Controllers
             return RedirectToAction("Login", "Secure");
         }
 
+
+
         [HttpGet]
         public async Task<IActionResult> Compare()
         {
-            if (User.Identity.IsAuthenticated)
+            var user = User;
+            if (user?.Identity != null && user.Identity.IsAuthenticated)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    TempData["error"] = "User ID is invalid.";
+                    return RedirectToAction("Index", "Car");
+                }
 
                 var carsToCompare = await db.Compares
                     .Include(c => c.Car)
@@ -229,69 +252,110 @@ namespace Motax.Controllers
         [Authorize]
         public async Task<IActionResult> AddToWishlist(int carId)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            var existingWishlist = await db.Wishlists
-                .Where(w => w.UserId == userId && w.CarId == carId)
-                .FirstOrDefaultAsync();
-
-            if (existingWishlist != null)
+            var user = User;
+            if (user?.Identity != null && user.Identity.IsAuthenticated)
             {
-                TempData["error"] = "Car is already in your wishlist. <a href='/Car/Wishlist'><b style=\"color:blue\">Click My Wishlist</b></a>";
+                var userIdStr = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
+                {
+                    TempData["error"] = "Invalid user ID.";
+                    return RedirectToAction("Index");
+                }
+
+                var existingWishlist = await db.Wishlists
+                    .Where(w => w.UserId == userId && w.CarId == carId)
+                    .FirstOrDefaultAsync();
+
+                if (existingWishlist != null)
+                {
+                    TempData["error"] = "Car is already in your wishlist. <a href='/Car/Wishlist'><b style=\"color:blue\">Click My Wishlist</b></a>";
+                    return RedirectToAction("Index");
+                }
+
+                var wishlistItem = new Wishlist
+                {
+                    UserId = userId,
+                    CarId = carId,
+                    SelectDate = DateTime.Now
+                };
+
+                db.Wishlists.Add(wishlistItem);
+                await db.SaveChangesAsync();
+
+                TempData["success"] = "Car added to wishlist. <a href='/Car/Wishlist'><b style=\"color:blue\">Click My Wishlist</b></a>";
                 return RedirectToAction("Index");
             }
 
-            var wishlistItem = new Wishlist
-            {
-                UserId = userId,
-                CarId = carId,
-                SelectDate = DateTime.Now
-            };
-
-            db.Wishlists.Add(wishlistItem);
-            await db.SaveChangesAsync();
-
-            TempData["success"] = "Car added to wishlist. <a href='/Car/Wishlist'><b style=\"color:blue\">Click My Wishlist</b></a>";
-            return RedirectToAction("Index");
+            TempData["error"] = "You need to be logged in to add items to your wishlist.";
+            return RedirectToAction("Login", "Secure");
         }
+
 
         [Authorize]
         public async Task<IActionResult> Wishlist()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var wishlist = await db.Wishlists
-                .Where(w => w.UserId == userId)
-                .Include(w => w.Car)
-                .ToListAsync();
+            var user = User;
+            if (user?.Identity != null && user.Identity.IsAuthenticated)
+            {
+                var userIdStr = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
+                {
+                    TempData["error"] = "Invalid user ID.";
+                    return RedirectToAction("Index");
+                }
 
-            return View(wishlist);
+                var wishlist = await db.Wishlists
+                    .Where(w => w.UserId == userId)
+                    .Include(w => w.Car)
+                    .ToListAsync();
+
+                return View(wishlist);
+            }
+
+            TempData["error"] = "You need to be logged in to view your wishlist.";
+            return RedirectToAction("Login", "Secure");
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> RemoveFromWishlist(int wishlistId)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var wishlistItem = await db.Wishlists.FirstOrDefaultAsync(w => w.Id == wishlistId && w.UserId == userId);
-
-            if (wishlistItem != null)
+            var user = User;
+            if (user?.Identity != null && user.Identity.IsAuthenticated)
             {
-                db.Wishlists.Remove(wishlistItem);
-                await db.SaveChangesAsync();
-                TempData["success"] = "Car removed from wishlist.";
-            }
-            else
-            {
-                TempData["error"] = "Car not found in your wishlist.";
+                var userIdStr = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
+                {
+                    TempData["error"] = "Invalid user ID.";
+                    return RedirectToAction("Wishlist");
+                }
+
+                var wishlistItem = await db.Wishlists.FirstOrDefaultAsync(w => w.Id == wishlistId && w.UserId == userId);
+
+                if (wishlistItem != null)
+                {
+                    db.Wishlists.Remove(wishlistItem);
+                    await db.SaveChangesAsync();
+                    TempData["success"] = "Car removed from wishlist.";
+                }
+                else
+                {
+                    TempData["error"] = "Car not found in your wishlist.";
+                }
+
+                return RedirectToAction("Wishlist");
             }
 
-            return RedirectToAction("Wishlist");
+            TempData["error"] = "You need to be logged in to remove items from your wishlist.";
+            return RedirectToAction("Login", "Secure");
         }
+
 
         public IActionResult AdvancedSearch(string? condition, string? brand, string? transmission, int? year, int? doors, string? price, string? bodyType)
         {
-            var cars = db.Cars.AsQueryable();
+            var cars = db.Cars.Include(c => c.Brand).AsQueryable();
 
             if (!string.IsNullOrEmpty(condition) && condition != "All")
             {
@@ -300,7 +364,7 @@ namespace Motax.Controllers
 
             if (!string.IsNullOrEmpty(brand) && brand != "All")
             {
-                cars = cars.Where(p => p.Brand.Name == brand);
+                cars = cars.Where(p => p.Brand != null && p.Brand.Name == brand);
             }
 
             if (!string.IsNullOrEmpty(transmission) && transmission != "All")
@@ -318,9 +382,6 @@ namespace Motax.Controllers
                 cars = cars.Where(p => p.Doors == doors.Value);
             }
 
-            // Fetch the data into memory to handle the price filtering
-            var carList = cars.ToList();
-
             if (!string.IsNullOrEmpty(price))
             {
                 var priceRange = price.Split('-');
@@ -328,16 +389,16 @@ namespace Motax.Controllers
                     double.TryParse(priceRange[0], out double minPrice) &&
                     double.TryParse(priceRange[1], out double maxPrice))
                 {
-                    carList = carList.Where(p => p.Price >= minPrice && p.Price <= maxPrice).ToList();
+                    cars = cars.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
                 }
             }
 
             if (!string.IsNullOrEmpty(bodyType) && bodyType != "All")
             {
-                carList = carList.Where(p => p.BodyType == bodyType).ToList();
+                cars = cars.Where(p => p.BodyType == bodyType);
             }
 
-            var result = carList.Select(p => new CarVM
+            var result = cars.Select(p => new CarVM
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -354,7 +415,5 @@ namespace Motax.Controllers
 
             return View("Index", result);
         }
-
-
     }
 }
