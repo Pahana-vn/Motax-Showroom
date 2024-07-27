@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Motax.Models;
 
-public partial class Accessory
+public partial class Accessories
 {
     public int Id { get; set; }
 

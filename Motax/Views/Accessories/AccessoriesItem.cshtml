@@ -25,7 +25,7 @@
                 <div class="shop-item-meta">
                     <a href="#"><i class="far fa-heart"></i></a>
                     <a href="#"><i class="far fa-eye"></i></a>
-                    <a href="#"><i class="far fa-shopping-cart"></i></a>
+                    <a asp-action="AddToCart" asp-controller="CartAccessoriesItem" asp-route-id="@item.Id"><i class="far fa-shopping-cart"></i></a>
                 </div>
             </div>
 

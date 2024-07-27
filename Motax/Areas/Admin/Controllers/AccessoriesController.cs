@@ -91,7 +91,7 @@ namespace Motax.Areas.Admin.Controllers
                     return View(accVM);
                 }
 
-                var accessory = new Accessory
+                var accessory = new Accessories
                 {
                     Name = accVM.Name,
                     TypeCode = GenerateRandomTypeCode(7),
@@ -123,7 +123,7 @@ namespace Motax.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int Id)
         {
-            Accessory? acce = await db.Accessories.FindAsync(Id);
+            Accessories? acce = await db.Accessories.FindAsync(Id);
             if (acce == null)
             {
                 return RedirectToAction("/404");
@@ -132,7 +132,7 @@ namespace Motax.Areas.Admin.Controllers
             AccessoriesAdminVM vm = new AccessoriesAdminVM
             {
                 Name = acce.Name,
-                TypeCode = GenerateRandomTypeCode(7),
+                TypeCode = acce.TypeCode,
                 Description = acce.Description,
                 CategoryId = acce.CategoryId,
                 BrandId = acce.BrandId,

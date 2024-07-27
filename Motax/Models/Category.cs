@@ -21,7 +21,7 @@ public partial class Category
 
     public DateOnly UpdateDay { get; set; }
 
-    public virtual ICollection<Accessory> Accessories { get; set; } = new List<Accessory>();
+    public virtual ICollection<Accessories> Accessories { get; set; } = new List<Accessories>();
 
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 }

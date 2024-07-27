@@ -60,12 +60,14 @@
                         <h5>Stock: <span>Available</span></h5>
                         <h5>SKU: <span>@Model.TypeCode</span></h5>
                     </div>
+
+                    <form asp-action="AddToCart" asp-controller="CartAccessoriesItem" asp-route-id="@Model.Id">
                     <div class="single-item-action">
                         <h5 class="title">Quantity:</h5>
                         <div class="cart-qty">
-                            <button class="minus-btn bg-white"><i class="fal fa-minus"></i></button>
-                            <input class="quantity bg-white" type="text" value="1" disabled>
-                            <button class="plus-btn bg-white"><i class="fal fa-plus"></i></button>
+                            <button type="button" class="minus-btn bg-white"><i class="fal fa-minus"></i></button>
+                            <input name="quantity" class="quantity bg-white" type="text" value="1">
+                            <button type="button" class="plus-btn bg-white"><i class="fal fa-plus"></i></button>
                         </div>
                         <div class="item-single-btn-area">
                             <button class="theme-btn">
@@ -76,6 +78,8 @@
                             <a href="#" class="single-item-btn"><i class="far fa-exchange-alt"></i></a>
                         </div>
                     </div>
+                    </form>
+
                     <div class="single-item-content">
                         <h5>Category: <span>@Model.NameCategory</span></h5>
                         <h5>Tags: <span><a asp-action="Index" asp-controller="Car">Car</a>, <a asp-action="Index" asp-controller="Accessories">Shop</a>, <a asp-action="Index" asp-controller="Dealer">Dealer</a></span></h5>

@@ -159,7 +159,8 @@ namespace Motax.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            var orderDetail = registration.Car.OrderDetails.FirstOrDefault();
+
+            var orderDetail = registration.Car?.OrderDetails.FirstOrDefault();
             var order = orderDetail?.Order;
 
             var viewModel = new CarRegistrationDetailVM

@@ -19,7 +19,7 @@ public partial class Comment
 
     public DateTime CommentDate { get; set; }
 
-    public virtual Accessory Accessories { get; set; } = null!;
+    public virtual Accessories Accessories { get; set; } = null!;
 
     public virtual Car Car { get; set; } = null!;
     public virtual Account Account { get; set; } = null!;

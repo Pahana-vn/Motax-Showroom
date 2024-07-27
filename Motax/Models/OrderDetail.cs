@@ -19,7 +19,7 @@ public partial class OrderDetail
 
     public double Discount { get; set; }
 
-    public virtual Accessory Accessories { get; set; } = null!;
+    public virtual Accessories Accessories { get; set; } = null!;
 
     public virtual Car Car { get; set; } = null!;
 

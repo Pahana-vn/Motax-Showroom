@@ -47,13 +47,19 @@
                     <span asp-validation-for="BrandId" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <label class="form-label">Status</label>
                     <select asp-for="Status" class="form-control">
                         <option value="1">Show</option>
                         <option value="0">Hide</option>
                     </select>
                     <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Type Code</label>
+                    <input asp-for="TypeCode" class="form-control">
+                    <span asp-validation-for="TypeCode" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6">

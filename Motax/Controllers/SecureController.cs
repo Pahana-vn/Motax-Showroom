@@ -7,6 +7,7 @@ using Motax.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Motax.Helpers;
 
 namespace Motax.Controllers
 {
@@ -92,7 +93,8 @@ namespace Motax.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username ?? string.Empty),
                 new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
-                new Claim(ClaimTypes.Role, user.Role?.Title ?? "user")
+                new Claim(ClaimTypes.Role, user.Role?.Title ?? "user"),
+                new Claim(MySetting.CLAIM_CUSTOMERID, user.Id.ToString())
             };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

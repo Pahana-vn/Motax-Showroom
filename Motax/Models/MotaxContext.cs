@@ -15,7 +15,7 @@ public partial class MotaxContext : DbContext
     {
     }
 
-    public virtual DbSet<Accessory> Accessories { get; set; }
+    public virtual DbSet<Accessories> Accessories { get; set; }
 
     public virtual DbSet<Account> Accounts { get; set; }
 
@@ -57,13 +57,15 @@ public partial class MotaxContext : DbContext
     public virtual DbSet<OrderStatus> OrderStatus { get; set; }
     public DbSet<ServiceUnit> ServiceUnits { get; set; }
     public DbSet<DeliveryUnit> DeliveryUnits { get; set; }
+    public DbSet<OrderAccessories> OrderAccessories { get; set; }
+    public DbSet<OrderDetailAccessories> OrderDetailAccessories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=DESKTOP-0QD3R2K;Initial Catalog=Motax;Integrated Security=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Accessory>(entity =>
+        modelBuilder.Entity<Accessories>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Accessor__3214EC07DE0E68AB");
 
