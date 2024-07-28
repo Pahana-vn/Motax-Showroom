@@ -5,6 +5,8 @@ using Motax.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System;
+using Motax.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Motax.Controllers
 {
@@ -12,11 +14,15 @@ namespace Motax.Controllers
     {
         private readonly MotaxContext db;
         private readonly ILogger<CartAccessoriesItemController> _logger;
+        private readonly PaypalClient _paypalClient;
+        private readonly IVnPayService _vnPayservice;
 
-        public CartAccessoriesItemController(MotaxContext context, ILogger<CartAccessoriesItemController> logger)
+        public CartAccessoriesItemController(MotaxContext context, ILogger<CartAccessoriesItemController> logger, PaypalClient paypalClient, IVnPayService vnPayservice)
         {
             db = context;
             _logger = logger;
+            _paypalClient = paypalClient;
+            _vnPayservice = vnPayservice;
         }
 
         public List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(MySetting.CART_KEY) ?? new List<CartItem>();
@@ -82,6 +88,32 @@ namespace Motax.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult IncrementQuantity(int id)
+        {
+            var cart = Cart;
+            var item = cart.SingleOrDefault(p => p.Id == id);
+            if (item != null)
+            {
+                item.Quantity++;
+                HttpContext.Session.Set(MySetting.CART_KEY, cart);
+            }
+            return Json(new { success = true, quantity = item?.Quantity, total = cart.Sum(p => p.Total), itemTotal = item?.Total });
+        }
+
+        public IActionResult DecrementQuantity(int id)
+        {
+            var cart = Cart;
+            var item = cart.SingleOrDefault(p => p.Id == id);
+            if (item != null && item.Quantity > 1)
+            {
+                item.Quantity--;
+                HttpContext.Session.Set(MySetting.CART_KEY, cart);
+            }
+            return Json(new { success = true, quantity = item?.Quantity, total = cart.Sum(p => p.Total), itemTotal = item?.Total });
+        }
+
+
+
         [Authorize]
         [HttpGet]
         public IActionResult Checkout()
@@ -90,12 +122,14 @@ namespace Motax.Controllers
             {
                 return Redirect("/");
             }
+            ViewBag.PaypalClientId = _paypalClient.ClientId;
             return View(Cart);
         }
 
+
         [Authorize]
         [HttpPost]
-        public IActionResult Checkout(CheckoutAccessoriesVM model)
+        public IActionResult Checkout(CheckoutAccessoriesVM model, string payment = "COD", double total = 0)
         {
             if (ModelState.IsValid)
             {
@@ -107,7 +141,6 @@ namespace Motax.Controllers
                 }
 
                 var customerId = int.Parse(customerClaim.Value);
-
                 var khachHang = new Account();
                 if (model.GiongKhachHang)
                 {
@@ -121,9 +154,10 @@ namespace Motax.Controllers
                     Address = model.Address ?? khachHang?.Address,
                     Phone = model.Phone ?? khachHang?.Phone,
                     OrderDate = DateTime.Now,
-                    HowToPay = "COD",
+                    HowToPay = payment == "Thanh toán VNPay" ? "VNPay" : "COD",
                     HowToTransport = "GRAB",
-                    Status = 1, // Set status to 1
+                    Status = 1,
+                    DeliveryDate = "3",
                     TypeCode = GenerateOrderCode(), // Generate random order code
                     Note = model.Note,
                 };
@@ -151,6 +185,19 @@ namespace Motax.Controllers
 
                     db.Database.CommitTransaction();
 
+                    if (payment == "Thanh toán VNPay")
+                    {
+                        var vnPayModel = new VnPaymentRequestModel
+                        {
+                            Amount = Cart.Sum(p => p.Total),
+                            CreatedDate = DateTime.Now,
+                            Description = $"{model.UserName} {model.Phone}",
+                            FullName = model.UserName,
+                            OrderId = hoadon.Id
+                        };
+                        return Redirect(_vnPayservice.CreatePaymentUrl(HttpContext, vnPayModel));
+                    }
+
                     HttpContext.Session.Set<List<CartItem>>(MySetting.CART_KEY, new List<CartItem>());
                     return RedirectToAction("PaymentSuccess");
                 }
@@ -159,7 +206,6 @@ namespace Motax.Controllers
                     db.Database.RollbackTransaction();
                     _logger.LogError(ex, "An error occurred during the checkout process");
                     ModelState.AddModelError("", $"An error occurred: {ex.Message}");
-                    // Log the error if necessary
                 }
             }
             else
@@ -176,6 +222,8 @@ namespace Motax.Controllers
             return View(Cart);
         }
 
+
+
         private string GenerateOrderCode()
         {
             return $"ORD-{Guid.NewGuid().ToString().Substring(0, 8).ToUpper()}";
@@ -185,5 +233,150 @@ namespace Motax.Controllers
         {
             return View();
         }
+
+        #region Payment Paypal
+        [Authorize]
+        [HttpPost("/CartAccessoriesItem/create-paypal-order")]
+        public async Task<IActionResult> CreatePaypalOrder(CancellationToken cancellationToken)
+        {
+            var tongTien = Cart.Sum(p => p.Total).ToString();
+            var donViTienTe = "USD";
+            var maDonHangThamChieu = GenerateOrderCode();
+
+            try
+            {
+                var response = await _paypalClient.CreateOrder(tongTien, donViTienTe, maDonHangThamChieu);
+
+                // Save order details to database
+                var order = new OrderAccessories
+                {
+                    AccountId = GetCurrentCustomerId(),
+                    Username = GetCurrentUserName(),
+                    Address = GetCurrentUserAddress(),
+                    Phone = GetCurrentUserPhone(),
+                    OrderDate = DateTime.Now,
+                    HowToPay = "PayPal",
+                    HowToTransport = "GRAB",
+                    Status = 1, // Set initial status to 1
+                    TypeCode = maDonHangThamChieu,
+                    Note = "" // Add any relevant note here
+                };
+
+                db.OrderAccessories.Add(order);
+                await db.SaveChangesAsync();
+
+                // Save order details
+                await SaveOrderDetails(order.Id);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var error = new { ex.GetBaseException().Message };
+                return BadRequest(error);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("/CartAccessoriesItem/capture-paypal-order")]
+        public async Task<IActionResult> CapturePaypalOrder(string orderID, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await _paypalClient.CaptureOrder(orderID);
+
+                // Update order details in the database
+                var order = await db.OrderAccessories.FirstOrDefaultAsync(o => o.TypeCode == orderID);
+                if (order != null)
+                {
+                    order.Status = 2; // Assuming 2 means 'Paid'
+                    await db.SaveChangesAsync();
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var error = new { ex.GetBaseException().Message };
+                return BadRequest(error);
+            }
+        }
+
+        private async Task SaveOrderDetails(int orderId)
+        {
+            var cthd = new List<OrderDetailAccessories>();
+            foreach (var item in Cart)
+            {
+                cthd.Add(new OrderDetailAccessories
+                {
+                    OrderAccessoriesId = orderId,
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+                    AccessoriesId = item.Id,
+                    Discount = 0
+                });
+            }
+            db.AddRange(cthd);
+            await db.SaveChangesAsync();
+        }
+
+        private int GetCurrentCustomerId()
+        {
+            var customerClaim = HttpContext.User.Claims.SingleOrDefault(p => p.Type == MySetting.CLAIM_CUSTOMERID);
+            return int.Parse(customerClaim?.Value ?? "0");
+        }
+
+        private string GetCurrentUserName()
+        {
+            var customerId = GetCurrentCustomerId();
+            var customer = db.Accounts.SingleOrDefault(kh => kh.Id == customerId);
+            return customer?.Username;
+        }
+
+        private string GetCurrentUserAddress()
+        {
+            var customerId = GetCurrentCustomerId();
+            var customer = db.Accounts.SingleOrDefault(kh => kh.Id == customerId);
+            return customer?.Address;
+        }
+
+        private string GetCurrentUserPhone()
+        {
+            var customerId = GetCurrentCustomerId();
+            var customer = db.Accounts.SingleOrDefault(kh => kh.Id == customerId);
+            return customer?.Phone;
+        }
+
+        #endregion
+
+
+
+        #region PaymentCallBack VnPay
+        [Authorize]
+        public IActionResult PaymentCallBack()
+        {
+            var response = _vnPayservice.PaymentExecute(Request.Query);
+
+            if (response == null || response.VnPayResponseCode != "00")
+            {
+                TempData["Message"] = $"Lỗi thanh toán VN Pay: {response.VnPayResponseCode}";
+                return RedirectToAction("PaymentFail");
+            }
+
+            // Retrieve the order using the order ID passed from VNPay
+            var orderId = response.OrderId;
+            var order = db.OrderAccessories.FirstOrDefault(o => o.TypeCode == orderId);
+            if (order != null)
+            {
+                order.Status = 2; // Assuming 2 means 'Paid'
+                db.SaveChanges();
+            }
+
+            TempData["Message"] = $"Thanh toán VNPay thành công";
+            return RedirectToAction("PaymentSuccess");
+        }
+        #endregion
+
+
     }
 }

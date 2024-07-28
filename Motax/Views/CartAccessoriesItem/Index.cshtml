@@ -14,7 +14,6 @@
     </div>
 </div>
 
-
 <div class="shop-cart py-120">
     <div class="container">
         <div class="shop-cart-wrapper">
@@ -33,7 +32,7 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
+                            <tr data-id="@item.Id">
                                 <td>
                                     <div class="cart-img">
                                         <a asp-action="Detail" asp-controller="Accessories" asp-route-id="@item.Id"><img src="~/Images/Accessories/Single/@item.ImageSingle" alt="@item.Name"></a>
@@ -50,15 +49,15 @@
 
                                 <td>
                                     <div class="cart-qty">
-                                        <button type="button" class="minus-btn"><i class="fal fa-minus"></i></button>
-                                        <input class="quantity" name="quantity" type="text" value="@item.Quantity" min="1">
-                                        <button type="button" class="plus-btn"><i class="fal fa-plus"></i></button>
+                                        <button type="button" class="minus-btn" data-id="@item.Id"><i class="fal fa-minus"></i></button>
+                                        <input class="quantity" name="quantity" type="text" value="@item.Quantity" readonly>
+                                        <button type="button" class="plus-btn" data-id="@item.Id"><i class="fal fa-plus"></i></button>
                                     </div>
                                 </td>
 
                                 <td>
                                     <div class="cart-sub-total">
-                                        <span>$@item.Total</span>
+                                        <span class="item-total">$@item.Total</span>
                                     </div>
                                 </td>
                                 <td>
@@ -82,9 +81,9 @@
                     <div class="col-md-6 col-lg-8">
                         <div class="cart-summary">
                             <ul>
-                                <li><strong>Sub Total:</strong> <span>$@Model.Sum(p=>p.Total)</span></li>
+                                <li><strong>Sub Total:</strong> <span id="sub-total">$@Model.Sum(p => p.Total)</span></li>
                                 <li><strong>Discount:</strong> <span>$0</span></li>
-                                <li class="cart-total"><strong>Total:</strong> <span>$@Model.Sum(p=>p.Total)</span></li>
+                                <li class="cart-total"><strong>Total:</strong> <span id="total">$@Model.Sum(p => p.Total)</span></li>
                             </ul>
                             <div class="text-end mt-40">
                                 <a asp-action="Checkout" asp-controller="CartAccessoriesItem" class="theme-btn">Checkout Now<i class="fas fa-arrow-right-long"></i></a>
@@ -98,7 +97,36 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        $(document).ready(function () {
+            $(".plus-btn").click(function () {
+                var id = $(this).data("id");
+                $.post("/CartAccessoriesItem/IncrementQuantity", { id: id }, function (data) {
+                    if (data.success) {
+                        var row = $("tr[data-id='" + id + "']");
+                        row.find(".quantity").val(data.quantity);
+                        row.find(".item-total").text("$" + data.itemTotal);
+                        updateTotals(data.total);
+                    }
+                });
+            });
+
+            $(".minus-btn").click(function () {
+                var id = $(this).data("id");
+                $.post("/CartAccessoriesItem/DecrementQuantity", { id: id }, function (data) {
+                    if (data.success) {
+                        var row = $("tr[data-id='" + id + "']");
+                        row.find(".quantity").val(data.quantity);
+                        row.find(".item-total").text("$" + data.itemTotal);
+                        updateTotals(data.total);
+                    }
+                });
+            });
+
+            function updateTotals(total) {
+                $("#sub-total").text("$" + total);
+                $("#total").text("$" + total);
+            }
+        });
+    </script>
 }

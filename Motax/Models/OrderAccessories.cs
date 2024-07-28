@@ -6,7 +6,7 @@
         public int? AccountId { get; set; }
         public string? TypeCode { get; set; }
         public DateTime? OrderDate { get; set; }
-        public DateTime? DeliveryDate { get; set; }
+        public string? DeliveryDate { get; set; }
         public string? Username { get; set; }
         public string? Address { get; set; }
         public string? Phone { get; set; }
@@ -16,5 +16,6 @@
         public string? Note { get; set; }
 
         public virtual Account? Account { get; set; }
+        public virtual ICollection<OrderDetailAccessories> OrderDetailAccessories { get; set; }
     }
 }

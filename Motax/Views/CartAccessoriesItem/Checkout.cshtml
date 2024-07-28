@@ -4,6 +4,55 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .checkout-widget {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f7f7f7;
+        border: 1px solid #e5e5e5;
+    }
+
+    .checkout-widget-title {
+        margin-bottom: 20px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .delivery-info {
+        margin-bottom: 15px;
+    }
+
+    .cart-summary {
+        padding: 20px;
+        background: #f7f7f7;
+        border: 1px solid #e5e5e5;
+    }
+
+    .cart-summary ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .cart-summary ul li {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .cart-summary ul li.cart-total {
+        font-weight: bold;
+    }
+
+    .text-end {
+        text-align: right;
+    }
+
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+</style>
+
 <div class="site-breadcrumb" style="background: url(assets/img/breadcrumb/01.jpg)">
     <div class="container">
         <h2 class="breadcrumb-title">Shop Checkout</h2>
@@ -17,29 +66,29 @@
 <div class="shop-checkout py-120">
     <div class="container">
         <div class="row">
-            <form asp-action="Checkout" asp-controller="CartAccessoriesItem" method="post">
-                <div class="col-lg-8">
-                    <div class="checkout-widget">
-                        <h4 class="checkout-widget-title">Shipping Address</h4>
-                        <div class="checkout-form">
-                            <div class="row">
-                                <div class="form-group pb-2">
-                                    <input type="checkbox" class="custom-checkbox" id="GiongKhachHang" name="GiongKhachHang">
-                                    <label for="GiongKhachHang">Same with customer information</label>
-                                </div>
-                                <div class="col-lg-6 delivery-info">
+            <div class="col-lg-8">
+                <div class="checkout-widget">
+                    <h4 class="checkout-widget-title">Shipping Address</h4>
+                    <div class="checkout-form">
+                        <form asp-action="Checkout" asp-controller="CartAccessoriesItem" method="post">
+                            <div class="form-group pb-2">
+                                <input type="checkbox" class="custom-checkbox" id="GiongKhachHang" name="GiongKhachHang">
+                                <label for="GiongKhachHang">Same with customer information</label>
+                            </div>
+                            <div class="row delivery-info">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>User Name</label>
                                         <input type="text" name="UserName" class="form-control" placeholder="Your First Name">
                                     </div>
                                 </div>
-                                <div class="col-lg-6 delivery-info">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Phone</label>
                                         <input type="text" name="Phone" class="form-control" placeholder="Your Last Name">
                                     </div>
                                 </div>
-                                <div class="col-lg-12 delivery-info">
+                                <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>Address</label>
                                         <input type="text" name="Address" class="form-control" placeholder="Your Address">
@@ -52,33 +101,45 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+
+                            <div class="text-end mt-40">
+                                <input type="submit" name="payment" value="Place order (COD)" class="btn btn-dark btn-block btn-rounded" />
+                            </div>
+
+                            <div class="text-end mt-40">
+                                <input type="submit" name="payment" value="Thanh toán VNPay" class="btn border-secondary text-uppercase text-primary w-100 mt-2" />
+                            </div>
+
+                        </form>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="checkout cart-summary">
-                        <h4 class="mb-30">Cart Summary</h4>
-                        <ul>
-                            @foreach (var item in Model)
-                            {
-                                <li><strong>Name accessory:</strong> <span>@item.Name</span></li>
-                                <li><strong>Accessories Qty:</strong> <span>@item.Quantity</span></li>
-                                <li><strong>Discount:</strong> <span>$0</span></li>
-                                <li><strong>Sub Total:</strong> <span>$@item.Total</span></li>
-                            }
-                            <li class="cart-total"><strong>Total Pay:</strong> <span>$@Model.Sum(p => p.Total)</span></li>
-                        </ul>
-                        <div class="text-end mt-40">
-                            <input type="submit" name="payment" class="btn btn-dark btn-block btn-rounded" value="Place order (COD)" />
-                        </div>
-                    </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="checkout cart-summary">
+                    <h4 class="mb-30">Cart Summary</h4>
+                    <ul>
+                        @foreach (var item in Model)
+                        {
+                            <li><strong>Name accessory:</strong> <span>@item.Name</span></li>
+                            <li><strong>Accessories Qty:</strong> <span>@item.Quantity</span></li>
+                            <li><strong>Discount:</strong> <span>$0</span></li>
+                            <li><strong>Sub Total:</strong> <span>$@item.Total</span></li>
+                            <span>-----------------------------------------------------------</span>
+                        }
+                        <li class="cart-total"><strong>Total Pay:</strong> <span>$@Model.Sum(p => p.Total)</span></li>
+
+                        
+                    </ul>
+                    <div id="paypal-button-container" class="form-item mt-3" style="max-width:1000px;"></div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="https://www.paypal.com/sdk/js?client-id=@ViewBag.PaypalClientId"></script>
     <script>
         $(document).ready(function () {
             $("#GiongKhachHang").change(function () {
@@ -91,5 +152,37 @@
                 }
             });
         });
+
+        paypal.Buttons({
+            style: {
+                layout: 'vertical',
+                color: 'silver',
+                tagline: 'false'
+            },
+            createOrder: (data, actions) => {
+                return fetch("/CartAccessoriesItem/create-paypal-order", {
+                    method: "post",
+                }).then((response) => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw error; });
+                    }
+
+                    return response.json();
+                }).then((order) => order.id)
+                    .catch(error => alert(error.message));
+            },
+            onApprove: (data, actions) => {
+                return fetch(`/CartAccessoriesItem/capture-paypal-order?orderId=${data.orderID}`, {
+                    method: "post",
+                }).then((response) => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw error; });
+                    }
+
+                    // Redirect to success page
+                    window.location.href = "/CartAccessoriesItem/PaymentSuccess";
+                }).catch(error => alert(error.message));
+            }
+        }).render('#paypal-button-container');
     </script>
 }

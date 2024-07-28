@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Motax.Models;
 using Motax.Filters;
 using System.Security.Claims;
+using Motax.Helpers;
+using Motax.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +56,16 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+//Register/Setting Paypal client
+builder.Services.AddSingleton(x => new PaypalClient(
+    builder.Configuration["PaypalOptions:AppId"],
+    builder.Configuration["PaypalOptions:AppSecret"],
+    builder.Configuration["PaypalOptions:Mode"]
+));
+
+//Register/Setting VN Pay
+builder.Services.AddSingleton<IVnPayService, VnPayService>();
 
 var app = builder.Build();
 
