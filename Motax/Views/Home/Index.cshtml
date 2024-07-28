@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Motax.ViewModels.HomeViewModel
+@{
     Layout = "_layout";
 }
 
@@ -29,7 +30,7 @@
                     <div class="col-md-12 col-lg-6">
                         <div class="hero-right">
                             <div class="hero-img">
-                                <img src="~/Frontend/assets/img/slider/hero-1.png" alt data-animation="fadeInRight" data-delay=".25s">
+                                <img src="~/Frontend/assets/img/slider/hero-1.png" alt="" data-animation="fadeInRight" data-delay=".25s">
                             </div>
                         </div>
                     </div>
@@ -328,285 +329,67 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="car-item wow fadeInUp" data-wow-delay=".25s">
-                    <div class="car-img">
-                        <span class="car-status status-1">Used</span>
-                        <img src="~/Frontend/assets/img/car/01.jpg" alt>
-                        <div class="car-btns">
-                            <a href="#"><i class="far fa-heart"></i></a>
-                            <a href="#"><i class="far fa-arrows-repeat"></i></a>
-                        </div>
-                    </div>
-                    <div class="car-content">
-                        <div class="car-top">
-                            <h4><a href="#">Mercedes Benz Car</a></h4>
-                            <div class="car-rate">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>5.0 (58.5k Review)</span>
+             @foreach (var item in Model.Cars)
+            {
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="car-item wow fadeInUp" data-wow-delay=".25s">
+                        <div class="car-img">
+                            <span class="car-status status-1">Used</span>
+                            <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">
+                                <img src="~/Images/Car/Single/@item.ImageSingle" alt="@item.Name">
+                            </a>
+                            <div class="car-btns">
+                                <form asp-action="AddToWishlist" asp-controller="Car" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="carId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-link p-0">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </form>
+                                <form asp-action="AddToCompare" asp-controller="Car" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="carId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-link p-0">
+                                        <i class="far fa-arrows-repeat"></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
-                        <ul class="car-list">
-                            <li><i class="far fa-steering-wheel"></i>Automatic</li>
-                            <li><i class="far fa-road"></i>10.15km / 1-litre</li>
-                            <li><i class="far fa-car"></i>Model: 2023</li>
-                            <li><i class="far fa-gas-pump"></i>Hybrid</li>
-                        </ul>
-                        <div class="car-footer">
-                            <span class="car-price">$45,620</span>
-                            <a href="#" class="theme-btn"><span class="far fa-eye"></span>Details</a>
+                        <div class="car-content">
+                            <div class="car-top">
+                                <h4><a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">@item.Name</a></h4>
+                                <div class="car-rate">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= Math.Ceiling(item.AverageRating))
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="far fa-star"></i>
+                                        }
+                                    }
+                                    <span>@item.AverageRating.ToString("0.0") (@item.ReviewCount Reviews)</span>
+                                </div>
+                            </div>
+                            <ul class="car-list">
+                                <li><i class="far fa-steering-wheel"></i>@item.Transmission</li>
+                                <li><i class="far fa-road"></i>@item.Mileage</li>
+                                <li><i class="far fa-car"></i>Model: @item.Year</li>
+                                <li><i class="far fa-gas-pump"></i>@item.FuelType</li>
+                            </ul>
+                            <div class="car-footer">
+                                <span class="car-price">$@item.Price</span>
+                                <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id" class="theme-btn"><span class="far fa-eye"></span>Details</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="car-item wow fadeInUp" data-wow-delay=".50s">
-                    <div class="car-img">
-                        <img src="~/Frontend/assets/img/car/02.jpg" alt>
-                        <div class="car-btns">
-                            <a href="#"><i class="far fa-heart"></i></a>
-                            <a href="#"><i class="far fa-arrows-repeat"></i></a>
-                        </div>
-                    </div>
-                    <div class="car-content">
-                        <div class="car-top">
-                            <h4><a href="#">Yellow Ferrari 458</a></h4>
-                            <div class="car-rate">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>5.0 (58.5k Review)</span>
-                            </div>
-                        </div>
-                        <ul class="car-list">
-                            <li><i class="far fa-steering-wheel"></i>Automatic</li>
-                            <li><i class="far fa-road"></i>10.15km / 1-litre</li>
-                            <li><i class="far fa-car"></i>Model: 2023</li>
-                            <li><i class="far fa-gas-pump"></i>Hybrid</li>
-                        </ul>
-                        <div class="car-footer">
-                            <span class="car-price">$90,250</span>
-                            <a href="#" class="theme-btn"><span class="far fa-eye"></span>Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="car-item wow fadeInUp" data-wow-delay=".75s">
-                    <div class="car-img">
-                        <img src="~/Frontend/assets/img/car/03.jpg" alt>
-                        <div class="car-btns">
-                            <a href="#"><i class="far fa-heart"></i></a>
-                            <a href="#"><i class="far fa-arrows-repeat"></i></a>
-                        </div>
-                    </div>
-                    <div class="car-content">
-                        <div class="car-top">
-                            <h4><a href="#">Black Audi Q7</a></h4>
-                            <div class="car-rate">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>5.0 (58.5k Review)</span>
-                            </div>
-                        </div>
-                        <ul class="car-list">
-                            <li><i class="far fa-steering-wheel"></i>Automatic</li>
-                            <li><i class="far fa-road"></i>10.15km / 1-litre</li>
-                            <li><i class="far fa-car"></i>Model: 2023</li>
-                            <li><i class="far fa-gas-pump"></i>Hybrid</li>
-                        </ul>
-                        <div class="car-footer">
-                            <span class="car-price">$44,350</span>
-                            <a href="#" class="theme-btn"><span class="far fa-eye"></span>Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="car-item wow fadeInUp" data-wow-delay="1s">
-                    <div class="car-img">
-                        <span class="car-status status-2">New</span>
-                        <img src="~/Frontend/assets/img/car/04.jpg" alt>
-                        <div class="car-btns">
-                            <a href="#"><i class="far fa-heart"></i></a>
-                            <a href="#"><i class="far fa-arrows-repeat"></i></a>
-                        </div>
-                    </div>
-                    <div class="car-content">
-                        <div class="car-top">
-                            <h4><a href="#">BMW Sports Car</a></h4>
-                            <div class="car-rate">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>5.0 (58.5k Review)</span>
-                            </div>
-                        </div>
-                        <ul class="car-list">
-                            <li><i class="far fa-steering-wheel"></i>Automatic</li>
-                            <li><i class="far fa-road"></i>10.15km / 1-litre</li>
-                            <li><i class="far fa-car"></i>Model: 2023</li>
-                            <li><i class="far fa-gas-pump"></i>Hybrid</li>
-                        </ul>
-                        <div class="car-footer">
-                            <span class="car-price">$78,760</span>
-                            <a href="#" class="theme-btn"><span class="far fa-eye"></span>Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="car-item wow fadeInUp" data-wow-delay=".25s">
-                    <div class="car-img">
-                        <span class="car-status status-1">Used</span>
-                        <img src="~/Frontend/assets/img/car/05.jpg" alt>
-                        <div class="car-btns">
-                            <a href="#"><i class="far fa-heart"></i></a>
-                            <a href="#"><i class="far fa-arrows-repeat"></i></a>
-                        </div>
-                    </div>
-                    <div class="car-content">
-                        <div class="car-top">
-                            <h4><a href="#">White Tesla Car</a></h4>
-                            <div class="car-rate">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>5.0 (58.5k Review)</span>
-                            </div>
-                        </div>
-                        <ul class="car-list">
-                            <li><i class="far fa-steering-wheel"></i>Automatic</li>
-                            <li><i class="far fa-road"></i>10.15km / 1-litre</li>
-                            <li><i class="far fa-car"></i>Model: 2023</li>
-                            <li><i class="far fa-gas-pump"></i>Hybrid</li>
-                        </ul>
-                        <div class="car-footer">
-                            <span class="car-price">$64,230</span>
-                            <a href="#" class="theme-btn"><span class="far fa-eye"></span>Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="car-item wow fadeInUp" data-wow-delay=".50s">
-                    <div class="car-img">
-                        <span class="car-status status-2">New</span>
-                        <img src="~/Frontend/assets/img/car/06.jpg" alt>
-                        <div class="car-btns">
-                            <a href="#"><i class="far fa-heart"></i></a>
-                            <a href="#"><i class="far fa-arrows-repeat"></i></a>
-                        </div>
-                    </div>
-                    <div class="car-content">
-                        <div class="car-top">
-                            <h4><a href="#">White Nissan Car</a></h4>
-                            <div class="car-rate">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>5.0 (58.5k Review)</span>
-                            </div>
-                        </div>
-                        <ul class="car-list">
-                            <li><i class="far fa-steering-wheel"></i>Automatic</li>
-                            <li><i class="far fa-road"></i>10.15km / 1-litre</li>
-                            <li><i class="far fa-car"></i>Model: 2023</li>
-                            <li><i class="far fa-gas-pump"></i>Hybrid</li>
-                        </ul>
-                        <div class="car-footer">
-                            <span class="car-price">$34,540</span>
-                            <a href="#" class="theme-btn"><span class="far fa-eye"></span>Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="car-item wow fadeInUp" data-wow-delay=".75s">
-                    <div class="car-img">
-                        <img src="~/Frontend/assets/img/car/07.jpg" alt>
-                        <div class="car-btns">
-                            <a href="#"><i class="far fa-heart"></i></a>
-                            <a href="#"><i class="far fa-arrows-repeat"></i></a>
-                        </div>
-                    </div>
-                    <div class="car-content">
-                        <div class="car-top">
-                            <h4><a href="#">Mercedes Benz Suv</a></h4>
-                            <div class="car-rate">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>5.0 (58.5k Review)</span>
-                            </div>
-                        </div>
-                        <ul class="car-list">
-                            <li><i class="far fa-steering-wheel"></i>Automatic</li>
-                            <li><i class="far fa-road"></i>10.15km / 1-litre</li>
-                            <li><i class="far fa-car"></i>Model: 2023</li>
-                            <li><i class="far fa-gas-pump"></i>Hybrid</li>
-                        </ul>
-                        <div class="car-footer">
-                            <span class="car-price">$75,820</span>
-                            <a href="#" class="theme-btn"><span class="far fa-eye"></span>Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="car-item wow fadeInUp" data-wow-delay="1s">
-                    <div class="car-img">
-                        <img src="~/Frontend/assets/img/car/08.jpg" alt>
-                        <div class="car-btns">
-                            <a href="#"><i class="far fa-heart"></i></a>
-                            <a href="#"><i class="far fa-arrows-repeat"></i></a>
-                        </div>
-                    </div>
-                    <div class="car-content">
-                        <div class="car-top">
-                            <h4><a href="#">Red Hyundai Car</a></h4>
-                            <div class="car-rate">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span>5.0 (58.5k Review)</span>
-                            </div>
-                        </div>
-                        <ul class="car-list">
-                            <li><i class="far fa-steering-wheel"></i>Automatic</li>
-                            <li><i class="far fa-road"></i>10.15km / 1-litre</li>
-                            <li><i class="far fa-car"></i>Model: 2023</li>
-                            <li><i class="far fa-gas-pump"></i>Hybrid</li>
-                        </ul>
-                        <div class="car-footer">
-                            <span class="car-price">$25,620</span>
-                            <a href="#" class="theme-btn"><span class="far fa-eye"></span>Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
         <div class="text-center mt-4">
-            <a href="#" class="theme-btn">Load More <i class="far fa-arrow-rotate-right"></i> </a>
+            <a asp-action="Index" asp-controller="Car" class="theme-btn">Load More <i class="far fa-arrow-rotate-right"></i> </a>
         </div>
     </div>
 </div>
@@ -624,102 +407,20 @@
             </div>
         </div>
         <div class="row">
+             @foreach (var item in Model.Categories)
+            {
             <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay=".25s">
+                    <a asp-action="Index" asp-controller="Accessories" asp-route-dealer="@item.Id" class="category-item wow fadeInUp" data-wow-delay=".25s">
                     <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/01.png" alt>
+                            <img src="~/Images/Category/Car/@item.ExistingImage" alt="@item.Name">
                     </div>
-                    <h5>Sedan</h5>
+                    <h5>@item.Name</h5>
                 </a>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay=".50s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/02.png" alt>
-                    </div>
-                    <h5>Compact</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay=".75s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/03.png" alt>
-                    </div>
-                    <h5>Convertible</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay="1s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/04.png" alt>
-                    </div>
-                    <h5>SUV</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay="1.25s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/05.png" alt>
-                    </div>
-                    <h5>Crossover</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay="1.50s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/06.png" alt>
-                    </div>
-                    <h5>Wagon</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay=".25s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/07.png" alt>
-                    </div>
-                    <h5>Sports</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay=".50s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/08.png" alt>
-                    </div>
-                    <h5>Pickup</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay=".75s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/09.png" alt>
-                    </div>
-                    <h5>Family MPV</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay="1s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/10.png" alt>
-                    </div>
-                    <h5>Coupe</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay="1.25s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/11.png" alt>
-                    </div>
-                    <h5>Electric</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-item wow fadeInUp" data-wow-delay="1.50s">
-                    <div class="category-img">
-                        <img src="~/Frontend/assets/img/category/12.png" alt>
-                    </div>
-                    <h5>Luxury</h5>
-                </a>
-            </div>
+            }
+        </div>
+        <div class="text-center mt-4">
+            <a asp-action="Index" asp-controller="Car" class="theme-btn">Load More <i class="far fa-arrow-rotate-right"></i> </a>
         </div>
     </div>
 </div>
@@ -754,126 +455,29 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6 col-lg-3">
-                <div class="dealer-item wow fadeInUp" data-wow-delay=".25s">
+             @foreach (var item in Model.Dealers)
+            {
+                <div class="col-md-6 col-lg-3">
+                    <div class="dealer-item wow fadeInUp" data-wow-delay=".25s">
                     <div class="dealer-img">
-                        <span class="dealer-listing">25 Listing</span>
-                        <img src="~/Frontend/assets/img/dealer/01.png" alt>
+                            <span class="dealer-listing">@item.Quantity</span>
+                            <a asp-action="Detail" asp-controller="Dealer" asp-route-id="@item.Id">
+                                <img src="~/Images/Dealers/Dealer/@item.ImageBackground" alt="@item.Name">
+                            </a>
                     </div>
                     <div class="dealer-content">
-                        <h4><a href="#">Automotive Gear</a></h4>
+                            <h4><a asp-action="Detail" asp-controller="Dealer" asp-route-id="@item.Id">@item.Name</a></h4>
                         <ul>
-                            <li><i class="far fa-location-dot"></i> 25/B Milford Road, New York</li>
-                            <li><i class="far fa-phone"></i> <a href="tel:+21236547898">+2 123 654 7898</a></li>
+                                <li><i class="far fa-location-dot"></i> @item.Address</li>
+                                <li><i class="far fa-phone"></i> <a href="">@item.Phone</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="dealer-item wow fadeInUp" data-wow-delay=".50s">
-                    <div class="dealer-img">
-                        <span class="dealer-listing">35 Listing</span>
-                        <img src="~/Frontend/assets/img/dealer/02.png" alt>
-                    </div>
-                    <div class="dealer-content">
-                        <h4><a href="#">Keithson Car</a></h4>
-                        <ul>
-                            <li><i class="far fa-location-dot"></i> 25/B Milford Road, New York</li>
-                            <li><i class="far fa-phone"></i> <a href="tel:+21236547898">+2 123 654 7898</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="dealer-item wow fadeInUp" data-wow-delay=".75s">
-                    <div class="dealer-img">
-                        <span class="dealer-listing">15 Listing</span>
-                        <img src="~/Frontend/assets/img/dealer/03.png" alt>
-                    </div>
-                    <div class="dealer-content">
-                        <h4><a href="#">Superious Automotive</a></h4>
-                        <ul>
-                            <li><i class="far fa-location-dot"></i> 25/B Milford Road, New York</li>
-                            <li><i class="far fa-phone"></i> <a href="tel:+21236547898">+2 123 654 7898</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="dealer-item wow fadeInUp" data-wow-delay="1s">
-                    <div class="dealer-img">
-                        <span class="dealer-listing">20 Listing</span>
-                        <img src="~/Frontend/assets/img/dealer/04.png" alt>
-                    </div>
-                    <div class="dealer-content">
-                        <h4><a href="#">Racing Gear Car</a></h4>
-                        <ul>
-                            <li><i class="far fa-location-dot"></i> 25/B Milford Road, New York</li>
-                            <li><i class="far fa-phone"></i> <a href="tel:+21236547898">+2 123 654 7898</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="dealer-item wow fadeInUp" data-wow-delay=".25s">
-                    <div class="dealer-img">
-                        <span class="dealer-listing">19 Listing</span>
-                        <img src="~/Frontend/assets/img/dealer/05.png" alt>
-                    </div>
-                    <div class="dealer-content">
-                        <h4><a href="#">Car Showromio</a></h4>
-                        <ul>
-                            <li><i class="far fa-location-dot"></i> 25/B Milford Road, New York</li>
-                            <li><i class="far fa-phone"></i> <a href="tel:+21236547898">+2 123 654 7898</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="dealer-item wow fadeInUp" data-wow-delay=".50s">
-                    <div class="dealer-img">
-                        <span class="dealer-listing">40 Listing</span>
-                        <img src="~/Frontend/assets/img/dealer/06.png" alt>
-                    </div>
-                    <div class="dealer-content">
-                        <h4><a href="#">Fastspeedio Car</a></h4>
-                        <ul>
-                            <li><i class="far fa-location-dot"></i> 25/B Milford Road, New York</li>
-                            <li><i class="far fa-phone"></i> <a href="tel:+21236547898">+2 123 654 7898</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="dealer-item wow fadeInUp" data-wow-delay=".75s">
-                    <div class="dealer-img">
-                        <span class="dealer-listing">59 Listing</span>
-                        <img src="~/Frontend/assets/img/dealer/07.png" alt>
-                    </div>
-                    <div class="dealer-content">
-                        <h4><a href="#">Star AutoMall</a></h4>
-                        <ul>
-                            <li><i class="far fa-location-dot"></i> 25/B Milford Road, New York</li>
-                            <li><i class="far fa-phone"></i> <a href="tel:+21236547898">+2 123 654 7898</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="dealer-item wow fadeInUp" data-wow-delay="1s">
-                    <div class="dealer-img">
-                        <span class="dealer-listing">28 Listing</span>
-                        <img src="~/Frontend/assets/img/dealer/08.png" alt>
-                    </div>
-                    <div class="dealer-content">
-                        <h4><a href="#">Superspeed Auto</a></h4>
-                        <ul>
-                            <li><i class="far fa-location-dot"></i> 25/B Milford Road, New York</li>
-                            <li><i class="far fa-phone"></i> <a href="tel:+21236547898">+2 123 654 7898</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            }
+        </div>
+        <div class="text-center mt-4">
+            <a asp-action="Index" asp-controller="Dealer" class="theme-btn">Load More <i class="far fa-arrow-rotate-right"></i> </a>
         </div>
     </div>
 </div>
@@ -977,54 +581,20 @@
             </div>
         </div>
         <div class="row">
+            @foreach (var item in Model.Brands)
+            {
             <div class="col-6 col-md-3 col-lg-2">
-                <a href="#" class="brand-item wow fadeInUp" data-wow-delay=".25s">
+                    <a asp-action="Index" asp-controller="Car" asp-route-brand="@item.Id" class="brand-item wow fadeInUp" data-wow-delay=".25s">
                     <div class="brand-img">
-                        <img src="~/Frontend/assets/img/brand/01.png" alt>
+                            <img src="~/Images/Brand/Car/@item.ExistingImage" width="120px" height="120px" />
                     </div>
-                    <h5>Ferrari</h5>
+                    <h5>@item.Name</h5>
                 </a>
             </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <a href="#" class="brand-item wow fadeInUp" data-wow-delay=".50s">
-                    <div class="brand-img">
-                        <img src="~/Frontend/assets/img/brand/02.png" alt>
-                    </div>
-                    <h5>Hyundai</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <a href="#" class="brand-item wow fadeInUp" data-wow-delay=".75s">
-                    <div class="brand-img">
-                        <img src="~/Frontend/assets/img/brand/03.png" alt>
-                    </div>
-                    <h5>Mercedes Benz</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <a href="#" class="brand-item wow fadeInUp" data-wow-delay="1s">
-                    <div class="brand-img">
-                        <img src="~/Frontend/assets/img/brand/04.png" alt>
-                    </div>
-                    <h5>Toyota</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <a href="#" class="brand-item wow fadeInUp" data-wow-delay="1.25s">
-                    <div class="brand-img">
-                        <img src="~/Frontend/assets/img/brand/05.png" alt>
-                    </div>
-                    <h5>BMW</h5>
-                </a>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <a href="#" class="brand-item wow fadeInUp" data-wow-delay="1.50s">
-                    <div class="brand-img">
-                        <img src="~/Frontend/assets/img/brand/06.png" alt>
-                    </div>
-                    <h5>Nissan</h5>
-                </a>
-            </div>
+            }
+        </div>
+        <div class="text-center mt-4">
+            <a asp-action="Index" asp-controller="Car" class="theme-btn">Load More <i class="far fa-arrow-rotate-right"></i> </a>
         </div>
     </div>
 </div>

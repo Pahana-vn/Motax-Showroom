@@ -21,7 +21,9 @@ namespace Motax.Controllers
         #region Index
         public IActionResult Index(int? brand, int? dealer)
         {
-            var cars = db.Cars.AsQueryable();
+            var cars = db.Cars
+                .Include(p => p.Comments)
+                .AsQueryable();
 
             if (brand.HasValue && brand.Value != 0)
             {
@@ -45,8 +47,149 @@ namespace Motax.Controllers
                 Price = p.Price,
                 ImageSingle = p.ImageSingle,
                 NameBrand = p.Brand != null ? p.Brand.Name : null,
-                IsAvailable = p.IsAvailable // Add this line
+                IsAvailable = p.IsAvailable,
+                AverageRating = p.Comments.Any() ? p.Comments.Average(c => c.Rating) : 0,
+                ReviewCount = p.Comments.Count()
             });
+
+            return View(result);
+        }
+
+        public IActionResult Index2(int? brand, int? dealer)
+        {
+            var cars = db.Cars
+                .Include(p => p.Comments)
+                .AsQueryable();
+
+            if (brand.HasValue && brand.Value != 0)
+            {
+                cars = cars.Where(p => p.BrandId == brand.Value);
+            }
+
+            if (dealer.HasValue)
+            {
+                cars = cars.Where(p => p.DealerId == dealer.Value);
+            }
+
+            var result = cars.Select(p => new CarVM
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Condition = p.Condition,
+                FuelType = p.FuelType,
+                Mileage = p.Mileage,
+                Transmission = p.Transmission,
+                Year = p.Year,
+                Price = p.Price,
+                ImageSingle = p.ImageSingle,
+                NameBrand = p.Brand != null ? p.Brand.Name : null,
+                IsAvailable = p.IsAvailable,
+                AverageRating = p.Comments.Any() ? p.Comments.Average(c => c.Rating) : 0,
+                ReviewCount = p.Comments.Count()
+            });
+
+            return View(result);
+        }
+
+        #endregion
+
+        #region Comment
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddComment(CommentViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var comment = new Comment
+                {
+                    CarId = model.CarId,
+                    AccountId = int.Parse(userId),
+                    AccessoriesId = model.AccessoriesId,  // Handle AccessoriesId
+                    Rating = model.Rating,
+                    Comment1 = model.Comment1,
+                    CommentDate = DateTime.Now
+                };
+
+                db.Comments.Add(comment);
+                await db.SaveChangesAsync();
+
+                return RedirectToAction("Detail", new { id = model.CarId });
+            }
+
+            return View(model);
+        }
+        #endregion
+
+        #region Detail
+        public IActionResult Detail(int id)
+        {
+            var data = db.Cars
+                .Include(p => p.Brand)
+                .Include(p => p.Dealer)
+                .Include(p => p.Comments)
+                .ThenInclude(c => c.Account)
+                .SingleOrDefault(p => p.Id == id);
+
+            if (data == null)
+            {
+                TempData["error"] = "This product was not found";
+                return Redirect("/404");
+            }
+
+            var relatedCars = db.Cars
+                .Where(p => p.BrandId == data.BrandId && p.Id != id)
+                .Select(p => new CarVM
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Condition = p.Condition,
+                    FuelType = p.FuelType,
+                    Mileage = p.Mileage,
+                    Transmission = p.Transmission,
+                    Year = p.Year,
+                    Price = p.Price,
+                    ImageSingle = p.ImageSingle,
+                    NameBrand = p.Brand != null ? p.Brand.Name : null,
+                    IsAvailable = p.IsAvailable
+                }).ToList();
+
+            var result = new DetailCarVM
+            {
+                Id = data.Id,
+                Name = data.Name,
+                ImageSingle = data.ImageSingle,
+                ImageMultiple = data.ImageMultiple,
+                Price = data.Price,
+                NameBrand = data.Brand?.Name,
+                AddressDealer = data.Dealer?.Address,
+                BodyType = data.BodyType,
+                Condition = data.Condition,
+                FuelType = data.FuelType,
+                Mileage = data.Mileage,
+                Transmission = data.Transmission,
+                Year = data.Year,
+                Color = data.Color,
+                Doors = data.Doors,
+                Cylinders = data.Cylinders,
+                EngineSize = data.EngineSize,
+                Vin = data.Vin,
+                Title = data.Title,
+                CarFeatures = data.CarFeatures,
+                PriceType = data.PriceType,
+                IsAvailable = data.IsAvailable,
+                RelatedCars = relatedCars,
+                Comments = data.Comments.Select(c => new CommentViewModel
+                {
+                    CarId = c.CarId,
+                    Rating = c.Rating,
+                    Comment1 = c.Comment1,
+                    CommentDate = c.CommentDate,
+                    AccountName = c.Account.Username // Assuming Account has a Username property
+                }).ToList()
+            };
+
             return View(result);
         }
         #endregion
@@ -92,67 +235,6 @@ namespace Motax.Controllers
                 IsAvailable = p.IsAvailable // Add this line
             }).ToList();
             return View("Index", result);
-        }
-        #endregion
-
-        #region Detail
-        public IActionResult Detail(int id)
-        {
-            var data = db.Cars
-                .Include(p => p.Brand)
-                .Include(p => p.Dealer)
-                .SingleOrDefault(p => p.Id == id);
-
-            if (data == null)
-            {
-                TempData["error"] = "This product was not found";
-                return Redirect("/404");
-            }
-            //them xe có liên quan
-            var relatedCars = db.Cars
-           .Where(p => p.BrandId == data.BrandId && p.Id != id)
-           .Select(p => new CarVM
-           {
-               Id = p.Id,
-               Name = p.Name,
-               Condition = p.Condition,
-               FuelType = p.FuelType,
-               Mileage = p.Mileage,
-               Transmission = p.Transmission,
-               Year = p.Year,
-               Price = p.Price,
-               ImageSingle = p.ImageSingle,
-               NameBrand = p.Brand != null ? p.Brand.Name : null,
-               IsAvailable = p.IsAvailable // Add this line
-           }).ToList();
-
-            var result = new DetailCarVM
-            {
-                Id = data.Id,
-                Name = data.Name,
-                ImageSingle = data.ImageSingle,
-                ImageMultiple = data.ImageMultiple,
-                Price = data.Price,
-                NameBrand = data.Brand?.Name,
-                AddressDealer = data.Dealer?.Address,
-                BodyType = data.BodyType,
-                Condition = data.Condition,
-                FuelType = data.FuelType,
-                Mileage = data.Mileage,
-                Transmission = data.Transmission,
-                Year = data.Year,
-                Color = data.Color,
-                Doors = data.Doors,
-                Cylinders = data.Cylinders,
-                EngineSize = data.EngineSize,
-                Vin = data.Vin,
-                Title = data.Title,
-                CarFeatures = data.CarFeatures,
-                PriceType = data.PriceType,
-                IsAvailable = data.IsAvailable, // Add this line
-                RelatedCars = relatedCars
-            };
-            return View(result);
         }
         #endregion
 

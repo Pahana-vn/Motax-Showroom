@@ -39,6 +39,15 @@
 
         .car-btns a {
             text-decoration: none; /* Loại bỏ gạch chân cho các liên kết */
+        }
+
+    .car-rate .fas {
+        color: #f39c12; /* Yellow color for filled stars */
+    }
+
+    .car-rate .far {
+        color: #ccc; /* Grey color for empty stars */
+    }
 </style>
 
 
@@ -56,7 +65,7 @@
 {
     <div class="col-md-6 col-lg-4">
         <div class="car-item">
-            <div  class="car-img">
+            <div class="car-img">
                 @if (item.Condition == "New")
                 {
                     <span class="car-status status-2">@item.Condition</span>
@@ -90,12 +99,18 @@
                 <div class="car-top">
                     <h4><a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">@item.Name</a></h4>
                     <div class="car-rate">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <span>5.0 (58.5k Review)</span>
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Math.Ceiling(item.AverageRating))
+                            {
+                                <i class="fas fa-star"></i>
+                            }
+                            else
+                            {
+                                <i class="far fa-star"></i>
+                            }
+                        }
+                        <span>@item.AverageRating.ToString("0.0") (@item.ReviewCount Reviews)</span>
                     </div>
                 </div>
                 <ul class="car-list">

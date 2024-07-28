@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="site-breadcrumb" style="background: url(Frontend/assets/img/breadcrumb/01.jpg)">
+<div class="site-breadcrumb" style="background: url(/Frontend/assets/img/breadcrumb/01.jpg)">
     <div class="container">
         <h2 class="breadcrumb-title">Detail Car</h2>
         <ul class="breadcrumb-menu">
@@ -184,17 +184,34 @@
                             <div class="car-single-overview">
                                 <h4 class="mb-3">Description</h4>
                                 <div class="mb-4">
-                                    @Model.Title
+                                    @Html.Raw(Model.Title)
                                 </div>
                                 <h4 class="mb-3">Car Features</h4>
                                 <div class="row mb-3">
                                     <div class="col-lg-4">
-
-                                        @Model.CarFeatures
-
+                                        <ul class="car-single-list">
+                                            <li><i class="far fa-check-circle"></i> Multi-zone A/C</li>
+                                            <li><i class="far fa-check-circle"></i> Heated front seats</li>
+                                            <li><i class="far fa-check-circle"></i> Navigation system</li>
+                                            <li><i class="far fa-check-circle"></i> Leather seats</li>
+                                        </ul>
                                     </div>
-
-
+                                    <div class="col-lg-4">
+                                        <ul class="car-single-list">
+                                            <li><i class="far fa-check-circle"></i> Premium sound system</li>
+                                            <li><i class="far fa-check-circle"></i> Bluetooth</li>
+                                            <li><i class="far fa-check-circle"></i> Andriod Auto</li>
+                                            <li><i class="far fa-check-circle"></i> Intermittent wipers</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <ul class="car-single-list">
+                                            <li><i class="far fa-check-circle"></i> Memory seat</li>
+                                            <li><i class="far fa-check-circle"></i> Adaptive Cruise Control</li>
+                                            <li><i class="far fa-check-circle"></i> Cooled Seats</li>
+                                            <li><i class="far fa-check-circle"></i> Keyles Start</li>
+                                        </ul>
+                                    </div>
                                 </div>
 
                                 <h4 class="mb-4">Location</h4>
@@ -205,69 +222,76 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="car-single-widget">
                             <div class="car-single-review">
                                 <div class="blog-comments mb-0">
-                                    <h4>Reviews (05)</h4>
+                                    <h4>Reviews (@Model.Comments.Count)</h4>
                                     <div class="blog-comments-wrapper">
-                                        <div class="blog-comments-single">
-                                            <img src="assets/img/blog/com-1.jpg" alt="thumb">
-                                            <div class="blog-comments-content">
-                                                <h5>Jesse Sinkler</h5>
-                                                <span><i class="far fa-clock"></i> January 31, 2023</span>
-                                                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
-                                                <a href="#"><i class="far fa-reply"></i> Reply</a>
+                                        @foreach (var comment in Model.Comments)
+                                        {
+                                            <div class="blog-comments-single">
+
+                                                @if (User.Identity.IsAuthenticated)
+                                                {
+                                                    var imagePath = ViewData["UserAvatar"] as string;
+                                                    if (!string.IsNullOrEmpty(imagePath))
+                                                    {
+                                                        <img src="@Url.Content("~/Images/Account/Avatar/" + imagePath)" alt="User Avatar" class="avatar-img">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
+                                                }
+
+                                                <div class="blog-comments-content">
+                                                    <h5>@comment.AccountName</h5>
+                                                    <div class="comment-rating">
+                                                        @for (int i = 1; i <= 5; i++)
+                                                        {
+                                                            if (i <= comment.Rating)
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="far fa-star"></i>
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <span><i class="far fa-clock"></i> @comment.CommentDate.ToString("MMMM dd, yyyy")</span>
+                                                    <p>@comment.Comment1</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="blog-comments-single">
-                                            <img src="assets/img/blog/com-2.jpg" alt="thumb">
-                                            <div class="blog-comments-content">
-                                                <h5>Daniel Wellman</h5>
-                                                <span><i class="far fa-clock"></i> January 31, 2023</span>
-                                                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
-                                                <a href="#"><i class="far fa-reply"></i> Reply</a>
-                                            </div>
-                                        </div>
-                                        <div class="blog-comments-single">
-                                            <img src="assets/img/blog/com-3.jpg" alt="thumb">
-                                            <div class="blog-comments-content">
-                                                <h5>Kenneth Evans</h5>
-                                                <span><i class="far fa-clock"></i> January 31, 2023</span>
-                                                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
-                                                <a href="#"><i class="far fa-reply"></i> Reply</a>
-                                            </div>
-                                        </div>
+                                        }
                                     </div>
                                     <div class="blog-comments-form">
                                         <h4>Leave A Review</h4>
-                                        <form action="#">
+                                        <form asp-action="AddComment" method="post">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group car-review-rating">
                                                         <label>Your Rating</label>
-                                                        <div>
-                                                            <i class="far fa-star"></i>
-                                                            <i class="far fa-star"></i>
-                                                            <i class="far fa-star"></i>
-                                                            <i class="far fa-star"></i>
-                                                            <i class="far fa-star"></i>
+                                                        <div class="star-rating">
+                                                            <i class="far fa-star" data-value="1"></i>
+                                                            <i class="far fa-star" data-value="2"></i>
+                                                            <i class="far fa-star" data-value="3"></i>
+                                                            <i class="far fa-star" data-value="4"></i>
+                                                            <i class="far fa-star" data-value="5"></i>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" placeholder="Your Name*">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <input type="email" class="form-control" placeholder="Your Email*">
+                                                        <input type="hidden" name="Rating" id="Rating" value="0">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-<textarea class="form-control" rows="5" placeholder="Your Comment*"></textarea>
+                                                        <textarea class="form-control" name="Comment1" rows="5" placeholder="Your Comment*"></textarea>
                                                     </div>
+                                                    <input type="hidden" name="CarId" value="@Model.Id" />
                                                     <button type="submit" class="theme-btn"><span class="far fa-paper-plane"></span> Submit Review</button>
                                                 </div>
                                             </div>
@@ -276,6 +300,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -301,6 +326,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="car-single-widget">
                         <h5 class="mb-3">Contact Details</h5>
                         <div class="car-single-form">
@@ -335,6 +361,7 @@
 
                 </div>
             </div>
+
             <div class="car-single-related mt-5">
                 <h3 class="mb-30">Related Listing</h3>
                 <div class="row">
@@ -380,7 +407,62 @@
                         }}
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.star-rating i').on('mouseover', function () {
+                var rating = $(this).data('value');
+                highlightStars(rating);
+            });
+
+            $('.star-rating i').on('mouseout', function () {
+                var rating = $('#Rating').val();
+                highlightStars(rating);
+            });
+
+            $('.star-rating i').on('click', function () {
+                var rating = $(this).data('value');
+                $('#Rating').val(rating);
+                highlightStars(rating);
+            });
+
+            function highlightStars(rating) {
+                $('.star-rating i').each(function () {
+                    var starValue = $(this).data('value');
+                    if (starValue <= rating) {
+                        $(this).removeClass('far').addClass('fas');
+                    } else {
+                        $(this).removeClass('fas').addClass('far');
+                    }
+                });
+            }
+        });
+    </script>
+    <style>
+        .avatar-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .star-rating, .comment-rating {
+            display: flex;
+        }
+
+            .star-rating i, .comment-rating i {
+                font-size: 24px;
+                color: #ccc;
+                cursor: pointer;
+            }
+
+                .star-rating i.fas, .comment-rating i.fas {
+                    color: #f39c12; /* Yellow color for filled stars */
+                }
+    </style>
+}

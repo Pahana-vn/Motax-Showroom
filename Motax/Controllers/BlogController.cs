@@ -8,5 +8,10 @@ namespace Motax.Controllers
         {
             return View();
         }
+
+        public IActionResult Detail()
+        {
+            return View();
+        }
     }
 }

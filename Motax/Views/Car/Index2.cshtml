@@ -1,0 +1,206 @@
+﻿@model IEnumerable<Motax.ViewModels.CarVM>
+@{
+    ViewData["Title"] = "Index2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .price-range-box {
+        display: flex;
+        align-items: center;
+    }
+
+        .price-range-box input {
+            width: 100px;
+            margin-right: 5px;
+        }
+
+        .price-range-box .delimiter {
+            margin-right: 5px;
+        }
+
+    .car-sort-list-grid {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+        .car-sort-list-grid a {
+            margin-right: 10px;
+        }
+
+    .car-sort-box {
+        margin-top: 10px;
+    }
+
+</style>
+
+<div class="site-breadcrumb" style="background: url(/Frontend/assets/img/breadcrumb/01.jpg)">
+    <div class="container">
+        <h2 class="breadcrumb-title">Listing List</h2>
+        <ul class="breadcrumb-menu">
+            <li><a href="index-2.html">Home</a></li>
+            <li class="active">Listing List</li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="car-area list bg py-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="car-sidebar">
+                    <div class="car-widget">
+                        <div class="car-search-form">
+                            <h4 class="car-widget-title">Search</h4>
+                            <form asp-action="Search" asp-controller="Car">
+                                <div class="form-group">
+                                    <input type="text" name="query" class="form-control" placeholder="Search">
+                                    <button><i class="far fa-search"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    @await Component.InvokeAsync("MenuBrand")
+
+                    @await Component.InvokeAsync("MenuDealer")
+
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="col-md-12">
+                    <div class="car-sort">
+
+                        <h5 class="car-widget-title">Price Range</h5>
+                        <form class="price-range-box" asp-action="FindFilter" asp-controller="Car" method="get">
+                            <input type="number" name="min" class="" placeholder="$min">
+                            <span class="delimiter">-</span>
+                            <input type="number" name="max" class="" placeholder="$max">
+                            <button type="submit" class="btn btn-primary">Go</button>
+                        </form>
+
+
+                        <div class="car-sort-list-grid">
+                            <a class="car-sort-grid" asp-action="Index" asp-controller="Car"><i class="far fa-grid-2"></i></a>
+                            <a class="car-sort-list active" asp-action="Index2" asp-controller="Car"><i class="far fa-list-ul"></i></a>
+                        </div>
+
+                        <div class="col-md-3 car-sort-box">
+                            <select class="select">
+                                <option value="1">Sort By Default</option>
+                                <option value="5">Sort By Featured</option>
+                                <option value="2">Sort By Latest</option>
+                                <option value="3">Sort By Low Price</option>
+                                <option value="4">Sort By High Price</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    @foreach (var item in Model){
+                    <div class="col-md-6 col-lg-12">
+                        <div class="car-item">
+                            <div class="car-img">
+
+                                @if (item.Condition == "New")
+                                {
+                                    <span class="car-status status-2">@item.Condition</span>
+                                }
+                                else
+                                {
+                                    <span class="car-status status-1">@item.Condition</span>
+                                }
+
+                                <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">
+                                    <img src="~/Images/Car/Single/@item.ImageSingle" alt="@item.Name">
+                                </a>
+
+                                <div class="car-btns">
+                                        <form asp-action="AddToWishlist" asp-controller="Car" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="carId" value="@item.Id" />
+                                            <button type="submit" class="btn btn-link p-0">
+                                                <i class="far fa-heart"></i>
+                                            </button>
+                                        </form>
+                                        <form asp-action="AddToCompare" asp-controller="Car" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="carId" value="@item.Id" />
+                                            <button type="submit" class="btn btn-link p-0">
+                                                <i class="far fa-arrows-repeat"></i>
+                                            </button>
+                                        </form>
+                                </div>
+                            </div>
+                            <div class="car-content">
+                                <div class="car-top">
+                                        <h4><a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">@item.Name</a></h4>
+
+                                    <div class="car-rate">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= Math.Ceiling(item.AverageRating))
+                                                {
+                                                    <i class="fas fa-star"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="far fa-star"></i>
+                                                }
+                                            }
+                                            <span>@item.AverageRating.ToString("0.0") (@item.ReviewCount Reviews)</span>
+                                    </div>
+
+                                </div>
+                                <ul class="car-list">
+                                        <li><i class="far fa-steering-wheel"></i>@item.Transmission</li>
+                                        <li><i class="far fa-road"></i>@item.Mileage</li>
+                                        <li><i class="far fa-car"></i>Model: @item.Year</li>
+                                        <li><i class="far fa-gas-pump"></i>@item.FuelType</li>
+                                </ul>
+                                <p>
+                                    There are many variations of passages available but the majority have suffered in some injected humour words slightly believable.
+                                </p>
+                                <div class="car-footer">
+                                        <span class="car-price">$@item.Price</span>
+                                        <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id" class="theme-btn"><span class="far fa-eye"></span>Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="pagination-area">
+                    <div aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="far fa-arrow-left"></i></span>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true"><i class="far fa-arrow-right"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

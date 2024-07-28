@@ -13,6 +13,8 @@
         public double? Price { get; set; }
         public string? NameBrand { get; set; }
         public bool IsAvailable { get; set; }
+        public double AverageRating { get; set; } // New property for average rating
+        public int ReviewCount { get; set; } // New property for review count
 
     }
     public class DetailCarVM
@@ -40,6 +42,18 @@
         public string? PriceType { get; set; }
         public bool IsAvailable { get; set; }
         public List<CarVM>? RelatedCars { get; set; }
+        public List<CommentViewModel>? Comments { get; set; } // Add this line
+    }
+
+    public class CommentViewModel
+    {
+        public int? CarId { get; set; }
+        public int AccountId { get; set; }
+        public int? AccessoriesId { get; set; } // Add AccessoriesId property
+        public int Rating { get; set; }
+        public string? Comment1 { get; set; }
+        public DateTime CommentDate { get; set; }
+        public string? AccountName { get; set; }
     }
 
 }
