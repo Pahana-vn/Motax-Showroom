@@ -84,6 +84,7 @@ namespace Motax.Controllers
             if (ModelState.IsValid)
             {
                 var user = await db.Accounts
+                                   .Include(u => u.Role) // Ensure Role is included
                                    .FirstOrDefaultAsync(x => x.Username == acc.UserName);
 
                 if (user != null && BCrypt.Net.BCrypt.Verify(acc.Password, user.Password))
@@ -100,7 +101,20 @@ namespace Motax.Controllers
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                    return RedirectToAction("Index", "Home");
+                    // Redirect based on role
+                    switch (user.RoleId)
+                    {
+                        case 1: // Admin
+                            return Redirect("https://localhost:7181/admin/Home/Index");
+                        case 2: // Customer
+                            return Redirect("https://localhost:7181");
+                        case 3: // Staff
+                            return Redirect("https://localhost:7181/staff/Home/Index");
+                        case 4: // Shipper
+                            return Redirect("https://localhost:7181/shipper/Home/Index");
+                        default:
+                            return RedirectToAction("Index", "Home");
+                    }
                 }
                 else
                 {
@@ -110,9 +124,8 @@ namespace Motax.Controllers
 
             return View(acc);
         }
-
-
         #endregion
+
 
         #region Profile
         [HttpGet]

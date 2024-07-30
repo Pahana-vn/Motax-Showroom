@@ -20,11 +20,8 @@ public partial class MotaxContext : DbContext
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<Blog> Blogs { get; set; }
-
     public virtual DbSet<BlogDetail> BlogDetails { get; set; }
-
     public virtual DbSet<Brand> Brands { get; set; }
-
     public virtual DbSet<Car> Cars { get; set; }
     public virtual DbSet<CarRegistration> CarRegistrations { get; set; }
 

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Motax.ViewModels.ContactMessageVM>
+
+@{
+    ViewData["Title"] = "Dealer Messages";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
+}
+
+<h2>Messages</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in Model)
+        {
+            <tr>
+                <td>@message.Name</td>
+                <td>@message.Email</td>
+                <td>@message.Message</td>
+                <td>@message.CreatedAt</td>
+                <td>
+                    <form asp-action="DeleteMessage" asp-controller="Dealer" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@message.Id" />
+                        <input type="hidden" name="dealerId" value="@ViewBag.DealerId" />
+                        <button type="submit" class="btn btn-icon btn-sm btn-danger-transparent rounded-pill" onclick="return confirm('Are you sure you want to delete this message?');">
+                            <i class="ri-delete-bin-line"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

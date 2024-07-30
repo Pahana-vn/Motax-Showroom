@@ -3,6 +3,52 @@
     Layout = "_layout";
 }
 
+<style>
+    .car-btns {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .car-btns .btn {
+            background-color: #ff0000; /* Màu nền đỏ */
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none; /* Loại bỏ gạch chân */
+        }
+
+            .car-btns .btn i {
+                font-size: 15px;
+                color: #ffffff; /* Màu trắng cho icon */
+            }
+
+            .car-btns .btn:hover {
+                background-color: #d9534f; /* Màu khi hover */
+            }
+
+        .car-btns a {
+            text-decoration: none; /* Loại bỏ gạch chân cho các liên kết */
+        }
+
+    .car-rate .fas {
+        color: #f39c12; /* Yellow color for filled stars */
+    }
+
+    .car-rate .far {
+        color: #ccc; /* Grey color for empty stars */
+    }
+</style>
+
 <div class="hero-section">
     <div class="hero-slider owl-carousel owl-theme">
         <div class="hero-single" style="background: url(~/Frontend/assets/img/slider/slider-1.jpg)">
@@ -22,8 +68,8 @@
                                 suffered alteration in some form by injected humour.
                             </p>
                             <div class="hero-btn" data-animation="fadeInUp" data-delay="1s">
-                                <a href="#" class="theme-btn">About More<i class="fas fa-arrow-right-long"></i></a>
-                                <a href="#" class="theme-btn theme-btn2">Learn More<i class="fas fa-arrow-right-long"></i></a>
+                                <a asp-action="Index" asp-controller="Car" class="theme-btn">About More<i class="fas fa-arrow-right-long"></i></a>
+                                <a asp-action="Index" asp-controller="Car" class="theme-btn theme-btn2">Learn More<i class="fas fa-arrow-right-long"></i></a>
                             </div>
                         </div>
                     </div>
@@ -54,8 +100,8 @@
                                 suffered alteration in some form by injected humour.
                             </p>
                             <div class="hero-btn" data-animation="fadeInUp" data-delay="1s">
-                                <a href="#" class="theme-btn">About More<i class="fas fa-arrow-right-long"></i></a>
-                                <a href="#" class="theme-btn theme-btn2">Learn More<i class="fas fa-arrow-right-long"></i></a>
+                                <a asp-action="Index" asp-controller="Car" class="theme-btn">About More<i class="fas fa-arrow-right-long"></i></a>
+                                <a asp-action="Index" asp-controller="Car" class="theme-btn theme-btn2">Learn More<i class="fas fa-arrow-right-long"></i></a>
                             </div>
                         </div>
                     </div>
@@ -86,8 +132,8 @@
                                 suffered alteration in some form by injected humour.
                             </p>
                             <div class="hero-btn" data-animation="fadeInUp" data-delay="1s">
-                                <a href="#" class="theme-btn">About More<i class="fas fa-arrow-right-long"></i></a>
-                                <a href="#" class="theme-btn theme-btn2">Learn More<i class="fas fa-arrow-right-long"></i></a>
+                                <a asp-action="Index" asp-controller="Car" class="theme-btn">About More<i class="fas fa-arrow-right-long"></i></a>
+                                <a asp-action="Index" asp-controller="Car" class="theme-btn theme-btn2">Learn More<i class="fas fa-arrow-right-long"></i></a>
                             </div>
                         </div>
                     </div>
@@ -257,7 +303,7 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="about.html" class="theme-btn mt-4">Discover More<i class="fas fa-arrow-right-long"></i></a>
+                    <a asp-action="Index" asp-controller="AboutUs" class="theme-btn mt-4">Discover More<i class="fas fa-arrow-right-long"></i></a>
                 </div>
             </div>
         </div>
@@ -334,7 +380,14 @@
                 <div class="col-md-6 col-lg-4 col-xl-3">
                     <div class="car-item wow fadeInUp" data-wow-delay=".25s">
                         <div class="car-img">
-                            <span class="car-status status-1">Used</span>
+                            @if (item.Condition == "New")
+                            {
+                                <span class="car-status status-2">@item.Condition</span>
+                            }
+                            else
+                            {
+                                <span class="car-status status-1">@item.Condition</span>
+                            }
                             <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">
                                 <img src="~/Images/Car/Single/@item.ImageSingle" alt="@item.Name">
                             </a>
@@ -400,8 +453,8 @@
         <div class="row">
             <div class="col-lg-6 mx-auto">
                 <div class="site-heading text-center">
-                    <span class="site-title-tagline"><i class="flaticon-drive"></i> Car Category</span>
-                    <h2 class="site-title">Car By Body <span>Types</span></h2>
+                    <span class="site-title-tagline"><i class="flaticon-drive"></i> Accessory  Category</span>
+                    <h2 class="site-title">Accessory  By Body <span>Types</span></h2>
                     <div class="heading-divider"></div>
                 </div>
             </div>

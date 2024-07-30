@@ -1,0 +1,104 @@
+﻿@model Motax.ViewModels.DealerAdminVM
+@{
+    ViewData["Title"] = "Create dealer";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
+}
+
+
+<div class="col-xl-12" style="margin-top:20px;">
+    <div class="card custom-card">
+
+        <div class="card-header justify-content-between">
+            <div class="card-title">
+                Create dealer
+            </div>
+        </div>
+
+        <div class="card-body" style="margin:10px;">
+            <form asp-action="Create" asp-controller="Dealer" class="row g-3 mt-0" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Name Dealer</label>
+                    <input asp-for="Name" class="form-control">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    <input asp-for="Phone" class="form-control">
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Email</label>
+                    <input type="email" asp-for="Email" class="form-control">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="inputAddress" class="form-label">Address</label>
+                    <input type="text" asp-for="Address" class="form-control">
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="inputAddress" class="form-label">City</label>
+                    <select asp-for="City" class="form-control">
+                        <option value="None">--Choose City--</option>
+                        <option value="Ha Noi">Ha Noi</option>
+                        <option value="Thanh pho Ho Chi Minh">Thanh pho Ho Chi Minh</option>
+                        <option value="Ha Long">Ha Long</option>
+                        <option value="Phu Quoc">Phu Quoc</option>
+                        <option value="Da Lat">Da Lat</option>
+                    </select>
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <label for="inputAddress2" class="form-label">Image Background</label>
+                    <input asp-for="ImageBackground" type="file" class="form-control">
+                    <span asp-validation-for="ImageBackground" class="text-danger"></span>
+                    <img id="imgpreview" class="pt-2" />
+                </div>
+
+                <div class="col-12">
+                    <label for="inputAddress2" class="form-label">Status</label>
+                    <select asp-for="Status" class="form-control">
+                        <option value="1">Show</option>
+                        <option value="0">Hide</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+            <a class="btn" style="color:blue; margin-top:5px;" asp-action="Index" asp-controller="Dealer">Back to list dealer</a>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+
+    <script>
+        $("#ImageBackground").change(function () {
+            readURL(this);
+        });
+    </script>
+
+    <script>
+        CKEDITOR.replace('Description', {
+            versionCheck: false,
+        });
+    </script>
+}
+
+

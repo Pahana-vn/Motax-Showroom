@@ -1,0 +1,68 @@
+﻿@model Motax.ViewModels.DealerDetailAdminVM
+@{
+    ViewData["Title"] = "Edit DealerDetail";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
+}
+
+<div class="col-xl-12" style="margin-top:20px;">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title">
+                Edit Dealer Detail
+            </div>
+        </div>
+
+        <div class="card-body" style="margin:10px;">
+            <form asp-action="Edit" asp-controller="DealerDetail" class="row g-3 mt-0" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="col-md-6">
+                    <select asp-for="DealerId" class="form-control" asp-items="ViewBag.dealers">
+                        <option value="0">--Choose a Dealer--</option>
+                    </select>
+                    <span asp-validation-for="DealerId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="CoverImage" class="form-label">Cover Image</label>
+                    <input asp-for="CoverImage" class="form-control" type="file">
+                    <span asp-validation-for="CoverImage" class="text-danger"></span>
+                    <img src="~/Images/DealerDetail/Cover/@Model.ExistingCoverImage" width="120px" height="120px" />
+                </div>
+
+                <div class="col-md-6">
+                    <label for="AvatarImage" class="form-label">Avatar Image</label>
+                    <input asp-for="AvatarImage" class="form-control" type="file">
+                    <span asp-validation-for="AvatarImage" class="text-danger"></span>
+                    <img src="~/Images/DealerDetail/Avatar/@Model.ExistingAvatarImage" width="120px" height="120px" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Consultant Name</label>
+                    <input asp-for="ConsultantName" class="form-control">
+                    <span asp-validation-for="ConsultantName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="ConsultantAvatar" class="form-label">Consultant Avatar</label>
+                    <input asp-for="ConsultantAvatar" class="form-control" type="file">
+                    <span asp-validation-for="ConsultantAvatar" class="text-danger"></span>
+                    <img src="~/Images/DealerDetail/Consultant/@Model.ExistingConsultantAvatar" width="120px" height="120px" />
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+            <a class="btn" style="color:blue; margin-top:5px;" asp-action="Index" asp-controller="DealerDetail">Back to list Dealer Details</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

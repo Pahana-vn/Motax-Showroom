@@ -1,0 +1,65 @@
+﻿@model IEnumerable<DealerDetail>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">List Dealer Detail </div> -------
+                <div class="card-title">
+                    <a class="btn btn-success label-btn" asp-action="Create" asp-controller="DealerDetail"> <i class="ri-chat-smile-line label-btn-icon me-2"></i> Add Dealer Detail</a>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Image Cover</th>
+                                <th>Image Avatar</th>
+                                <th>Consultant Name</th>
+                                <th>Consultant Avatar</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="~/Images/Dealers/DealerDetail/Cover/@item.CoverImage" width="200px" height="120px" />
+                                    </td>
+                                    <td>
+                                        <img src="~/Images/Dealers/DealerDetail/Avatar/@item.AvatarImage" width="120px" height="120px" />
+                                    </td>
+                                    <td>@item.ConsultantName</td>
+                                    <td>
+                                        <img src="~/Images/Dealers/DealerDetail/Consultant/@item.ConsultantAvatar" width="120px" height="120px" />
+                                    </td>
+                                    
+                                    <td>
+                                        <a class="btn btn-icon btn-sm btn-info-transparent rounded-pill" asp-action="Edit" asp-controller="DealerDetail" asp-route-id="@item.Id"> <i class="ri-edit-line"></i> </a>
+
+                                        <form asp-action="Delete" asp-controller="DealerDetail" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-icon btn-sm btn-danger-transparent rounded-pill" onclick="return confirm('Are you sure you want to delete this dealerDetail?');">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

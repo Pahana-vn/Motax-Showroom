@@ -46,6 +46,8 @@ builder.Services.AddAuthorization(
         options =>
         {
             options.AddPolicy("CheckAdmin", policy => policy.RequireClaim(ClaimTypes.Role, "admin"));
+            options.AddPolicy("CheckStaff", policy => policy.RequireClaim(ClaimTypes.Role, "staff"));
+            options.AddPolicy("CheckShipper", policy => policy.RequireClaim(ClaimTypes.Role, "shipper"));
         }
     );
 

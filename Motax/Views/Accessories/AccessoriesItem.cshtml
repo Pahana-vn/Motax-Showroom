@@ -5,6 +5,8 @@
     var errorMessage = TempData["error"] as string;
 }
 
+
+
 @if (!string.IsNullOrEmpty(successMessage))
 {
     <div class="alert alert-success">@Html.Raw(successMessage)</div>
@@ -23,8 +25,8 @@
                     <img src="~/Images/Accessories/Single/@item.ImageSingle" alt="">
                 </a>
                 <div class="shop-item-meta">
-                    <a href="#"><i class="far fa-heart"></i></a>
-                    <a href="#"><i class="far fa-eye"></i></a>
+                    @* <a href="#"><i class="far fa-heart"></i></a> *@
+                    <a asp-action="Detail" asp-controller="Accessories" asp-route-id="@item.Id"><i class="far fa-eye"></i></a>
                     <a asp-action="AddToCart" asp-controller="CartAccessoriesItem" asp-route-id="@item.Id"><i class="far fa-shopping-cart"></i></a>
                 </div>
             </div>
