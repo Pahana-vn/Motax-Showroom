@@ -21,10 +21,9 @@
                             <tr>
                                 <th>Image</th>
                                 <th>Name Account</th>
-                                <th>Phone</th>
-                                <th>Address</th>
                                 <th>Role</th>
                                 <th>Status</th>
+                                <th>Detail</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -36,8 +35,6 @@
                                         <img src="~/Images/Account/Avatar/@item.Image" width="120px" height="120px" />
                                     </td>
                                     <td>@item.Username</td>
-                                    <td>@item.Phone</td>
-                                    <td>@item.Address</td>
                                     <td>
                                         @switch (item.RoleId)
                                         {
@@ -67,6 +64,11 @@
                                         {
                                             <span class="text text-danger">Hide</span>
                                         }
+                                    </td>
+                                    <td>
+                                        <a asp-action="Detail" asp-controller="Secure" asp-route-id="@item.Id" class="">
+                                            <span class="btn btn-primary"> View </span>
+                                        </a>
                                     </td>
                                     <td>
                                         <a class="btn btn-icon btn-sm btn-info-transparent rounded-pill" asp-action="Edit" asp-controller="Secure" asp-route-id="@item.Id"> <i class="ri-edit-line"></i> </a>

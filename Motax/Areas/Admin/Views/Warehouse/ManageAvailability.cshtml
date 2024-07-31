@@ -5,30 +5,77 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
 }
 
-<h2>Manage Car Availability</h2>
+<style>
+    .table {
+        margin-top: 20px;
+    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Availability</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var car in Model)
-        {
-            <tr>
-                <td>@car.Name</td>
-                <td>@car.IsAvailable</td>
-                <td>
-                    <form asp-action="UpdateAvailability" method="post" asp-area="Admin" asp-controller="Warehouse">
-                        <input type="hidden" name="carId" value="@car.Id" />
-                        <input type="hidden" name="isAvailable" value="@(car.IsAvailable ? "false" : "true")" />
-                        <button type="submit" class="btn btn-primary">@(car.IsAvailable ? "Unavailable" : "available")</button>
-                    </form>
-                </td>
-            </tr>
+        .table th,
+        .table td {
+            vertical-align: middle;
+            text-align: center;
         }
-    </tbody>
-</table>
+
+    .btn-primary {
+        width: 150px;
+    }
+
+    .text-center {
+        margin-bottom: 20px;
+    }
+
+
+    .table-responsive {
+        padding: 20px;
+        margin: 20px 0; /* Add margin to create space from the template */
+    }
+</style>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <h2 class="text-center">Manage Car Availability</h2>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Availability</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var car in Model)
+                            {
+                                <tr>
+                                    <td>@car.Name</td>
+                                    <td>
+                                        @if (car.IsAvailable)
+                                        {
+                                            <span class="btn btn-success btn-raised-shadow -btn-wave">Available</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="btn btn-danger btn-raised-shadow -btn-wave">Unavailable</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <form asp-action="UpdateAvailability" method="post" asp-area="Admin" asp-controller="Warehouse">
+                                            <input type="hidden" name="carId" value="@car.Id" />
+                                            <input type="hidden" name="isAvailable" value="@(car.IsAvailable ? "false" : "true")" />
+                                            <button type="submit" class="btn btn-primary btn-raised-shadow -btn-wave">
+                                                @(car.IsAvailable ? "Set Unavailable" : "Set Available")
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

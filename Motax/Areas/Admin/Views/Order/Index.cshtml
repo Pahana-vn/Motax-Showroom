@@ -40,9 +40,9 @@
                                     <td>
                                         @if (item.OrderStatus != null)
                                         {
-                                            @if(item.OrderStatus.Status == "New Order")
+                                            @if (item.OrderStatus.Status == "Pending")
                                             {
-                                                <span style="color:blue">@item.OrderStatus.Status</span>
+                                                <span style="color:brown">@item.OrderStatus.Status</span>
                                             }
                                             @if (item.OrderStatus.Status == "Cancelled")
                                             {
@@ -61,6 +61,10 @@
                                             {
                                                 <span style="color:gold">@item.OrderStatus.Status</span>
                                             }
+                                            @if (item.OrderStatus.Status == "Customer Confirmed")
+                                            {
+                                                <span style="color:blue">@item.OrderStatus.Status</span>
+                                            }
                                         }
                                         else
                                         {
@@ -69,7 +73,8 @@
                                     </td>
                                     <td>
                                         <a class="" asp-action="Details2" asp-controller="Order" asp-route-id="@item.Id"> <span class="btn btn-primary">Data Car</span></a>
-                                    </td><td>
+                                    </td>
+                                    <td>
                                         <a class="" asp-action="Details" asp-controller="Order" asp-route-id="@item.Id"> <span class="btn btn-primary">Detail</span></a>
                                     </td>
                                     <td>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Motax.Models;
 using Motax.ViewModels;
 using System.Linq;
@@ -125,6 +126,69 @@ namespace Motax.Controllers
             ViewBag.TotalPayment = monthlyPayment * totalPayments;
 
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyOrder()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (int.TryParse(userId, out int intUserId))
+                {
+                    var orders = await db.Orders
+                                         .Where(o => o.AccountId == intUserId)
+                                         .Include(o => o.OrderStatus)
+                                         .ToListAsync();
+
+                    var viewModel = new MyOrderViewModel
+                    {
+                        Orders = orders
+                    };
+
+                    return View(viewModel);
+                }
+            }
+            return RedirectToAction("Login");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            var order = await db.Orders.FindAsync(orderId);
+            if (order != null)
+            {
+                var orderStatus = db.OrderStatus.FirstOrDefault(os => os.Status == "Cancelled");
+                order.OrderStatusId = orderStatus?.Id ?? 0;
+                db.Orders.Update(order);
+                await db.SaveChangesAsync();
+                TempData["success"] = "Order cancelled successfully.";
+            }
+            else
+            {
+                TempData["error"] = "Order not found.";
+            }
+            return RedirectToAction("MyOrder");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmOrder(int orderId)
+        {
+            var order = await db.Orders.FindAsync(orderId);
+            if (order != null)
+            {
+                var orderStatus = db.OrderStatus.FirstOrDefault(os => os.Status == "Customer Confirmed");
+                order.OrderStatusId = orderStatus?.Id ?? 0;
+                db.Orders.Update(order);
+                await db.SaveChangesAsync();
+                TempData["success"] = "Order confirmed successfully.";
+            }
+            else
+            {
+                TempData["error"] = "Order not found.";
+            }
+            return RedirectToAction("MyOrder");
         }
     }
 }

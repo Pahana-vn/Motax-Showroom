@@ -1589,7 +1589,23 @@
                             </a>
                         </li>
                         <!-- End::slide -->
-                        
+                        <!-- Start::slide__category -->
+                        <li class="slide__category"><span class="category-name">Account Customer</span></li>
+                        <!-- End::slide__category -->
+                        <!-- Start::slide -->
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M5 5h4v6H5zm10 8h4v6h-4zM5 17h4v2H5zM15 5h4v2h-4z" opacity=".3" /><path d="M3 13h8V3H3v10zm2-8h4v6H5V5zm8 16h8V11h-8v10zm2-8h4v6h-4v-6zM13 3v6h8V3h-8zm6 4h-4V5h4v2zM3 21h8v-6H3v6zm2-4h4v2H5v-2z" /></svg>
+                                <span class="side-menu__label">All Account</span>
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide">
+                                    <a asp-action="Index" asp-controller="Secure" asp-area="Staff" class="side-menu__item">Create Account</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- End::slide -->
 
                         <!-- Start::slide__category -->
                         <li class="slide__category"><span class="category-name">Manager Dealers</span></li>
@@ -1603,10 +1619,10 @@
                             </a>
                             <ul class="slide-menu child1">
                                 <li class="slide">
-                                    <a asp-action="Index" asp-controller="Dealer" class="side-menu__item">Dealer</a>
+                                    <a asp-action="Index" asp-controller="Dealer" asp-area="Staff" class="side-menu__item">Dealer</a>
                                 </li>
                                 <li class="slide">
-                                    <a asp-action="Index" asp-controller="DealerDetail" class="side-menu__item">Create Detail Dealer</a>
+                                    <a asp-action="Index" asp-controller="DealerDetail" asp-area="Staff" class="side-menu__item">Create Detail Dealer</a>
                                 </li>
                                
                             </ul>
@@ -1626,11 +1642,11 @@
                             </a>
                             <ul class="slide-menu child1">
                                 <li class="slide">
-                                    <a asp-controller="Warehouse" asp-action="ManageAvailability" class="side-menu__item">Ware House</a>
+                                    <a asp-controller="Warehouse" asp-action="ManageAvailability" asp-area="Staff" class="side-menu__item">Ware House</a>
                                 </li>
 
                                 <li class="slide">
-                                    <a asp-action="Index" asp-controller="Order" class="side-menu__item">Orders</a>
+                                    <a asp-action="Index" asp-controller="Order" asp-area="Staff" class="side-menu__item">Check Orders</a>
                                 </li>
                             </ul>
                         </li>
@@ -1649,11 +1665,11 @@
                             </a>
                             <ul class="slide-menu child1">
                                 <li class="slide">
-                                    <a asp-action="Index2" asp-controller="Car" class="side-menu__item">Car Registration</a>
+                                    <a asp-action="Index2" asp-controller="CarRegistration" asp-area="Staff" class="side-menu__item">Car Registration</a>
                                 </li>
 
                                 <li class="slide">
-                                    <a asp-action="Index" asp-controller="CarRegistration" class="side-menu__item">List Car Registration</a>
+                                    <a asp-action="Index" asp-controller="CarRegistration" asp-area="Staff" class="side-menu__item">List Car Registration</a>
                                 </li>
                             </ul>
                         </li>

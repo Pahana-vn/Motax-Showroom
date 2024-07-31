@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Motax.Staff.Admin.Controllers
+namespace Motax.Areas.Staff.Controllers
 {
     [Area("Staff")]
     [Route("Staff/Home")]

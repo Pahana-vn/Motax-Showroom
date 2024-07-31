@@ -81,6 +81,7 @@ namespace Motax.Areas.Admin.Controllers
                 };
                 db.Accounts.Add(user);
                 await db.SaveChangesAsync();
+                TempData["success"] = "Account created successfully!";
                 return RedirectToAction("Index");
             }
             acc.Roles = GetRoles(); // Re-populate the roles in case of an error
@@ -205,5 +206,37 @@ namespace Motax.Areas.Admin.Controllers
             TempData["success"] = "Account has been deleted";
             return RedirectToAction("Index");
         }
+
+        #region Detail
+        [Route("Detail")]
+        [HttpGet]
+        public async Task<IActionResult> Detail(int id)
+        {
+            var account = await db.Accounts
+                                  .Include(a => a.Role)
+                                  .FirstOrDefaultAsync(a => a.Id == id);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            var vm = new AccountDetailAdminVM
+            {
+                Id = account.Id,
+                Username = account.Username,
+                Email = account.Email,
+                Phone = account.Phone,
+                Address = account.Address,
+                Dob = account.Dob,
+                Gender = account.Gender,
+                Image = account.Image,
+                Role = account.Role.Title,
+                Status = account.Status == 1 ? "Active" : "Inactive"
+            };
+
+            return View(vm);
+        }
+        #endregion
+
     }
 }

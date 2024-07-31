@@ -1,0 +1,56 @@
+﻿@model IEnumerable<CarRegistration>
+@{
+    ViewData["Title"] = "Index2";
+    Layout = "~/Areas/Shipper/Views/Shared/_LayoutBackendShipper.cshtml";
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">List CarRegistration </div> -------
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Registration Number</th>
+                                <th>License Plate</th>
+                                <th>Insurance Details</th>
+                                <th>Driver's License Number</th>
+                                <th>Invoice</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.CustomerName</td>
+                                    <td>@item.RegistrationNumber</td>
+                                    <td>@item.LicensePlate</td>
+                                    <td>@item.InsuranceDetails</td>
+                                    <td>@item.DriverLicenseNumber</td>
+                                    <td>
+                                        <a asp-action="Detail" asp-controller="CarRegistration" asp-route-id="@item.Id" class="">
+                                            <span class="btn btn-primary"> View</span>
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        <a asp-action="Create" asp-controller="ServiceUnit" asp-route-carRegistrationId="@item.Id" class="">
+                                            <span class="btn btn-primary">Create Shipping</span>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

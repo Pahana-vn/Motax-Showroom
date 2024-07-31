@@ -27,6 +27,8 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Shipper\Data\" />
+    <Folder Include="Areas\Shipper\Models\" />
     <Folder Include="Areas\Staff\Data\" />
     <Folder Include="Areas\Staff\Models\" />
     <Folder Include="wwwroot\Images\Accessories\Multiple\" />

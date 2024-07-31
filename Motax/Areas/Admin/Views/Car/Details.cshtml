@@ -1,0 +1,95 @@
+﻿@model Motax.ViewModels.CarDetailAdminVM
+@{
+    ViewData["Title"] = "Car Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="main-content-body-invoice">
+            <div class="card card-invoice">
+                <div class="card-body">
+
+                    <div class="table-responsive mt-4">
+                        <table class="table border">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Body Type</th>
+                                    <th>Mileage</th>
+                                    <th>Transmission</th>
+                                    <th>Condition</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.Name</td>
+                                    <td>@Model.BodyType</td>
+                                    <td>@Model.Mileage</td>
+                                    <td>@Model.Transmission</td>
+                                    <td>@Model.Condition</td>
+                                </tr>
+                            </tbody>
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Fuel Type</th>
+                                    <th>Color</th>
+                                    <th>Doors</th>
+                                    <th>Cylinders</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.Year</td>
+                                    <td>@Model.FuelType</td>
+                                    <td>@Model.Color</td>
+                                    <td>@Model.Doors</td>
+                                    <td>@Model.Cylinders</td>
+                                </tr>
+                            </tbody>
+                            <thead>
+                                <tr>
+                                    <th>Engine Size</th>
+                                    <th>Price</th>
+                                    <th>Price Type</th>
+                                    <th>VIN</th>
+                                    <th>IsAvailable</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.EngineSize</td>
+                                    <td>@Model.Price</td>
+                                    <td>@Model.PriceType</td>
+                                    <td>@Model.Vin</td>
+                                    <td>@Model.IsAvailable</td>
+                                </tr>
+                            </tbody>
+                            <tr>
+                                <td class="align-top" colspan="2" rowspan="4">
+                                    <div class="invoice-notes">
+                                        @* <label class="main-content-label fs-13">Image Car --------------------------------------> </label> *@
+                                        <img style="border-radius:15px" src="~/Images/Car/Single/@Model.ImageSingle" width="130px" height="100px" />
+                                    </div><!-- invoice-notes -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-uppercase tx-inverse">
+                                    <a asp-action="Index" asp-controller="Car" class="btn btn-primary">Back to car</a>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+
+                    <a href="javascript:void(0);" class="btn btn-danger float-end mt-3 ms-2" onclick="javascript:window.print();">
+                        <i class="mdi mdi-printer me-1"></i>Print
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -252,28 +252,37 @@ namespace Motax.Areas.Admin.Controllers
         [Route("Detail/{id}")]
         public async Task<IActionResult> Detail(int id)
         {
-            var dealerDetail = await db.DealerDetails
-                .Include(dd => dd.Dealer)
-                .SingleOrDefaultAsync(dd => dd.DealerId == id);
+            var dealer = await db.Dealers
+                .Include(d => d.DealerDetails)
+                .SingleOrDefaultAsync(d => d.Id == id);
 
-            if (dealerDetail == null)
+            if (dealer == null)
             {
-                TempData["error"] = "Dealer detail not found";
+                TempData["error"] = "Dealer not found";
                 return RedirectToAction("Index");
             }
 
-            var dealerDetailVM = new DealerDetailAdminVM
+            var dealerDetail = dealer.DealerDetails.FirstOrDefault();
+            var dealerDetailVM = new DealerDetailViewModelVM2
             {
-                Id = dealerDetail.Id,
-                DealerId = dealerDetail.DealerId,
-                ConsultantName = dealerDetail.ConsultantName,
-                ExistingCoverImage = dealerDetail.CoverImage,
-                ExistingAvatarImage = dealerDetail.AvatarImage,
-                ExistingConsultantAvatar = dealerDetail.ConsultantAvatar
+                Id = dealer.Id,
+                Name = dealer.Name,
+                Email = dealer.Email,
+                Phone = dealer.Phone,
+                Address = dealer.Address,
+                City = dealer.City,
+                Status = dealer.Status,
+                ExistingImage = dealer.ImageBackground,
+                ConsultantName = dealerDetail?.ConsultantName,
+                ExistingCoverImage = dealerDetail?.CoverImage,
+                ExistingAvatarImage = dealerDetail?.AvatarImage,
+                ExistingConsultantAvatar = dealerDetail?.ConsultantAvatar
             };
 
             return View(dealerDetailVM);
         }
+
+
 
     }
 }

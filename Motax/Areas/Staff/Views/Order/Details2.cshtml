@@ -1,0 +1,104 @@
+﻿@model Motax.ViewModels.OrderDetailViewModel
+@{
+    ViewData["Title"] = "Details2";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
+}
+
+@if (Model == null)
+{
+    <p>No order details found</p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12 col-xl-12">
+            <div class="main-content-body-invoice">
+                <div class="card card-invoice">
+                    <div class="card-body">
+
+                        <div class="table-responsive mt-4">
+                            <table class="table border">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Body Type</th>
+                                        <th>Mileage</th>
+                                        <th>Transmission</th>
+                                        <th>Condition</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@Model.Car.Name</td>
+                                        <td>@Model.Car.BodyType</td>
+                                        <td>@Model.Car.Mileage</td>
+                                        <td>@Model.Car.Transmission</td>
+                                        <td>@Model.Car.Condition</td>
+                                    </tr>
+                                </tbody>
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Fuel Type</th>
+                                        <th>Color</th>
+                                        <th>Doors</th>
+                                        <th>Cylinders</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@Model.Car.Year</td>
+                                        <td>@Model.Car.FuelType</td>
+                                        <td>@Model.Car.Color</td>
+                                        <td>@Model.Car.Doors</td>
+                                        <td>@Model.Car.Cylinders</td>
+                                    </tr>
+                                </tbody>
+                                <thead>
+                                    <tr>
+                                        <th>Engine Size</th>
+                                        <th>Price</th>
+                                        <th>Price Type</th>
+                                        <th>VIN</th>
+                                        <th>IsAvailable</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@Model.Car.EngineSize</td>
+                                        <td>@Model.Car.Price</td>
+                                        <td>@Model.Car.PriceType</td>
+                                        <td>@Model.Car.Vin</td>
+                                        <td>@Model.Car.IsAvailable</td>
+                                    </tr>
+                                </tbody>
+                                <tr>
+                                    <td class="align-top" colspan="2" rowspan="4">
+                                        <div class="invoice-notes">
+                                            @* <label class="main-content-label fs-13">Image Car --------------------------------------> </label> *@
+                                            <img style="border-radius:15px" src="~/Images/Car/Single/@Model.Car.ImageSingle" width="130px" height="100px" />
+                                        </div><!-- invoice-notes -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-uppercase tx-inverse">
+                                        <a asp-action="Index" asp-controller="Order" class="btn btn-primary">Back to order</a>
+                                    </td>
+                                   
+                                </tr>
+                            </table>
+                        </div>
+
+                        <a href="javascript:void(0);" class="btn btn-danger float-end mt-3 ms-2" onclick="javascript:window.print();">
+                            <i class="mdi mdi-printer me-1"></i>Print
+                        </a>
+                        <a href="javascript:void(0);" class="btn btn-success float-end mt-3">
+                            <i class="mdi mdi-telegram me-1"></i>Send Invoice
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

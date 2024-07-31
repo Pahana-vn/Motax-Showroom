@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Motax.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Motax.ViewModels
 {
@@ -31,5 +32,6 @@ namespace Motax.ViewModels
 
         public IFormFile? Image { get; set; }
         public string? ExistingImage { get; set; }
+        public List<Order> Orders { get; set; } = new List<Order>();
     }
 }

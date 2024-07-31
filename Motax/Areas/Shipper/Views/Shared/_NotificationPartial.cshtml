@@ -1,0 +1,48 @@
+﻿
+
+@if(TempData["success"]!=null){
+
+
+        <div class="alert alert-success overflow-hidden p-0" role="alert">
+        <div class="p-3 bg-success text-fixed-white d-flex justify-content-between">
+            <h6 class="alert-heading mb-0 text-fixed-white">Success data</h6>
+                <button type="button" class="btn-close p-0 text-fixed-white" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>
+            </div>
+            <hr class="my-0">
+            <div class="p-3">
+            <span>@TempData["success"]</span>
+            </div>
+        </div>
+   
+}
+
+@if(TempData["error"]!=null){
+
+
+    <div class="alert alert-danger overflow-hidden p-0" role="alert">
+        <div class="p-3 bg-danger text-fixed-white d-flex justify-content-between">
+            <h6 class="alert-heading mb-0 text-fixed-white">Error data</h6>
+            <button type="button" class="btn-close p-0 text-fixed-white" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>
+        </div>
+        <hr class="my-0">
+        <div class="p-3">
+            <span>@TempData["error"]</span>
+        </div>
+    </div>
+   
+
+}
+
+@if (TempData["warning"] != null)
+{
+    <div class="alert alert-warning overflow-hidden p-0" role="alert">
+        <div class="p-3 bg-warning text-fixed-white d-flex justify-content-between">
+            <h6 class="alert-heading mb-0 text-fixed-white">Warning data</h6>
+            <button type="button" class="btn-close p-0 text-fixed-white" data-bs-dismiss="alert" aria-label="Close"><i class="bi bi-x"></i></button>
+        </div>
+        <hr class="my-0">
+        <div class="p-3">
+            <span>@TempData["warning"]</span>
+        </div>
+    </div>
+}

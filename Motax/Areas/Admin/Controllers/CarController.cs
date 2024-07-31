@@ -313,5 +313,51 @@ namespace Motax.Areas.Admin.Controllers
         }
 
         #endregion
+
+        [Route("Details")]
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var car = await db.Cars
+                .Include(c => c.Dealer)
+                .Include(c => c.Brand)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            var carViewModel = new CarDetailAdminVM
+            {
+                Id = car.Id,
+                Name = car.Name,
+                BodyType = car.BodyType,
+                Mileage = car.Mileage,
+                Transmission = car.Transmission,
+                Year = car.Year,
+                FuelType = car.FuelType,
+                Color = car.Color,
+                Doors = car.Doors,
+                Cylinders = car.Cylinders,
+                EngineSize = car.EngineSize,
+                Vin = car.Vin,
+                CarFeatures = car.CarFeatures,
+                Title = car.Title,
+                BrandName = car.Brand?.Name,
+                DealerName = car.Dealer?.Name,
+                Price = car.Price,
+                DriverAirbag = car.DriverAirbag,
+                Status = car.Status,
+                Condition = car.Condition,
+                PriceType = car.PriceType,
+                ImageSingle = car.ImageSingle,
+                ImageMultiple = car.ImageMultiple?.Split(",").ToList() ?? new List<string>(),
+                IsAvailable = car.IsAvailable
+            };
+
+            return View(carViewModel);
+        }
+
     }
 }

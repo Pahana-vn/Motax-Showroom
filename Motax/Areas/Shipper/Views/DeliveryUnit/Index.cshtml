@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Motax.Models.DeliveryUnit>
+@{
+    ViewData["Title"] = "Index Delivery Units";
+    Layout = "~/Areas/Shipper/Views/Shared/_LayoutBackendShipper.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">List DeliveryUnit </div> -------
+                
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>Dealer</th>
+                                <th>Service Unit</th>
+                                <th>Scheduled Pickup Date</th>
+                                <th>Pickup Location</th>
+                                <th>Customer Contact</th>
+                                <th>Is Confirmed</th>
+                                <th>Invoice</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Car?.Name</td>
+                                    <td>@item.Dealer?.Name</td>
+                                    <td>@item.ServiceUnit?.ServiceDetails</td>
+                                    <td>@item.ScheduledPickupDate.ToShortDateString()</td>
+                                    <td>@item.PickupLocation</td>
+                                    <td>@item.CustomerContact</td>
+                                    <td>@item.IsConfirmed</td>
+                                    <td>
+                                        <a asp-controller="CarRegistration" asp-action="Detail" asp-route-id="@item.CarRegistrationId" class="btn btn-primary">View</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

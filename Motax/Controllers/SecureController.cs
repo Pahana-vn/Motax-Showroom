@@ -137,6 +137,7 @@ namespace Motax.Controllers
                 if (int.TryParse(userId, out int intUserId))
                 {
                     var user = await db.Accounts.FindAsync(intUserId);
+                    var orders = await db.Orders.Where(o => o.AccountId == intUserId).Include(o => o.OrderStatus).ToListAsync();
                     if (user != null)
                     {
                         var viewModel = new ProfileUpdateViewModel
@@ -148,7 +149,8 @@ namespace Motax.Controllers
                             Phone = user.Phone,
                             Gender = user.Gender,
                             Address = user.Address,
-                            ExistingImage = user.Image
+                            ExistingImage = user.Image,
+                            Orders = orders
                         };
                         return View(viewModel);
                     }

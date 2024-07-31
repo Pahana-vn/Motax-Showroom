@@ -1,36 +1,105 @@
-﻿@model Motax.ViewModels.DealerDetailAdminVM
+﻿@model Motax.ViewModels.DealerDetailViewModelVM2
+
 @{
     ViewData["Title"] = "Dealer Detail";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
 }
 
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card custom-card">
-            <div class="card-header">
-                <div class="card-title">Dealer Detail</div>
+<style>
+    .img-small {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+    }
+</style>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Dealer Detail</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                @if (!string.IsNullOrEmpty(Model.ExistingImage))
+                {
+                    <img src="~/Images/Dealers/Dealer/@Model.ExistingImage" class="img-fluid img-small" alt="Dealer Image" />
+                }
+                else
+                {
+                    <img src="~/Images/Dealers/Dealer/default-dealer.jpg" class="img-fluid img-small" alt="Dealer Image" />
+                }
             </div>
-
-            <div class="card-body">
-                <dl class="row">
-                    <dt class="col-sm-2">Consultant Name</dt>
-                    <dd class="col-sm-10">@Model.ConsultantName</dd>
-
-                    <dt class="col-sm-2">Cover Image</dt>
-                    <dd class="col-sm-10">
-                        <img src="~/Images/Dealers/DealerDetail/Cover/@Model.ExistingCoverImage" width="200px" height="120px" />
-                    </dd>
-
-                    <dt class="col-sm-2">Avatar Image</dt>
-                    <dd class="col-sm-10">
-                        <img src="~/Images/Dealers/DealerDetail/Avatar/@Model.ExistingAvatarImage" width="120px" height="120px" />
-                    </dd>
-
-                    <dt class="col-sm-2">Consultant Avatar</dt>
-                    <dd class="col-sm-10">
-                        <img src="~/Images/Dealers/DealerDetail/Consultant/@Model.ExistingConsultantAvatar" width="120px" height="120px" />
-                    </dd>
-                </dl>
+            <div class="col-md-8">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Name</th>
+                        <td>@Model.Name</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>@Model.Email</td>
+                    </tr>
+                    <tr>
+                        <th>Phone</th>
+                        <td>@Model.Phone</td>
+                    </tr>
+                    <tr>
+                        <th>Address</th>
+                        <td>@Model.Address</td>
+                    </tr>
+                    <tr>
+                        <th>City</th>
+                        <td>@Model.City</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>@Model.Status</td>
+                    </tr>
+                    <tr>
+                        <th>Consultant Name</th>
+                        <td>@Model.ConsultantName</td>
+                    </tr>
+                    <tr>
+                        <th>Cover Image</th>
+                        <td>
+                            @if (!string.IsNullOrEmpty(Model.ExistingCoverImage))
+                            {
+                                <img src="~/Images/Dealers/DealerDetail/Cover/@Model.ExistingCoverImage" class="img-fluid img-small" alt="Cover Image" />
+                            }
+                            else
+                            {
+                                <span>No Cover Image</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Avatar Image</th>
+                        <td>
+                            @if (!string.IsNullOrEmpty(Model.ExistingAvatarImage))
+                            {
+                                <img src="~/Images/Dealers/DealerDetail/Avatar/@Model.ExistingAvatarImage" class="img-fluid img-small" alt="Avatar Image" />
+                            }
+                            else
+                            {
+                                <span>No Avatar Image</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Consultant Avatar</th>
+                        <td>
+                            @if (!string.IsNullOrEmpty(Model.ExistingConsultantAvatar))
+                            {
+                                <img src="~/Images/Dealers/DealerDetail/Consultant/@Model.ExistingConsultantAvatar" class="img-fluid img-small" alt="Consultant Avatar" />
+                            }
+                            else
+                            {
+                                <span>No Consultant Avatar</span>
+                            }
+                        </td>
+                    </tr>
+                </table>
+                <a asp-action="Index" class="btn btn-primary">Back to List</a>
             </div>
         </div>
     </div>

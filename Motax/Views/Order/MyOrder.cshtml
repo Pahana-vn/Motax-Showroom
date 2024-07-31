@@ -1,0 +1,115 @@
+﻿@model Motax.ViewModels.MyOrderViewModel
+
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="user-profile py-120">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-3">
+                <div class="user-profile-sidebar">
+                    <div class="user-profile-sidebar-top">
+                        <div class="user-profile-img">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                var imagePath = ViewData["UserAvatar"] as string;
+                                if (!string.IsNullOrEmpty(imagePath))
+                                {
+                                    <img src="@Url.Content("~/Images/Account/Avatar/" + imagePath)" alt="User Avatar" class="avatar-img">
+                                }
+                                else
+                                {
+                                    <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
+                                }
+                            }
+                            else
+                            {
+                                <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
+                            }
+
+                        </div>
+                        
+                    </div>
+                    <ul class="user-profile-sidebar-list">
+                        <li><a asp-action="Profile" asp-controller="Secure"><i class="far fa-user"></i> My Profile</a></li>
+
+                        <li><a asp-action="MyOrder" asp-controller="Order"><i class="far fa-user"></i> My Order</a></li>
+
+
+
+                        <li><a asp-action="Wishlist" asp-controller="Car"><i class="far fa-heart"></i> My Favorites</a></li>
+
+                        <li><a asp-action="Compare" asp-controller="Car"><i class="far fa-layer-group"></i> My Compare</a></li>
+
+                        <li><a asp-action="PageNotFound" asp-controller="Home"><i class="far fa-envelope"></i> Messages <span class="badge badge-danger">02</span></a></li>
+
+                        <li><a asp-action="Logout" asp-controller="Secure"><i class="far fa-sign-out"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="user-profile-wrapper">
+                    <div class="row">
+                        <div class="user-profile-card">
+                            <h4 class="user-profile-card-title">My Orders</h4>
+                            <div class="user-profile-form">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Order Code</th>
+                                                <th>Order Date</th>
+                                                <th>Total Amount</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var order in Model.Orders)
+                                            {
+                                                <tr>
+                                                    <td>@order.Id</td>
+                                                    <td>@order.OrderCode</td>
+                                                    <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                                                    <td>@order.TotalAmount</td>
+                                                    <td>@order.OrderStatus?.Status</td>
+                                                    <td>
+                                                        @if (order.OrderStatus?.Status == "New Order")
+                                                        {
+                                                            <form asp-action="CancelOrder" asp-controller="Order" method="post" style="display:inline;">
+                                                                <input type="hidden" name="orderId" value="@order.Id" />
+                                                                <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                                            </form>
+                                                            <form asp-action="ConfirmOrder" asp-controller="Order" method="post" style="display:inline;">
+                                                                <input type="hidden" name="orderId" value="@order.Id" />
+                                                                <button type="submit" class="btn btn-sm btn-success">Confirm</button>
+                                                            </form>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-muted">No action available</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+

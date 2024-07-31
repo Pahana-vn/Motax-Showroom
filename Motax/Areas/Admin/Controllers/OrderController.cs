@@ -100,5 +100,47 @@ namespace Motax.Areas.Admin.Controllers
 
         #endregion
 
+        #region Admin: Xác nhận và hủy đơn hàng
+        [HttpPost]
+        [Route("CancelOrder")]
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            var order = await db.Orders.FindAsync(orderId);
+            if (order != null)
+            {
+                var orderStatus = db.OrderStatus.FirstOrDefault(os => os.Status == "Cancelled");
+                order.OrderStatusId = orderStatus?.Id ?? 0;
+                db.Orders.Update(order);
+                await db.SaveChangesAsync();
+                TempData["success"] = "Order cancelled successfully.";
+            }
+            else
+            {
+                TempData["error"] = "Order not found.";
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Route("ConfirmOrder")]
+        public async Task<IActionResult> ConfirmOrder(int orderId)
+        {
+            var order = await db.Orders.FindAsync(orderId);
+            if (order != null)
+            {
+                var orderStatus = db.OrderStatus.FirstOrDefault(os => os.Status == "Customer Confirmed");
+                order.OrderStatusId = orderStatus?.Id ?? 0;
+                db.Orders.Update(order);
+                await db.SaveChangesAsync();
+                TempData["success"] = "Order confirmed successfully.";
+            }
+            else
+            {
+                TempData["error"] = "Order not found.";
+            }
+            return RedirectToAction("Index");
+        }
+        #endregion
+
     }
 }
