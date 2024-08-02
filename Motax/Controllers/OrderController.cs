@@ -4,6 +4,7 @@ using Motax.Models;
 using Motax.ViewModels;
 using System.Linq;
 using System.Security.Claims;
+
 using System.Threading.Tasks;
 
 namespace Motax.Controllers
@@ -11,10 +12,12 @@ namespace Motax.Controllers
     public class OrderController : Controller
     {
         private readonly MotaxContext db;
+        private readonly ILogger<OrderController> logger;
 
-        public OrderController(MotaxContext context)
+        public OrderController(MotaxContext context, ILogger<OrderController> logger)
         {
             db = context;
+            this.logger = logger;
         }
 
         [HttpPost]
@@ -140,17 +143,67 @@ namespace Motax.Controllers
                                          .Where(o => o.AccountId == intUserId)
                                          .Include(o => o.OrderStatus)
                                          .ToListAsync();
+                    var invoices = await db.Invoices
+                                           .Where(i => i.UserId == intUserId)
+                                           .Include(i => i.CarRegistration)
+                                           .ToListAsync();
 
                     var viewModel = new MyOrderViewModel
                     {
-                        Orders = orders
+                        Orders = orders,
+                        Invoices = invoices
                     };
 
                     return View(viewModel);
                 }
             }
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Secure");
         }
+
+        [HttpGet]
+        [Route("Order/Invoices")]
+        public async Task<IActionResult> Invoices()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (int.TryParse(userId, out int intUserId))
+                {
+                    logger.LogInformation($"Fetching invoices for user {intUserId}");
+                    var invoices = await db.Invoices
+                                           .Where(i => i.UserId == intUserId)
+                                           .Include(i => i.CarRegistration)
+                                           .ToListAsync();
+
+                    if (invoices.Any())
+                    {
+                        logger.LogInformation($"Found {invoices.Count} invoices for user {intUserId}");
+                        foreach (var invoice in invoices)
+                        {
+                            logger.LogInformation($"Invoice {invoice.Id}: Date={invoice.InvoiceDate}, TotalAmount={invoice.TotalAmount}, Status={invoice.Status}");
+                        }
+                    }
+                    else
+                    {
+                        logger.LogWarning($"No invoices found for user {intUserId}");
+                    }
+
+                    return View(invoices);
+                }
+                else
+                {
+                    logger.LogError("Failed to parse userId from claims");
+                }
+            }
+            else
+            {
+                logger.LogWarning("User not authenticated");
+            }
+
+            return RedirectToAction("Login", "Secure");
+        }
+
+
 
 
         [HttpPost]

@@ -63,9 +63,9 @@
                     <ul class="user-profile-sidebar-list">
                         <li><a asp-action="Profile" asp-controller="Secure"><i class="far fa-user"></i> My Profile</a></li>
 
-                        <li><a asp-action="MyOrder" asp-controller="Order"><i class="far fa-user"></i> My Order</a></li>
+                        <li><a asp-action="MyOrder" asp-controller="Order"><i class="far fa-gauge-high"></i> My Order</a></li>
 
-
+                        <li><a asp-action="Invoices" asp-controller="Order"><i class="far fa-plus-circle"></i> My Invoice</a></li>
 
                         <li><a asp-action="Wishlist" asp-controller="Car"><i class="far fa-heart"></i> My Favorites</a></li>
 
@@ -169,50 +169,6 @@
     </div>
 </div>
 
-<h4 class="user-profile-card-title">My Orders</h4>
-<div class="table-responsive">
-    <table class="table table-striped table-hover table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>Order Code</th>
-                <th>Order Date</th>
-                <th>Delivery Date</th>
-                <th>Total Amount</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in Model.Orders)
-            {
-                <tr>
-                    <td>@order.OrderCode</td>
-                    <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
-                    <td>@order.DeliveryDate.ToString("yyyy-MM-dd")</td>
-                    <td>@order.TotalAmount</td>
-                    <td>@order.OrderStatus?.Status</td>
-                    <td>
-                        @if (order.OrderStatus?.Status == "New Order")
-                        {
-                            <form asp-action="CancelOrder" asp-controller="Order" method="post" asp-area="Admin" style="display:inline;">
-                                <input type="hidden" name="orderId" value="@order.Id" />
-                                <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
-                            </form>
-                            <form asp-action="ConfirmOrder" asp-controller="Order" method="post" asp-area="Admin" style="display:inline;">
-                                <input type="hidden" name="orderId" value="@order.Id" />
-                                <button type="submit" class="btn btn-sm btn-success">Confirm</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <span class="text-muted">No action available</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
 
 @section Scripts {
     <script>

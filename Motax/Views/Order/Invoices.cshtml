@@ -1,7 +1,6 @@
-﻿@model Motax.ViewModels.MyOrderViewModel
-
+﻿@model IEnumerable<Motax.Models.Invoices>
 @{
-    ViewData["Title"] = "My Orders";
+    ViewData["Title"] = "My Invoices";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -31,7 +30,7 @@
                             }
 
                         </div>
-                        
+
                     </div>
                     <ul class="user-profile-sidebar-list">
                         <li><a asp-action="Profile" asp-controller="Secure"><i class="far fa-user"></i> My Profile</a></li>
@@ -55,47 +54,33 @@
                 <div class="user-profile-wrapper">
                     <div class="row">
                         <div class="user-profile-card">
-                            <h4 class="user-profile-card-title">My Orders</h4>
+                            <h4 class="user-profile-card-title">My Invoices</h4>
                             <div class="user-profile-form">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th>No.</th>
-                                                <th>Order Code</th>
-                                                <th>Order Date</th>
+                                                <th>Invoice Date</th>
                                                 <th>Total Amount</th>
                                                 <th>Status</th>
-                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var order in Model.Orders)
+                                            @if (Model != null && Model.Any())
+                                            {
+                                                @foreach (var invoice in Model)
+                                                {
+                                                    <tr>
+                                                        <td>@invoice.InvoiceDate.ToString("yyyy-MM-dd")</td>
+                                                        <td>@invoice.TotalAmount$</td>
+                                                        <td style="color:darkred">@invoice.Status</td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
                                             {
                                                 <tr>
-                                                    <td>@order.Id</td>
-                                                    <td>@order.OrderCode</td>
-                                                    <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
-                                                    <td>@order.TotalAmount$</td>
-                                                    <td>@order.OrderStatus?.Status</td>
-                                                    <td>
-                                                            @if (order.OrderStatus?.Status == "Pending")
-                                                            {
-                                                            <form asp-action="CancelOrder" asp-controller="Order" method="post" style="display:inline;">
-                                                                <input type="hidden" name="orderId" value="@order.Id" />
-                                                                <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
-                                                            </form>
-                                                            <form asp-action="ConfirmOrder" asp-controller="Order" method="post" style="display:inline;">
-                                                                <input type="hidden" name="orderId" value="@order.Id" />
-                                                                <button type="submit" class="btn btn-sm btn-success">Confirm</button>
-                                                            </form>
-                                                            }
-                                                            else
-                                                            {
-                                                            <span class="text-muted">No action available</span>
-                                                            <p>Order Status: @order.OrderStatus?.Status</p> <!-- Thêm dòng này để hiển thị trạng thái đơn hàng -->
-                                                            }
-                                                    </td>
+                                                    <td colspan="3">No invoices found</td>
                                                 </tr>
                                             }
                                         </tbody>
@@ -111,6 +96,5 @@
         </div>
     </div>
 </div>
-
 
 

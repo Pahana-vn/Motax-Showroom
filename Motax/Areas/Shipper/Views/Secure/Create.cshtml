@@ -1,0 +1,96 @@
+﻿@model Motax.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Shipper/Views/Shared/_LayoutBackendShipper.cshtml";
+}
+
+<div class="col-xl-12" style="margin-top:20px;">
+    <div class="card custom-card">
+
+        <div class="card-header justify-content-between">
+            <div class="card-title">
+                Create Account
+            </div>
+        </div>
+
+        <div class="card-body" style="margin:10px;">
+            <form asp-action="Create" asp-controller="Secure" asp-area="Staff" class="row g-3 mt-0" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Username</label>
+                    <input asp-for="Username" class="form-control">
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="inputEmail4" class="form-label">Password</label>
+                    <input type="password" asp-for="Password" class="form-control">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="inputEmail4" class="form-label">ConfirmPassword</label>
+                    <input type="password" asp-for="ConfirmPassword" class="form-control">
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="inputEmail4" class="form-label">Phone</label>
+                    <input type="number" asp-for="Phone" class="form-control">
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="inputEmail4" class="form-label">D.O.B</label>
+                    <input type="date" asp-for="Dob" class="form-control">
+                    <span asp-validation-for="Dob" class="text-danger"></span>
+                </div>
+
+                <div class="col-6">
+                    <label for="inputEmail4" class="form-label">Gender</label>
+                    <input type="text" asp-for="Gender" class="form-control">
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+
+                <div class="col-6">
+                    <label for="inputAddress" class="form-label">Address</label>
+                    <input type="text" asp-for="Address" class="form-control">
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <div class="col-6">
+                    <label for="inputAddress2" class="form-label">Image</label>
+                    <input asp-for="Image" class="form-control">
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                    <img id="imgpreview" class="pt-2" />
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+            <a class="btn" style="color:blue; margin-top:5px;" asp-action="Index" asp-controller="Secure">Back to list Account</a>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $("#Image").change(function () {
+            readURL(this);
+        });
+    </script>
+}
+

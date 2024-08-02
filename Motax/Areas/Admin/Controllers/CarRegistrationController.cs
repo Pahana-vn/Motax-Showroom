@@ -159,7 +159,6 @@ namespace Motax.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-
             var orderDetail = registration.Car?.OrderDetails.FirstOrDefault();
             var order = orderDetail?.Order;
 
@@ -195,5 +194,35 @@ namespace Motax.Areas.Admin.Controllers
 
             return View(viewModel);
         }
+
+        [Route("SendInvoice/{id}")]
+        [HttpPost]
+        public async Task<IActionResult> SendInvoice(int id)
+        {
+            var carRegistration = await db.CarRegistrations.Include(cr => cr.User).FirstOrDefaultAsync(cr => cr.Id == id);
+            if (carRegistration == null)
+            {
+                TempData["error"] = "Car registration not found.";
+                return RedirectToAction("Index");
+            }
+
+            // Ensure the invoice is created for the correct user
+            var invoice = new Invoices
+            {
+                UserId = carRegistration.UserId,
+                CarRegistrationId = carRegistration.Id,
+                InvoiceDate = DateTime.Now,
+                TotalAmount = carRegistration.TotalAmount ?? 0,
+                Status = "Pending"
+            };
+
+            db.Invoices.Add(invoice);
+            await db.SaveChangesAsync();
+
+            TempData["success"] = "Invoice sent successfully.";
+            return RedirectToAction("Detail", new { id = id });
+        }
+
+
     }
 }

@@ -138,9 +138,12 @@
                     <a href="javascript:void(0);" class="btn btn-danger float-end mt-3 ms-2" onclick="javascript:window.print();">
                         <i class="mdi mdi-printer me-1"></i>Print
                     </a>
-                    <a href="javascript:void(0);" class="btn btn-success float-end mt-3">
+                    <a href="javascript:void(0);" class="btn btn-success float-end mt-3"
+                       onclick="document.getElementById('send-invoice-form').submit();">
                         <i class="mdi mdi-telegram me-1"></i>Send Invoice
                     </a>
+                    <form id="send-invoice-form" method="post" asp-action="SendInvoice" asp-route-id="@Model.CarId" style="display:none;"></form>
+
                 </div>
             </div>
         </div>
