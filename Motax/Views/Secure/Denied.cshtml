@@ -1,7 +1,70 @@
-﻿
-@{
-    ViewData["Title"] = "Denied";
+﻿@{
+    ViewData["Title"] = "Access Denied";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Không có quyền truy cập trang này</h1>
+<style>
+    .error-area {
+        background-color: #f8f9fa;
+        text-align: center;
+        padding: 60px 0;
+    }
+
+    .error-wrapper {
+        background-color: #ffffff;
+        border: 1px solid #dddddd;
+        border-radius: 10px;
+        padding: 40px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .error-img img {
+        max-width: 200px;
+    }
+
+    .error-wrapper h2 {
+        font-size: 2.5rem;
+        margin: 20px 0;
+        color: #333333;
+    }
+
+    .error-wrapper p {
+        font-size: 1.2rem;
+        color: #777777;
+    }
+
+    .theme-btn {
+        display: inline-block;
+        background-color: #007bff;
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+        .theme-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .theme-btn i {
+            margin-left: 5px;
+        }
+</style>
+
+<div class="error-area py-120">
+    <div class="container">
+        <div class="col-md-8 mx-auto">
+            <div class="error-wrapper">
+                
+                <h2>Access Denied!</h2>
+                <p>You do not have permission to access this page.</p>
+                <p>Please contact the administrator if you believe this is an error.</p>
+                <p>Roles with access: Customer, Admin, Staff, Shipper</p>
+                <a asp-action="Index" asp-controller="Home" class="theme-btn">Go Back Home <i class="far fa-home"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+

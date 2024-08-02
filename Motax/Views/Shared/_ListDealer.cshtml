@@ -13,7 +13,7 @@
                 <div class="car-sidebar">
                     <div class="car-widget">
                         <div class="car-search-form">
-                            <h4 class="car-widget-title">Search Dealer/h4>
+                            <h4 class="car-widget-title">Search Dealer </h4>
                             <form asp-action="Search" asp-controller="Dealer">
                                 <div class="form-group">
                                     <input type="text" name="query" class="form-control" placeholder="Search">
@@ -27,7 +27,23 @@
 
                     @await Component.InvokeAsync("MenuBrand")
 
-                   
+                    <div class="shop-widget">
+                        <h4 class="shop-widget-title">Popular Tags</h4>
+                        <div class="shop-tags">
+                            <a asp-action="Index" asp-controller="Car">Car</a>
+                            <a asp-action="Index" asp-controller="Dealer">Dealer</a>
+                            <a asp-action="Index" asp-controller="Accessories">Accessories</a>
+                            <a asp-action="Index" asp-controller="Service">Service</a>
+                            <a asp-action="Index" asp-controller="Blog">Blog</a>
+                        </div>
+                    </div>
+                    <div class="widget-banner mt-30 mb-50" style="background-image:url(/Frontend/assets/img/shop/banner.jpg)">
+                        <div class="banner-content">
+                            <h3>Get <span>35% Off</span> On All Our Products</h3>
+                            <a asp-action="Index" asp-controller="Car" class="theme-btn">Buy Now<i class="fas fa-arrow-right-long"></i> </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="col-lg-9">

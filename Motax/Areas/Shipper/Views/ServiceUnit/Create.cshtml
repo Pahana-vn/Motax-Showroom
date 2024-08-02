@@ -1,46 +1,42 @@
-﻿@model Motax.ViewModels.DeliveryUnitViewModel
+﻿@model Motax.ViewModels.ServiceUnitViewModel
 @{
-    ViewData["Title"] = "Create Delivery Unit";
+    ViewData["Title"] = "Create Service Unit";
     Layout = "~/Areas/Shipper/Views/Shared/_LayoutBackendShipper.cshtml";
 }
 <div class="col-xl-12" style="margin-top:20px;">
     <div class="card custom-card">
-
         <div class="card-header justify-content-between">
             <div class="card-title">
-                Create Delivery Unit
+                Create Service Unit
             </div>
         </div>
-
         <div class="card-body" style="margin:10px;">
-
             <form asp-action="Create" method="post">
                 <input type="hidden" asp-for="CarId" />
                 <input type="hidden" asp-for="DealerId" />
-                <input type="hidden" asp-for="ServiceUnitId" />
                 <input type="hidden" asp-for="CarRegistrationId" />
 
                 <div class="col-12">
-                    <label class="form-label">Scheduled Pickup Date</label>
-                    <input asp-for="ScheduledPickupDate" class="form-control" />
-                    <span asp-validation-for="ScheduledPickupDate" class="text-danger"></span>
+                    <label class="form-label">Service Date</label>
+                    <input asp-for="ServiceDate" class="form-control" />
+                    <span asp-validation-for="ServiceDate" class="text-danger"></span>
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label">Pickup Location</label>
-                    <input asp-for="PickupLocation" class="form-control" />
-                    <span asp-validation-for="PickupLocation" class="text-danger"></span>
+                    <label class="form-label">Service Details</label>
+                    <textarea asp-for="ServiceDetails" class="form-control"></textarea>
+                    <span asp-validation-for="ServiceDetails" class="text-danger"></span>
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label">Customer Contact</label>
-                    <input asp-for="CustomerContact" class="form-control" />
-                    <span asp-validation-for="CustomerContact" class="text-danger"></span>
+                    <input asp-for="IsCompleted" type="checkbox" class="" /> Is Completed
+                    <span asp-validation-for="IsCompleted" class="text-danger"></span>
                 </div>
 
                 <div class="col-12">
-                    <input asp-for="IsConfirmed" type="checkbox" class="" /> IsConfirmed
-                    <span asp-validation-for="IsConfirmed" class="text-danger"></span>
+                    <label class="form-label">Pickup Date</label>
+                    <input asp-for="PickupDate" class="form-control" />
+                    <span asp-validation-for="PickupDate" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">

@@ -28,7 +28,6 @@ namespace Motax.Areas.Admin.Controllers
             return View(serviceUnits);
         }
 
-
         [Route("Create")]
         [HttpGet]
         public IActionResult Create(int carRegistrationId)
@@ -43,7 +42,7 @@ namespace Motax.Areas.Admin.Controllers
             var viewModel = new ServiceUnitViewModel
             {
                 CarId = carRegistration.CarId,
-                DealerId = carRegistration.Car?.DealerId ?? 0, // Sử dụng giá trị mặc định 0 nếu DealerId là null
+                DealerId = carRegistration.Car?.DealerId ?? 0,
                 CarRegistrationId = carRegistrationId,
                 ServiceDate = DateTime.Now
             };
@@ -85,6 +84,5 @@ namespace Motax.Areas.Admin.Controllers
 
             return View(viewModel);
         }
-
     }
 }

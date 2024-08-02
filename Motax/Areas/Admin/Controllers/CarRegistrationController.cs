@@ -195,8 +195,5 @@ namespace Motax.Areas.Admin.Controllers
 
             return View(viewModel);
         }
-
-
-
     }
 }

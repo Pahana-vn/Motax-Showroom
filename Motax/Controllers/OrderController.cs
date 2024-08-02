@@ -66,7 +66,7 @@ namespace Motax.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var orderStatus = db.OrderStatus.FirstOrDefault(os => os.Status == "New Order");
+            var orderStatus = db.OrderStatus.FirstOrDefault(os => os.Status == "Pending");
 
             var order = new Order
             {

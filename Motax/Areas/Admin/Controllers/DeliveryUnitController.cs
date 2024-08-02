@@ -48,8 +48,8 @@ namespace Motax.Areas.Admin.Controllers
                 DealerId = serviceUnit.DealerId,
                 ServiceUnitId = serviceUnitId,
                 CarRegistrationId = serviceUnit.CarRegistrationId,
-                ScheduledPickupDate = serviceUnit.PickupDate ?? DateTime.Now, // Lấy ngày nhận hàng từ ServiceUnit
-                CustomerContact = serviceUnit.CarRegistration.CustomerName // Lấy tên khách hàng từ CarRegistration
+                ScheduledPickupDate = serviceUnit.PickupDate ?? DateTime.Now,
+                CustomerContact = serviceUnit.CarRegistration.CustomerName
             };
 
             return View(viewModel);
@@ -99,11 +99,10 @@ namespace Motax.Areas.Admin.Controllers
             db.Update(deliveryUnit);
             await db.SaveChangesAsync();
 
-            // Cập nhật trạng thái đơn hàng
             var order = await db.Orders.FirstOrDefaultAsync(o => o.CarId == deliveryUnit.CarId);
             if (order != null)
             {
-                order.OrderStatusId = 3; // "Delivered"
+                order.OrderStatusId = 3;
                 db.Orders.Update(order);
                 await db.SaveChangesAsync();
             }
@@ -112,5 +111,4 @@ namespace Motax.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
     }
-
 }

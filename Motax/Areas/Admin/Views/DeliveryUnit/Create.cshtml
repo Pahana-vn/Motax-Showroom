@@ -5,15 +5,12 @@
 }
 <div class="col-xl-12" style="margin-top:20px;">
     <div class="card custom-card">
-
         <div class="card-header justify-content-between">
             <div class="card-title">
-                Create ServiceUnit
+                Create Delivery Unit
             </div>
         </div>
-
         <div class="card-body" style="margin:10px;">
-
             <form asp-action="Create" method="post">
                 <input type="hidden" asp-for="CarId" />
                 <input type="hidden" asp-for="DealerId" />
@@ -39,7 +36,7 @@
                 </div>
 
                 <div class="col-12">
-                    <input asp-for="IsConfirmed" type="checkbox" class="" /> IsConfirmed
+                    <input asp-for="IsConfirmed" type="checkbox" class="" /> Is Confirmed
                     <span asp-validation-for="IsConfirmed" class="text-danger"></span>
                 </div>
 

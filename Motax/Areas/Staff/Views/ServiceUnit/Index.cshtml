@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Motax.Models.ServiceUnit>
+@{
+    ViewData["Title"] = "Index ServiceUnit";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">List ServiceUnit </div> -------
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>Dealer</th>
+                                <th>Vehicle Preparation Day</th>
+                                <th>Service Details</th>
+                                <th>Pickup Date</th>
+                                <th>Is Completed</th>
+                                <th>Invoice</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Car?.Name</td>
+                                    <td>@item.Dealer?.Name</td>
+                                    <td>@item.ServiceDate.ToShortDateString()</td>
+                                    <td>@item.ServiceDetails</td>
+                                    <td>@item.PickupDate?.ToShortDateString()</td>
+                                    <td>@item.IsCompleted</td>
+                                    <td>
+                                        <a asp-controller="CarRegistration" asp-action="Detail" asp-route-id="@item.CarRegistrationId" class="btn btn-primary">View</a>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Create" asp-controller="DeliveryUnit" asp-route-serviceUnitId="@item.Id" class="">
+                                            <span class="btn btn-primary">Create DeliveryUnit</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

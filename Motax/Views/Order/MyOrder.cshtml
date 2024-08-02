@@ -79,8 +79,8 @@
                                                     <td>@order.TotalAmount</td>
                                                     <td>@order.OrderStatus?.Status</td>
                                                     <td>
-                                                        @if (order.OrderStatus?.Status == "New Order")
-                                                        {
+                                                            @if (order.OrderStatus?.Status == "Pending")
+                                                            {
                                                             <form asp-action="CancelOrder" asp-controller="Order" method="post" style="display:inline;">
                                                                 <input type="hidden" name="orderId" value="@order.Id" />
                                                                 <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
@@ -89,11 +89,12 @@
                                                                 <input type="hidden" name="orderId" value="@order.Id" />
                                                                 <button type="submit" class="btn btn-sm btn-success">Confirm</button>
                                                             </form>
-                                                        }
-                                                        else
-                                                        {
+                                                            }
+                                                            else
+                                                            {
                                                             <span class="text-muted">No action available</span>
-                                                        }
+                                                            <p>Order Status: @order.OrderStatus?.Status</p> <!-- Thêm dòng này để hiển thị trạng thái đơn hàng -->
+                                                            }
                                                     </td>
                                                 </tr>
                                             }
