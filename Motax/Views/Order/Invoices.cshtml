@@ -63,6 +63,7 @@
                                                 <th>Invoice Date</th>
                                                 <th>Total Amount</th>
                                                 <th>Status</th>
+                                                <th>Detail</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -74,6 +75,9 @@
                                                         <td>@invoice.InvoiceDate.ToString("yyyy-MM-dd")</td>
                                                         <td>@invoice.TotalAmount$</td>
                                                         <td style="color:darkred">@invoice.Status</td>
+                                                        <td>
+                                                            <a asp-action="InvoiceDetail" asp-route-id="@invoice.Id" class="btn btn-primary btn-sm">View</a>
+                                                        </td>
                                                     </tr>
                                                 }
                                             }

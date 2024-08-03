@@ -197,7 +197,7 @@
                         <form asp-action="CreateOrder" asp-controller="Order" method="post">
                             <input type="hidden" name="UserId" value="@Model.User.Id" />
                             <input type="hidden" name="CarId" value="@Model.CarDetails.Id" />
-                            <input type="hidden" name="TotalPrice" value="@(Model.Price + (Model.Price * 0.10))" />
+                            <input type="hidden" name="TotalPrice" value="@(Model.Price + (Model.Price * 0.01))" />
                             <button type="submit" class="theme-btn">Confirm order creation<i class="fas fa-arrow-right"></i></button>
                         </form>
                     </div>

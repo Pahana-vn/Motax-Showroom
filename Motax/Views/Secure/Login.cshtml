@@ -4,67 +4,88 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="login-area py-120" style="background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeBwBOG1sd8YJ5oC4jo8a_pkiFRns-W9rPuw&s') no-repeat center center; background-size: cover;">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <img src="https://thietkenha.pro/images/stories/showroom/showroom-xe-hoi-1.jpg" alt="Car Image" class="img-fluid">
-            </div>
-            <div class="col-md-6">
-                <div class="login-form">
-                    <div class="login-header">
-                        <img src="~/Frontend/assets/img/logo/logo.png" alt="">
-                        <p>Create your motex account</p>
-                    </div>
-                    @{
-                        if (TempData["error"] != null)
-                        {
-                            <div class="alert alert-danger">@TempData["error"]</div>
-                        }
-                    }
-                    <form asp-action="Login" method="post">
-                        @Html.AntiForgeryToken()
-                        <div asp-validation-summary="ModelOnly"></div>
-
-                        <div class="form-group">
-                            <label>User Name</label>
-                            <input asp-for="UserName" class="form-control" placeholder="Your Name">
-                            <span class="text-danger" asp-validation-for="UserName"></span>
-                        </div>
-
-                        
-
-                        <div class="form-group">
-                            <label>Password</label>
-                            <input asp-for="Password" type="password" class="form-control" placeholder="Your Password">
-                            <span class="text-danger" asp-validation-for="Password"></span>
-                        </div>
-
-
-                        <div class="d-flex justify-content-between mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value ="" id="remember">
-                                <label class="form-check-label" for="remember">
-                                    Remember Me
-                                </label>
-                            </div>
-                            <a asp-action="ForgotPassword" asp-controller="Secure" class="forgot-pass">Forgot Password?</a>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <button type="submit" class="theme-btn"><i class="far fa-paper-plane"></i> Login</button>
-                        </div>
-                    </form>
-                    <div class="login-footer">
-                        <div class="social-login">
-                            <p>Continue with social media</p>
-                            <div class="social-login-list">
-                                <a asp-action="SignInFacebook" asp-controller="Auth"><i class="fab fa-facebook-f"></i></a>
-                                <a asp-action="SignInGoogle" asp-controller="Auth"><i class="fab fa-google"></i></a>
-                            </div>
-                        </div>
-                    </div>
+<div class="container-fluid custom-page">
+    <div class="row bg-white">
+        <!-- The image half -->
+        <div class="col-md-6 col-lg-6 col-xl-7 d-none d-md-flex bg-primary-transparent-3">
+            <div class="row w-100 mx-auto text-center">
+                <div class="col-md-12 col-lg-12 col-xl-12 my-auto mx-auto w-100">
+                    <img src="~/Backend/assets/images/media/pngs/51.png"
+                         class="my-auto ht-xl-80p wd-md-100p wd-xl-80p mx-auto" alt="logo">
                 </div>
             </div>
         </div>
+        <!-- The content half -->
+        <div class="col-md-6 col-lg-6 col-xl-5 bg-white py-4">
+            <div class="login d-flex align-items-center py-2">
+                <!-- Demo content-->
+                <div class="container p-0">
+                    <div class="row">
+                        <div class="col-md-10 col-lg-10 col-xl-9 mx-auto">
+                            <div class="card-sigin">
+                                <div class="mb-5 d-flex">
+                                    <a href="index.html" class="header-logo">
+                                        <img src="~/Backend/assets/images/brand-logos/desktop-white1.png"
+                                             class="desktop-logo ht-40" alt="logo">
+                                        <img src="~/Backend/assets/images/brand-logos/desktop-white1.png"
+                                             class="desktop-white ht-40" alt="logo">
+                                    </a>
+                                </div>
+                                <div class="card-sigin">
+                                    <div class="main-signup-header">
+                                        <h3>Welcome back!</h3>
+                                        <h6 class="fw-medium mb-4 fs-17">Please sign in to continue.</h6>
+                                        @{
+                                            if (TempData["error"] != null)
+                                            {
+                                                <div class="alert alert-danger">@TempData["error"]</div>
+                                            }
+                                        }
+                                        <form asp-action="Login" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <div asp-validation-summary="ModelOnly"></div>
+
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">Username account</label>
+                                                <input asp-for="UserName" class="form-control"type="text">
+                                                <span class="text-danger" asp-validation-for="UserName"></span>
+                                                </div>
+
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">Password</label> <input asp-for="Password" class="form-control" type="password">
+                                                <span class="text-danger" asp-validation-for="Password"></span>
+                                            </div>
+                                            <button type="submit" class="btn btn-success btn-block w-100">Sign In</button>
+                                        </form>
+                                        <div class="row mt-3">
+                                            <div class="col-sm-6">
+                                                <a asp-action="SignInFacebook" asp-controller="Auth" class="btn btn-primary btn-facebook">
+                                                    <i class="fab fa-facebook-f me-2"></i> Signup with Facebook
+                                                </a>
+                                            </div>
+                                            <div class="col-sm-6 mt-2 mt-sm-0">
+                                                <a asp-action="SignInGoogle" asp-controller="Auth" style="color:white" class="btn btn-danger btn-block w-100">
+                                                    <i class="fab fa-twitter me-2"></i> Signup with Google
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="main-signin-footer mt-5">
+                                            <p class="mb-1">
+                                                <a asp-action="ForgotPassword" asp-controller="Secure">Forgot password?</a>
+                                            </p>
+                                            <p> Don't have an account?
+                                                <a asp-action="Register" asp-controller="Secure"> Create an Account  </a>
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End -->
+            </div>
+        </div><!-- End -->
     </div>
 </div>

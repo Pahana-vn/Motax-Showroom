@@ -4,6 +4,7 @@ namespace Motax.ViewModels
 {
     public class CarRegistrationDetailVM
     {
+        public int CarRegistrationId { get; set; }
         public int CarId { get; set; }
         public int UserId { get; set; }
         public DateTime RegistrationDate { get; set; }

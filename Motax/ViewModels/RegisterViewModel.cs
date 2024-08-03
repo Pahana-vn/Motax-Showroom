@@ -20,6 +20,7 @@ namespace Motax.ViewModels
         public string? ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Please enter phone *")]
+        [RegularExpression(@"0[9875]\d{8}", ErrorMessage = "Incorrect Vietnamese phone number format")]
         public string? Phone { get; set; }
 
         [Required(ErrorMessage = "Please enter address *")]

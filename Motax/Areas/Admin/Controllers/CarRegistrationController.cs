@@ -36,47 +36,41 @@ namespace Motax.Areas.Admin.Controllers
 
         [Route("Register")]
         [HttpGet]
-        public async Task<IActionResult> Register(int carId)
+        public async Task<IActionResult> Register(int orderId)
         {
-            var car = await db.Cars.FindAsync(carId);
-            if (car == null)
+            var order = await db.Orders
+                .Include(o => o.Car)
+                .Include(o => o.Dealer)
+                .Include(o => o.Account)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
             {
-                TempData["error"] = "Car not found.";
+                TempData["error"] = "Order not found.";
                 return RedirectToAction("Index", "Home");
             }
 
             var orderStatuses = await db.OrderStatus.ToListAsync();
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-            if (userIdClaim == null)
-            {
-                TempData["error"] = "User not authenticated.";
-                return RedirectToAction("Index", "Home");
-            }
-
-            int userId;
-            if (!int.TryParse(userIdClaim.Value, out userId))
-            {
-                TempData["error"] = "Invalid user ID.";
-                return RedirectToAction("Index", "Home");
-            }
-
-            var carPrice = car.Price ?? 0;
 
             var viewModel = new CarRegistrationVM
             {
-                CarId = carId,
-                UserId = userId,
+                CarId = order.CarId,
+                UserId = order.AccountId,
                 RegistrationDate = DateTime.Now,
-                CarPrice = carPrice, // Set giá trị xe từ cơ sở dữ liệu
-                RegistrationFee = carPrice * 0.02, // Phí đăng ký là 2%
-                TaxAmount = carPrice * 0.10, // Thuế là 10%
-                TotalAmount = carPrice + (carPrice * 0.02) + (carPrice * 0.10), // Tổng giá trị
-                OrderStatusList = orderStatuses
+                CarPrice = order.Car.Price ?? 0,
+                RegistrationFee = (order.Car.Price ?? 0) * 0.02, // Registration fee is 2%
+                TaxAmount = (order.Car.Price ?? 0) * 0.10, // Tax is 10%
+                TotalAmount = (order.Car.Price ?? 0) + (order.Car.Price ?? 0) * 0.01 + (order.Car.Price ?? 0) * 0.02 + (order.Car.Price ?? 0) * 0.10,
+                OrderStatusList = orderStatuses,
+                CustomerName = order.Account.Username,
+                CustomerAddress = order.Address,
+                CustomerPhone = order.Phone,
+                CustomerEmail = order.Account.Email
             };
 
             return View(viewModel);
         }
+
 
 
         [Route("Register")]
@@ -93,18 +87,6 @@ namespace Motax.Areas.Admin.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                // Ensure the CarPrice is not null
-                if (registrationVM.CarPrice == null)
-                {
-                    TempData["error"] = "Car price not found.";
-                    return RedirectToAction("Index", "Home");
-                }
-
-                // Ensure the values are calculated properly
-                registrationVM.RegistrationFee = registrationVM.CarPrice * 0.02;
-                registrationVM.TaxAmount = registrationVM.CarPrice * 0.10;
-                registrationVM.TotalAmount = registrationVM.CarPrice + registrationVM.RegistrationFee + registrationVM.TaxAmount;
-
                 var registration = new CarRegistration
                 {
                     CarId = registrationVM.CarId,
@@ -116,16 +98,16 @@ namespace Motax.Areas.Admin.Controllers
                     CustomerEmail = registrationVM.CustomerEmail,
                     LicensePlate = registrationVM.LicensePlate,
                     RegistrationNumber = registrationVM.RegistrationNumber,
-                    RegistrationFee = registrationVM.RegistrationFee,
-                    TaxAmount = registrationVM.TaxAmount,
+                    RegistrationFee = registrationVM.CarPrice * 0.02,
+                    TaxAmount = registrationVM.CarPrice * 0.10,
                     PaymentStatus = registrationVM.PaymentStatus,
                     InsuranceDetails = registrationVM.InsuranceDetails,
                     InspectionDate = registrationVM.InspectionDate,
                     Notes = registrationVM.Notes,
-                    TotalAmount = registrationVM.TotalAmount,
+                    TotalAmount = registrationVM.CarPrice + registrationVM.CarPrice * 0.01 + registrationVM.CarPrice * 0.02 + registrationVM.CarPrice * 0.10,
                     OrderStatusId = registrationVM.OrderStatusId,
                     DriverLicenseNumber = registrationVM.DriverLicenseNumber,
-                    Status = "Pending" // Trạng thái ban đầu của đăng ký
+                    Status = "Pending"
                 };
 
                 db.CarRegistrations.Add(registration);
@@ -135,10 +117,10 @@ namespace Motax.Areas.Admin.Controllers
                 return RedirectToAction("Index", "CarRegistration");
             }
 
-            // Reload the OrderStatusList in case of an error
             registrationVM.OrderStatusList = await db.OrderStatus.ToListAsync();
             return View(registrationVM);
         }
+
 
 
         [Route("Detail/{id}")]
@@ -164,6 +146,7 @@ namespace Motax.Areas.Admin.Controllers
 
             var viewModel = new CarRegistrationDetailVM
             {
+                CarRegistrationId = registration.Id, // Set this property
                 CarId = registration.CarId,
                 UserId = registration.UserId,
                 RegistrationDate = registration.RegistrationDate,
@@ -195,11 +178,17 @@ namespace Motax.Areas.Admin.Controllers
             return View(viewModel);
         }
 
+
         [Route("SendInvoice/{id}")]
         [HttpPost]
         public async Task<IActionResult> SendInvoice(int id)
         {
-            var carRegistration = await db.CarRegistrations.Include(cr => cr.User).FirstOrDefaultAsync(cr => cr.Id == id);
+            var carRegistration = await db.CarRegistrations
+                .Include(cr => cr.User)
+                .Include(cr => cr.Car)
+                .ThenInclude(car => car.Dealer)
+                .FirstOrDefaultAsync(cr => cr.Id == id);
+
             if (carRegistration == null)
             {
                 TempData["error"] = "Car registration not found.";
@@ -222,6 +211,7 @@ namespace Motax.Areas.Admin.Controllers
             TempData["success"] = "Invoice sent successfully.";
             return RedirectToAction("Detail", new { id = id });
         }
+
 
 
     }

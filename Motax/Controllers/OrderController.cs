@@ -203,6 +203,24 @@ namespace Motax.Controllers
             return RedirectToAction("Login", "Secure");
         }
 
+        [HttpGet]
+        [Route("Order/InvoiceDetail/{id}")]
+        public async Task<IActionResult> InvoiceDetail(int id)
+        {
+            var invoice = await db.Invoices
+                                  .Include(i => i.CarRegistration)
+                                  .ThenInclude(cr => cr.Car)
+                                  .ThenInclude(car => car.Dealer)
+                                  .FirstOrDefaultAsync(i => i.Id == id);
+
+            if (invoice == null)
+            {
+                TempData["error"] = "Invoice not found.";
+                return RedirectToAction("Invoices");
+            }
+
+            return View(invoice);
+        }
 
 
 
