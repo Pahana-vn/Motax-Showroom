@@ -40,13 +40,6 @@ namespace Motax.Areas.Admin.Controllers
 
         }
 
-        [Route("Index2")]
-        public async Task<IActionResult> Index2()
-        {
-            return View(await db.Cars.OrderByDescending(c => c.Id).ToListAsync());
-
-        }
-
         #region Create
         [Route("Create")]
         [HttpGet]

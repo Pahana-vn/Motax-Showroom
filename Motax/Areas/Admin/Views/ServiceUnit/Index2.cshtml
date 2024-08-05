@@ -23,7 +23,6 @@
                                 <th>Service Details</th>
                                 <th>Pickup Date</th>
                                 <th>Is Completed</th>
-                                <th>Invoice</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -38,12 +37,6 @@
                                     <td>@item.PickupDate?.ToShortDateString()</td>
                                     <td>@item.IsCompleted</td>
                                     <td>
-                                        <a asp-controller="CarRegistration" asp-action="Detail" asp-route-id="@item.CarRegistrationId" class="btn btn-primary">View</a>
-                                    </td>
-                                    <td>
-                                        <a asp-action="Create" asp-controller="DeliveryUnit" asp-route-serviceUnitId="@item.Id" class="btn btn-primary">
-                                            Create DeliveryUnit
-                                        </a>
                                         <a asp-action="Create" asp-controller="GoodsReceipt" asp-route-serviceUnitId="@item.Id" class="btn btn-secondary">
                                             Receive Vehicle
                                         </a>

@@ -38,7 +38,7 @@
                                         @{
                                             if (TempData["error"] != null)
                                             {
-                                                <div class="alert alert-danger">@TempData["error"]</div>
+                                                    <div class="alert alert-danger">@TempData["error"]</div>
                                             }
                                         }
                                         <form asp-action="Login" method="post">
@@ -52,9 +52,11 @@
                                                 </div>
 
                                             <div class="form-group mb-3">
-                                                <label class="form-label">Password</label> <input asp-for="Password" class="form-control" type="password">
+                                                <label class="form-label">Password</label>                              <input type="password" asp-for="Password" id="pwd" class="form-control">
+                                                <input type="checkbox" id="chk" /> ShowPass
                                                 <span class="text-danger" asp-validation-for="Password"></span>
                                             </div>
+
                                             <button type="submit" class="btn btn-success btn-block w-100">Sign In</button>
                                         </form>
                                         <div class="row mt-3">
@@ -89,3 +91,12 @@
         </div><!-- End -->
     </div>
 </div>
+
+<script>
+    const pwd = document.getElementById("pwd");
+    const chk = document.getElementById("chk");
+
+    chk.onchange = function (e) {
+        pwd.type = chk.checked ? "text" : "password";
+    };
+</script>

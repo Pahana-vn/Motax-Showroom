@@ -9,5 +9,8 @@
         public string? ServiceDetails { get; set; }
         public bool IsCompleted { get; set; }
         public DateTime? PickupDate { get; set; }
+        public string? DealerName { get; set; }
+        public string? DealerAddress { get; set; }
+        public string? DealerPhone { get; set; }
     }
 }

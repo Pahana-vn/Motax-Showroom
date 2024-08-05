@@ -28,6 +28,30 @@ namespace Motax.Areas.Admin.Controllers
 
             return View(orders);
         }
+
+        [Route("Index2")]
+        public async Task<IActionResult> Index2()
+        {
+            var orders = await db.Orders
+                .Include(o => o.OrderStatus) // Bao gồm OrderStatus
+                .OrderByDescending(b => b.Id)
+                .ToListAsync();
+
+            return View(orders);
+        }
+
+        [Route("Index3")]
+        public async Task<IActionResult> Index3()
+        {
+            var orders = await db.Orders
+                .Include(o => o.OrderStatus)
+                .Where(o => o.OrderStatus.Status == "Customer Confirmed")
+                .OrderByDescending(b => b.Id)
+                .ToListAsync();
+
+            return View(orders);
+        }
+
         #region Detail
         [Route("Details/{id}")]
         public async Task<IActionResult> Details(int id)
@@ -121,26 +145,51 @@ namespace Motax.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
         [Route("ConfirmOrder")]
+        [HttpPost]
         public async Task<IActionResult> ConfirmOrder(int orderId)
         {
-            var order = await db.Orders.FindAsync(orderId);
+            var order = await db.Orders
+                .Include(o => o.Car)
+                .Include(o => o.Dealer)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
             if (order != null)
             {
-                var orderStatus = db.OrderStatus.FirstOrDefault(os => os.Status == "Customer Confirmed");
-                order.OrderStatusId = orderStatus?.Id ?? 0;
-                db.Orders.Update(order);
-                await db.SaveChangesAsync();
-                TempData["success"] = "Order confirmed successfully.";
+                var orderStatus = await db.OrderStatus.FirstOrDefaultAsync(os => os.Status == "Customer Confirmed");
+                if (orderStatus != null)
+                {
+                    order.OrderStatusId = orderStatus.Id;
+                    db.Orders.Update(order);
+                    await db.SaveChangesAsync();
+
+                    // Create a service order to prepare the vehicle
+                    await CreateServiceOrder(order);
+
+                    TempData["success"] = "Order confirmed and service order created successfully!";
+                    return RedirectToAction("Details", new { id = orderId });
+                }
             }
-            else
-            {
-                TempData["error"] = "Order not found.";
-            }
-            return RedirectToAction("Index");
+
+            TempData["error"] = "Order confirmation failed.";
+            return RedirectToAction("Details", new { id = orderId });
         }
         #endregion
 
+        private async Task CreateServiceOrder(Order order)
+        {
+            var serviceOrder = new ServiceUnit
+            {
+                CarId = order.CarId,
+                DealerId = order.DealerId,
+                ServiceDate = DateTime.Now,
+                ServiceDetails = "Prepare the vehicle for delivery.",
+                IsCompleted = false,
+                PickupDate = order.DeliveryDate,
+                CarRegistrationId = 0 // Set this appropriately if you have a CarRegistrationId
+            };
+
+            db.ServiceUnits.Add(serviceOrder);
+            await db.SaveChangesAsync();
+        }
     }
 }

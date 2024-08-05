@@ -57,6 +57,7 @@ public partial class MotaxContext : DbContext
     public DbSet<OrderAccessories> OrderAccessories { get; set; }
     public DbSet<OrderDetailAccessories> OrderDetailAccessories { get; set; }
     public DbSet<Invoices> Invoices { get; set; }
+    public DbSet<GoodsReceipt> GoodsReceipts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=DESKTOP-0QD3R2K;Initial Catalog=Motax;Integrated Security=True;Trust Server Certificate=True");

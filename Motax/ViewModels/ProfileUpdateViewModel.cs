@@ -7,13 +7,14 @@ namespace Motax.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Please enter fullname *")]
+        [Required(ErrorMessage = "Please enter user name *")]
         public string? Username { get; set; }
 
         [Required(ErrorMessage = "Please enter email *")]
         public string? Email { get; set; }
 
         [Required(ErrorMessage = "Please enter phone *")]
+        [RegularExpression(@"0[9875]\d{8}", ErrorMessage = "Incorrect Vietnamese phone number format")]
         public string? Phone { get; set; }
 
         [Required(ErrorMessage = "Please enter address *")]

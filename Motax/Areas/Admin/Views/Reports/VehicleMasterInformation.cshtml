@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Motax.ViewModels.VehicleMasterInformationViewModel>
+@{
+    ViewData["Title"] = "VehicleMasterInformation";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">Vehicle Master Information Report</div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    @if (TempData["error"] != null)
+                    {
+                        <div class="alert alert-warning">
+                            @TempData["error"]
+                        </div>
+                    }
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                
+                                <th>Dealer Name</th>
+                                <th>Dealer Address</th>
+                                <th>Dealer Phone</th>
+                                <th>Car Name</th>
+                                <th>Brand Name</th>
+                                <th>Year</th>
+                                <th>Price</th>
+                              
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    
+                                    <td>@item.DealerName</td>
+                                    <td>@item.DealerAddress</td>
+                                    <td>@item.DealerPhone</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Brand</td>
+                                    <td>@item.Year</td>
+                                    <td>@item.Price</td>
+                                
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1591,18 +1591,18 @@
                         <!-- End::slide -->
 
                         <!-- Start::slide__category -->
-                        <li class="slide__category"><span class="category-name">Account</span></li>
+                        <li class="slide__category"><span class="category-name">Role Management</span></li>
                         <!-- End::slide__category -->
                         <!-- Start::slide -->
                         <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M5 5h4v6H5zm10 8h4v6h-4zM5 17h4v2H5zM15 5h4v2h-4z" opacity=".3" /><path d="M3 13h8V3H3v10zm2-8h4v6H5V5zm8 16h8V11h-8v10zm2-8h4v6h-4v-6zM13 3v6h8V3h-8zm6 4h-4V5h4v2zM3 21h8v-6H3v6zm2-4h4v2H5v-2z" /></svg>
-                                <span class="side-menu__label">All Account</span>
+                                <span class="side-menu__label">Manage Employee</span>
                                 <i class="fe fe-chevron-right side-menu__angle"></i>
                             </a>
                             <ul class="slide-menu child1">
                                 <li class="slide">
-                                    <a asp-action="Index" asp-controller="Secure" class="side-menu__item">Create Account</a>
+                                    <a asp-action="Index" asp-controller="Secure" class="side-menu__item">Permission Management</a>
                                 </li>
                             </ul>
                         </li>
@@ -1622,7 +1622,7 @@
                             </a>
                             <ul class="slide-menu child1">
                                 <li class="slide">
-                                    <a asp-action="Index" asp-controller="Accessories" class="side-menu__item">Accessories</a>
+                                    <a asp-action="Index" asp-controller="Accessories" class="side-menu__item">Accessories Division</a>
                                 </li>
                                 <li class="slide">
                                     <a asp-action="Index" asp-controller="Brand" class="side-menu__item">Brand</a>
@@ -1631,7 +1631,7 @@
                                     <a asp-action="Index" asp-controller="Category" class="side-menu__item">Category Accessory</a>
                                 </li>
                                 <li class="slide">
-                                    <a asp-action="Index" asp-controller="Car" class="side-menu__item">Car</a>
+                                    <a asp-action="Index" asp-controller="Car" class="side-menu__item">Vehicle Division</a>
                                 </li>
                             </ul>
                         </li>
@@ -1640,7 +1640,7 @@
                        
 
                         <!-- Start::slide__category -->
-                        <li class="slide__category"><span class="category-name">Manager Dealers</span></li>
+                        <li class="slide__category"><span class="category-name">Vendors</span></li>
                         <!-- End::slide__category -->
                         <!-- Start::slide -->
                         <li class="slide has-sub">
@@ -1673,19 +1673,21 @@
                                 <i class="fe fe-chevron-right side-menu__angle"></i>
                             </a>
                             <ul class="slide-menu child1">
-                                <li class="slide">
-                                    <a asp-controller="Warehouse" asp-action="ManageAvailability" class="side-menu__item">Ware House</a>
-                                </li>
 
                                 <li class="slide">
                                     <a asp-action="Index" asp-controller="Order" class="side-menu__item">Orders</a>
                                 </li>
+
+                                <li class="slide">
+                                    <a asp-action="Index3" asp-controller="Order" class="side-menu__item">Orders - Customer Confirmed</a>
+                                </li>
+
                             </ul>
                         </li>
                         <!-- End::slide -->
 
                         <!-- Start::slide__category -->
-                        <li class="slide__category"><span class="category-name">CarRegistration</span></li>
+                        <li class="slide__category"><span class="category-name">Vehicle Management</span></li>
                         <!-- End::slide__category -->
 
                         <!-- Start::slide -->
@@ -1696,8 +1698,21 @@
                                 <i class="fe fe-chevron-right side-menu__angle"></i>
                             </a>
                             <ul class="slide-menu child1">
+
                                 <li class="slide">
-                                    <a asp-action="Index2" asp-controller="Car" class="side-menu__item">Car Registration</a>
+                                    <a asp-action="Index2" asp-controller="ServiceUnit" class="side-menu__item">Create Vehicle Receipt</a>
+                                </li>
+
+                                <li class="slide">
+                                    <a asp-action="Index" asp-controller="GoodsReceipt" class="side-menu__item">List ServiceUnit</a>
+                                </li>
+
+                                <li class="slide">
+                                    <a asp-controller="Warehouse" asp-action="ManageAvailability" class="side-menu__item">Update Ware House</a>
+                                </li>
+
+                                <li class="slide">
+                                    <a asp-action="Index2" asp-controller="Order" class="side-menu__item">Car Registration</a>
                                 </li>
 
                                 <li class="slide">
@@ -1710,7 +1725,7 @@
                        
 
                         <!-- Start::slide__category -->
-                        <li class="slide__category"><span class="category-name">Shipping Services</span></li>
+                        <li class="slide__category"><span class="category-name">Vehicle Requisition</span></li>
                         <!-- End::slide__category -->
                         <!-- Start::slide -->
                         <li class="slide has-sub">
@@ -1721,7 +1736,7 @@
                             </a>
                             <ul class="slide-menu child1">
                                 <li class="slide">
-                                    <a asp-action="Index2" asp-controller="CarRegistration" class="side-menu__item">Create Shipping</a>
+                                    <a asp-action="Index2" asp-controller="CarRegistration" class="side-menu__item">Create Shipping service</a>
                                 </li>
 
                                 <li class="slide">
@@ -1735,7 +1750,44 @@
                         </li>
                         <!-- End::slide -->
 
-                       
+
+
+                        <!-- Start::slide__category -->
+                        <li class="slide__category"><span class="category-name">Reports</span></li>
+                        <!-- End::slide__category -->
+                        <!-- Start::slide -->
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M5 9h14V5H5v4zm2-3.5c.83 0 1.5.67 1.5 1.5S7.83 8.5 7 8.5 5.5 7.83 5.5 7 6.17 5.5 7 5.5zM5 19h14v-4H5v4zm2-3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z" opacity=".3" /><path d="M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zm-1 6H5v-4h14v4zm-12-.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5zM20 3H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm-1 6H5V5h14v4zM7 8.5c.83 0 1.5-.67 1.5-1.5S7.83 5.5 7 5.5 5.5 6.17 5.5 7 6.17 8.5 7 8.5z" /></svg>
+                                <span class="side-menu__label">All Reports</span>
+                                <i class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide">
+                                    <a asp-action="StockAvailability" asp-controller="Reports" class="side-menu__item">Stock Availability Report</a>
+                                </li>
+
+                                <li class="slide">
+                                    <a asp-action="CustomerInformation" asp-controller="Reports" class="side-menu__item">Customer Information Report</a>
+                                </li>
+
+                                <li class="slide">
+                                    <a asp-controller="Reports" asp-action="VehicleMasterInformation" class="side-menu__item">Vehicle Master Information Report</a>
+                                </li>
+                                    
+                                <li class="slide">
+                                    <a asp-controller="Reports" asp-action="AllotmentDetails" class="side-menu__item">Allotment Details Report</a>
+                                </li>
+
+                                <li class="slide">
+                                    <a asp-controller="Reports" asp-action="WaitingListDetails" class="side-menu__item">WaitingListDetails report</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                        <!-- End::slide -->
+
+
 
                     </ul>
                     <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24"> <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path> </svg></div>

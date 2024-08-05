@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Motax.Models.Order>
 @{
-    ViewData["Title"] = "Index order";
+    ViewData["Title"] = "Index2 order";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
 }
 
@@ -8,7 +8,7 @@
     <div class="col-xl-12">
         <div class="card custom-card">
             <div class="card-header">
-                <div class="card-title">List Order</div>
+                <div class="card-title">List Order </div>
                 <div class="card-title">
                     <a class="btn btn-success label-btn" asp-action="Create" asp-controller="Order"> <i class="ri-chat-smile-line label-btn-icon me-2"></i> Add Order</a>
                 </div>
@@ -20,11 +20,12 @@
                         <thead>
                             <tr>
                                 <th>Order Code</th>
-                                <th>Order Date</th>
+                                <th>Name customer</th>
+                                <th>Delivery Date</th>
                                 <th>Total Amount</th>
-                                <th>Status</th>
                                 <th>Check vehicle</th>
                                 <th>Detail</th>
+                                <th>Register Car</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -33,23 +34,17 @@
                             {
                                 <tr>
                                     <td>@item.OrderCode</td>
-                                    <td>@item.OrderDate</td>
+                                    <td>@item.Username</td>
+                                    <td>@item.DeliveryDate</td>
                                     <td>@item.TotalAmount</td>
                                     <td>
-                                        @if (item.OrderStatus != null)
-                                        {
-                                            <span class="@item.OrderStatus.Status.ToLower()">@item.OrderStatus.Status</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-danger">No Status</span>
-                                        }
+                                        <a class="" asp-action="Details2" asp-controller="Order" asp-route-id="@item.Id"> <span class="btn btn-primary">Data Car</span></a>
                                     </td>
                                     <td>
-                                        <a class="btn btn-primary" asp-action="Details2" asp-controller="Order" asp-route-id="@item.Id">Data Car</a>
+                                        <a class="" asp-action="Details" asp-controller="Order" asp-route-id="@item.Id"> <span class="btn btn-primary">Detail</span></a>
                                     </td>
                                     <td>
-                                        <a class="btn btn-primary" asp-action="Details" asp-controller="Order" asp-route-id="@item.Id">Detail</a>
+                                        <a class="btn btn-primary" asp-action="Register" asp-controller="CarRegistration" asp-route-orderId="@item.Id">Register Car</a>
                                     </td>
                                     <td>
                                         <a class="btn btn-icon btn-sm btn-info-transparent rounded-pill" asp-action="Edit" asp-controller="Order" asp-route-id="@item.Id"> <i class="ri-edit-line"></i> </a>
@@ -70,4 +65,3 @@
         </div>
     </div>
 </div>
-

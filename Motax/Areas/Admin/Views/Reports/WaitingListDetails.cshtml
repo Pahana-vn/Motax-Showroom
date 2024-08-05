@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Motax.ViewModels.WaitingListDetailsViewModel>
+@{
+    ViewData["Title"] = "WaitingListDetails";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<h1>WaitingListDetails</h1>
+
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">WaitingListDetails report</div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    @if (TempData["error"] != null)
+                    {
+                        <div class="alert alert-warning">
+                            @TempData["error"]
+                        </div>
+                    }
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Car Name</th>
+                                <th>Order Date</th>
+                                <th>Delivery Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Username</td>
+                                    <td>@item.CarName</td>
+                                    <td>@item.OrderDate.ToString("yyyy-MM-dd")</td>
+                                    <td>@item.DeliveryDate.ToString("yyyy-MM-dd")</td>
+                                    <td>@item.StatusDescription</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

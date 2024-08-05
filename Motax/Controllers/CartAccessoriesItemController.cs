@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using Motax.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Motax.Controllers
 {
@@ -122,6 +123,36 @@ namespace Motax.Controllers
             {
                 return Redirect("/");
             }
+
+            // Get the logged-in user's ID from claims
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                TempData["error"] = "User not logged in.";
+                return RedirectToAction("Login", "Secure");
+            }
+
+            var user = db.Accounts.Find(int.Parse(userId));
+
+            if (user == null)
+            {
+                TempData["error"] = "User not found.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Check if all required user fields are present and valid
+            if (string.IsNullOrWhiteSpace(user.Username) || user.Username.Trim().ToLower() == "null" ||
+                string.IsNullOrWhiteSpace(user.Email) || user.Email.Trim().ToLower() == "null" ||
+                string.IsNullOrWhiteSpace(user.Address) || user.Address.Trim().ToLower() == "null" ||
+                string.IsNullOrWhiteSpace(user.Phone) || user.Phone.Trim().ToLower() == "null" ||
+                string.IsNullOrWhiteSpace(user.Gender) || user.Gender.Trim().ToLower() == "null" ||
+                !user.Dob.HasValue)
+            {
+                TempData["error"] = "Please complete your profile before proceeding with the order.";
+                return RedirectToAction("Profile", "Secure");
+            }
+
+
             ViewBag.PaypalClientId = _paypalClient.ClientId;
             return View(Cart);
         }

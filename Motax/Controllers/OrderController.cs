@@ -27,6 +27,7 @@ namespace Motax.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
+                TempData["error"] = "User not logged in.";
                 return RedirectToAction("Login", "Secure");
             }
 
@@ -39,6 +40,18 @@ namespace Motax.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            // Check if all required user fields are present
+            if (string.IsNullOrWhiteSpace(user.Username) || user.Username.ToLower() == "null" ||
+                string.IsNullOrWhiteSpace(user.Email) || user.Email.ToLower() == "null" ||
+                string.IsNullOrWhiteSpace(user.Address) || user.Address.ToLower() == "null" ||
+                string.IsNullOrWhiteSpace(user.Phone) || user.Phone.ToLower() == "null" ||
+                string.IsNullOrWhiteSpace(user.Gender) || user.Gender.ToLower() == "null" ||
+                !user.Dob.HasValue)
+            {
+                TempData["error"] = "Please complete your profile before proceeding with the order.";
+                return RedirectToAction("Profile", "Secure");
+            }
+
             var viewModel = new CheckoutViewModel
             {
                 User = user,
@@ -48,6 +61,8 @@ namespace Motax.Controllers
 
             return View(viewModel);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> CreateOrder(int userId, int carId, double totalPrice)

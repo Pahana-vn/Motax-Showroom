@@ -54,15 +54,18 @@
                                             </div>
 
                                             <div class="row">
+
                                                 <div class="form-group col-md-6 mb-3">
                                                     <label class="form-label">Password</label>
-                                                    <input class="form-control" asp-for="Password" type="password">
+                                                    <input id="pwd" class="form-control" asp-for="Password" type="password">
+                                                    <input type="checkbox" id="chk" /> ShowPass
                                                     <span class="text-danger" asp-validation-for="Password"></span>
                                                 </div>
 
                                                 <div class="form-group col-md-6 mb-3">
                                                     <label class="form-label">Confirm Password</label>
-                                                    <input class="form-control" asp-for="ConfirmPassword" type="password">
+                                                    <input id="pwd2" class="form-control" asp-for="ConfirmPassword" type="password">
+                                                    <input type="checkbox" id="chk2" /> ShowPass Confirm
                                                     <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
                                                 </div>
                                             </div>
@@ -134,3 +137,17 @@
         </div><!-- End -->
     </div>
 </div>
+
+<script>
+    const pwd = document.getElementById("pwd");
+    const pwd2 = document.getElementById("pwd2");
+    const chk = document.getElementById("chk");
+    const chk2 = document.getElementById("chk2");
+
+    chk.onchange = function (e) {
+        pwd.type = chk.checked ? "text" : "password";
+    };
+    chk2.onchange = function (e) {
+        pwd2.type = chk2.checked ? "text" : "password";
+    };
+</script>
