@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Motax.Models.GoodsReceipt>
+
+@{
+    ViewData["Title"] = "Goods Receipts";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">List of Goods Receipts</div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>Dealer</th>
+                                <th>VIN</th>
+                                <th>Receipt Date</th>
+                                <th>Receipt Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Car?.Name</td>
+                                    <td>@item.Dealer?.Name</td>
+                                    <td>@item.VIN</td>
+                                    <td>@item.ReceiptDate.ToShortDateString()</td>
+                                    <td>@item.ReceiptDetails</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

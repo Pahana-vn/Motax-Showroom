@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Motax.Models;
 using Motax.ViewModels;
@@ -7,6 +8,7 @@ namespace Motax.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Reports")]
+    [Authorize(Policy = "CheckAdmin")]
     public class ReportsController : Controller
     {
         private readonly MotaxContext db;

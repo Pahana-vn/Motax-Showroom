@@ -37,7 +37,7 @@
                             <p class="invoice-info-row"><span>Invoice Code</span> <span>@Model.OrderCode</span></p>
                             <p class="invoice-info-row"><span>Issue Date:</span> <span>@Model.OrderCreateDate</span></p>
                             <p class="invoice-info-row"><span>Due Date:</span> <span>@Model.OrderExpiryDate</span></p>
-                            <p class="invoice-info-row"><span>Order Total Amount:</span> <span>$@(Model.OrderTotalAmount + Model.Car.Price * 0.01)</span></p>
+                            <p class="invoice-info-row"><span>Order Total Amount:</span> <span>$@(Model.Car.Price + Model.Car.Price * 0.01)</span></p>
                         </div>
                     </div>
 
@@ -113,7 +113,7 @@
                                     </div><!-- invoice-notes -->
                                 </td>
                                 <td style="color:navy"><b>Sub-Total</b></td>
-                                <td colspan="2">$@(Model.OrderTotalAmount)</td>
+                                <td colspan="2">$@(Model.Car.Price + Model.Car.Price * 0.01)</td>
                             </tr>
                             <tr>
                                 <td style="color:navy"><b>Tax (10%)</b></td>
@@ -126,7 +126,7 @@
                             <tr>
                                 <td class="text-uppercase tx-inverse"><b>Total Invoice</b></td>
                                 <td colspan="2">
-                                    <h4 class="text-primary">$@(Model.OrderTotalAmount + Model.TaxAmount + Model.RegistrationFee)</h4>
+                                    <h4 class="text-primary">$@(Model.Car.Price + Model.Car.Price * 0.01 + Model.TaxAmount + Model.RegistrationFee)</h4>
                                 </td>
                             </tr>
                         </table>
@@ -138,9 +138,13 @@
                     <a href="javascript:void(0);" class="btn btn-danger float-end mt-3 ms-2" onclick="javascript:window.print();">
                         <i class="mdi mdi-printer me-1"></i>Print
                     </a>
-                    <a href="javascript:void(0);" class="btn btn-success float-end mt-3">
+                    <a href="javascript:void(0);" class="btn btn-success float-end mt-3"
+                       onclick="document.getElementById('send-invoice-form').submit();">
                         <i class="mdi mdi-telegram me-1"></i>Send Invoice
                     </a>
+                    <form id="send-invoice-form" method="post" asp-action="SendInvoice" asp-route-id="@Model.CarRegistrationId" style="display:none;"></form>
+
+
                 </div>
             </div>
         </div>

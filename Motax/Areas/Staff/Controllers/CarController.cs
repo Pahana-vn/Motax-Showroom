@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace Motax.Areas.Staff.Controllers
 {
     [Area("Staff")]
     [Route("Staff/Car")]
+    [Authorize(Policy = "CheckAdminOrStaff")]
     public class CarController : Controller
     {
         private readonly MotaxContext db;
@@ -35,13 +37,6 @@ namespace Motax.Areas.Staff.Controllers
 
         [Route("Index")]
         public async Task<IActionResult> Index()
-        {
-            return View(await db.Cars.OrderByDescending(c => c.Id).ToListAsync());
-
-        }
-
-        [Route("Index2")]
-        public async Task<IActionResult> Index2()
         {
             return View(await db.Cars.OrderByDescending(c => c.Id).ToListAsync());
 

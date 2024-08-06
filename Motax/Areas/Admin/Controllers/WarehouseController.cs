@@ -2,11 +2,13 @@
 using Motax.Models;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Motax.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Warehouse")]
+    [Authorize(Policy = "CheckAdmin")]
     public class WarehouseController : Controller
     {
         private readonly MotaxContext db;

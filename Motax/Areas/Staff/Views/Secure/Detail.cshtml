@@ -1,4 +1,4 @@
-﻿@model Motax.ViewModels.AccountDetailStaffVM
+﻿@model Motax.ViewModels.AccountDetailAdminVM
 @{
     ViewData["Title"] = "Detail";
     Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
@@ -46,7 +46,10 @@
                         <th>Gender</th>
                         <td>@Model.Gender</td>
                     </tr>
-                    
+                    <tr>
+                        <th>Role</th>
+                        <td>@Model.Role</td>
+                    </tr>
                     <tr>
                         <th>Status</th>
                         <td>@Model.Status</td>

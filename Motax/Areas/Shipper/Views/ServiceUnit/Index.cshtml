@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Motax.Models.ServiceUnit>
+
 @{
     ViewData["Title"] = "Index ServiceUnit";
     Layout = "~/Areas/Shipper/Views/Shared/_LayoutBackendShipper.cshtml";
@@ -8,12 +9,11 @@
     <div class="col-xl-12">
         <div class="card custom-card">
             <div class="card-header">
-                <div class="card-title">List ServiceUnit </div> -------
+                <div class="card-title">List ServiceUnit</div>
             </div>
 
             <div class="card-body">
                 <div class="table-responsive">
-
                     <table id="file-export" class="table table-bordered text-nowrap w-100">
                         <thead>
                             <tr>
@@ -41,8 +41,8 @@
                                         <a asp-controller="CarRegistration" asp-action="Detail" asp-route-id="@item.CarRegistrationId" class="btn btn-primary">View</a>
                                     </td>
                                     <td>
-                                        <a asp-action="Create" asp-controller="DeliveryUnit" asp-route-serviceUnitId="@item.Id" class="">
-                                            <span class="btn btn-primary">Create DeliveryUnit</span>
+                                        <a asp-action="Create" asp-controller="DeliveryUnit" asp-route-serviceUnitId="@item.Id" class="btn btn-primary">
+                                            Create DeliveryUnit
                                         </a>
                                     </td>
                                 </tr>

@@ -48,6 +48,18 @@ builder.Services.AddAuthorization(
             options.AddPolicy("CheckAdmin", policy => policy.RequireClaim(ClaimTypes.Role, "admin"));
             options.AddPolicy("CheckStaff", policy => policy.RequireClaim(ClaimTypes.Role, "staff"));
             options.AddPolicy("CheckShipper", policy => policy.RequireClaim(ClaimTypes.Role, "shipper"));
+
+            options.AddPolicy("CheckAdminOrStaff", policy =>
+            {
+                policy.RequireAssertion(context =>
+                    context.User.HasClaim(c => c.Type == ClaimTypes.Role && (c.Value == "admin" || c.Value == "staff")));
+            });
+
+            options.AddPolicy("CheckAdminOrShipper", policy =>
+            {
+                policy.RequireAssertion(context =>
+                    context.User.HasClaim(c => c.Type == ClaimTypes.Role && (c.Value == "admin" || c.Value == "shipper")));
+            });
         }
     );
 

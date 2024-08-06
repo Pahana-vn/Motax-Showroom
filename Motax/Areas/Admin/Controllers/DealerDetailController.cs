@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace Motax.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/DealerDetail")]
+    [Authorize(Policy = "CheckAdmin")]
     public class DealerDetailController : Controller
     {
         private readonly MotaxContext db;

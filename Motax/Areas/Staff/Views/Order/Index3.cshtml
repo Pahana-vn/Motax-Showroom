@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Motax.Models.Order>
+@{
+    ViewData["Title"] = "Index3 Order";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">List Orders - Customer Confirmed</div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="file-export" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Order Code</th>
+                                <th>Order Date</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                                <th>Check vehicle</th>
+                                <th>Detail</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.OrderCode</td>
+                                    <td>@item.OrderDate</td>
+                                    <td>@item.TotalAmount</td>
+                                    <td>
+                                        @if (item.OrderStatus != null)
+                                        {
+                                            <span class="@item.OrderStatus.Status.ToLower()">@item.OrderStatus.Status</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">No Status</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary" asp-action="Details2" asp-controller="Order" asp-route-id="@item.Id">Data Car</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary" asp-action="Details" asp-controller="Order" asp-route-id="@item.Id">Detail</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-secondary" asp-action="Create2" asp-controller="ServiceUnit" asp-route-carId="@item.CarId" asp-route-dealerId="@item.DealerId">Create Service Order</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .customer-confirmed {
+        color: blue;
+    }
+</style>

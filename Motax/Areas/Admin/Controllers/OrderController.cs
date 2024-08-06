@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Motax.Models;
 using Motax.ViewModels;
@@ -9,6 +10,7 @@ namespace Motax.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Order")]
+    [Authorize(Policy = "CheckAdmin")]
     public class OrderController : Controller
     {
         private readonly MotaxContext db;
@@ -71,7 +73,7 @@ namespace Motax.Areas.Admin.Controllers
                     Quantity = od.Quantity,
                     Price = od.Price,
                     Discount = od.Discount,
-                    TotalAmount = od.Price * od.Quantity - od.Discount,
+                    TotalAmount = od.Price * od.Quantity + od.Price*0.01 - od.Discount,
                     Address = od.Order.Address,
                     Phone = od.Order.Phone,
                     OrderDate = od.Order.OrderDate,
@@ -106,7 +108,7 @@ namespace Motax.Areas.Admin.Controllers
                     Quantity = od.Quantity,
                     Price = od.Price,
                     Discount = od.Discount,
-                    TotalAmount = od.Price * od.Quantity - od.Discount,
+                    TotalAmount = od.Price * od.Quantity + od.Price * 0.01 - od.Discount,
                     Address = od.Order.Address,
                     Phone = od.Order.Phone,
                     OrderDate = od.Order.OrderDate,

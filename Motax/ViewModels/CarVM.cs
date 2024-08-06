@@ -41,6 +41,7 @@
         public string? Title { get; set; }
         public string? PriceType { get; set; }
         public bool IsAvailable { get; set; }
+
         public List<CarVM>? RelatedCars { get; set; }
         public List<CommentViewModel>? Comments { get; set; }
     }

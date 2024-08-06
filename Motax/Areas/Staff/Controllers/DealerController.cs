@@ -8,7 +8,7 @@ namespace Motax.Areas.Staff.Controllers
 {
     [Area("Staff")]
     [Route("Staff/Dealer")]
-    //[Authorize(Policy = "CheckStaff")]
+    [Authorize(Policy = "CheckAdminOrStaff")]
     public class DealerController : Controller
     {
         private readonly MotaxContext db;
@@ -281,6 +281,8 @@ namespace Motax.Areas.Staff.Controllers
 
             return View(dealerDetailVM);
         }
+
+
 
     }
 }

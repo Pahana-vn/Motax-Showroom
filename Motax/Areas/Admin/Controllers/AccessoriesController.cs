@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Motax.Models;
@@ -9,6 +10,7 @@ namespace Motax.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Accessories")]
+    [Authorize(Policy = "CheckAdmin")]
     public class AccessoriesController : Controller
     {
         private readonly MotaxContext db;

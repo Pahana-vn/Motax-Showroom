@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ namespace Motax.Areas.Staff.Controllers
 {
     [Area("Staff")]
     [Route("Staff/Secure")]
+    [Authorize(Policy = "CheckAdminOrStaff")]
     public class SecureController : Controller
     {
         private readonly MotaxContext db;

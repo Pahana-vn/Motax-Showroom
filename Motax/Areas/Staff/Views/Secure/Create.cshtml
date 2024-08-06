@@ -1,6 +1,6 @@
-﻿@model Motax.ViewModels.RegisterViewModel
+﻿@model Motax.ViewModels.RegisterAdminViewModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "create account";
     Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
 }
 
@@ -14,7 +14,7 @@
         </div>
 
         <div class="card-body" style="margin:10px;">
-            <form asp-action="Create" asp-controller="Secure" asp-area="Staff" class="row g-3 mt-0" enctype="multipart/form-data">
+            <form asp-action="Create" asp-controller="Secure" class="row g-3 mt-0" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -32,13 +32,13 @@
 
                 <div class="col-md-6">
                     <label for="inputEmail4" class="form-label">Password</label>
-                    <input type="password" asp-for="Password" class="form-control">
+                    <input asp-for="Password" class="form-control">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6">
                     <label for="inputEmail4" class="form-label">ConfirmPassword</label>
-                    <input type="password" asp-for="ConfirmPassword" class="form-control">
+                    <input asp-for="ConfirmPassword" class="form-control">
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
 
@@ -64,6 +64,12 @@
                     <label for="inputAddress" class="form-label">Address</label>
                     <input type="text" asp-for="Address" class="form-control">
                     <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RoleId"></label>
+                    <select asp-for="RoleId" class="form-control" asp-items="Model.Roles"></select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
                 </div>
 
                 <div class="col-6">

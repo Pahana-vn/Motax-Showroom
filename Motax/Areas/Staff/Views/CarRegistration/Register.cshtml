@@ -1,20 +1,18 @@
 ﻿@model Motax.ViewModels.CarRegistrationVM
+
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Car Registration";
     Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
 }
-
 <div class="col-xl-12" style="margin-top:20px;">
     <div class="card custom-card">
-
         <div class="card-header justify-content-between">
             <div class="card-title">
                 Register Car (CarId: @Model.CarId)
             </div>
         </div>
-
+        <h2>Car Registration</h2>
         <div class="card-body" style="margin:10px;">
-
             <form asp-action="Register" asp-controller="CarRegistration" method="post" class="row g-3 mt-0">
                 <input type="hidden" asp-for="CarId" />
                 <input type="hidden" asp-for="UserId" />
@@ -122,8 +120,11 @@
                     <span asp-validation-for="OrderStatusId" class="text-danger"></span>
                 </div>
 
-                <div class="col-12">
+                <div class="col-6">
                     <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                <div class="col-6">
+                    <a asp-action="Index2" asp-controller="Order" class="btn btn-primary">Back to CarRegistration</a>
                 </div>
             </form>
         </div>

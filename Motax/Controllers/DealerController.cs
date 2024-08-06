@@ -119,6 +119,7 @@ namespace Motax.Controllers
 
             db.ContactMessages.Add(contactMessage);
             db.SaveChanges();
+            TempData["success"] = "Send messages success!";
 
             return RedirectToAction("Detail", new { id = dealerId });
         }

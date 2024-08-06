@@ -1,15 +1,20 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Motax.Models;
 using Motax.ViewModels;
+using System.Security.Claims;
 
 namespace Motax.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Secure")]
+    [Authorize(Policy = "CheckAdmin")]
     public class SecureController : Controller
     {
         private readonly MotaxContext db;
@@ -238,5 +243,39 @@ namespace Motax.Areas.Admin.Controllers
         }
         #endregion
 
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Secure");
+        }
+
+
+        public async Task<IActionResult> UpdateUserAvatar()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await db.Accounts.FindAsync(int.Parse(userId));
+                if (user != null)
+                {
+                    ViewData["UserAvatar"] = user.Image;
+                }
+            }
+            return View();
+        }
+
+        private async Task SignInUser(Account user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username ?? ""),
+                new Claim(ClaimTypes.Email, user.Email ?? "")
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+        }
     }
 }

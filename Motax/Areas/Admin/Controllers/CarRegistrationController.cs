@@ -10,7 +10,7 @@ namespace Motax.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/CarRegistration")]
-    [Authorize]
+    [Authorize(Policy = "CheckAdmin")]
     public class CarRegistrationController : Controller
     {
         private readonly MotaxContext db;
