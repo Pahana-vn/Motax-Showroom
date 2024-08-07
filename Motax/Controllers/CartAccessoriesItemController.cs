@@ -408,6 +408,23 @@ namespace Motax.Controllers
         }
         #endregion
 
+        #region UpdateQuantity
+        public IActionResult UpdateQuantity(int id, int quantity)
+        {
+            var cart = Cart;
+            var item = cart.SingleOrDefault(p => p.Id == id);
+            if (item != null)
+            {
+                if (quantity > 20)
+                {
+                    return Json(new { success = false, message = "Please contact admin for wholesale prices" });
+                }
 
+                item.Quantity = quantity;
+                HttpContext.Session.Set(MySetting.CART_KEY, cart);
+            }
+            return Json(new { success = true, quantity = item?.Quantity, total = cart.Sum(p => p.Total), itemTotal = item?.Total });
+        }
+        #endregion
     }
 }

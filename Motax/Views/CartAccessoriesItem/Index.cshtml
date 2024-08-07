@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Motax.ViewModels.CartItem>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index CartAccessoriesItem";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -70,14 +70,16 @@
             </div>
             <div class="cart-footer">
                 <div class="row">
+
                     <div class="col-md-6 col-lg-4">
                         <div class="cart-coupon">
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Your Coupon Code">
-                                <button class="coupon-btn" type="submit">Apply <i class="fas fa-arrow-right-long"></i></button>
+                                <a class="coupon-btn" type="submit">Apply <i class="fas fa-arrow-right-long"></i></a>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-6 col-lg-8">
                         <div class="cart-summary">
                             <ul>
@@ -99,33 +101,51 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $(".plus-btn").click(function () {
+            $(".plus-btn").off("click").on("click", function () {
                 var id = $(this).data("id");
-                $.post("/CartAccessoriesItem/IncrementQuantity", { id: id }, function (data) {
-                    if (data.success) {
-                        var row = $("tr[data-id='" + id + "']");
-                        row.find(".quantity").val(data.quantity);
-                        row.find(".item-total").text("$" + data.itemTotal);
-                        updateTotals(data.total);
-                    }
-                });
+                var row = $("tr[data-id='" + id + "']");
+                var quantityInput = row.find(".quantity");
+                var currentQuantity = parseInt(quantityInput.val());
+
+                if (currentQuantity >= 20) {
+                    alert("Please contact admin for wholesale prices");
+                    return;
+                }
+
+                var newQuantity = currentQuantity + 1;
+                updateQuantity(id, newQuantity);
             });
 
-            $(".minus-btn").click(function () {
+            $(".minus-btn").off("click").on("click", function () {
                 var id = $(this).data("id");
-                $.post("/CartAccessoriesItem/DecrementQuantity", { id: id }, function (data) {
+                var row = $("tr[data-id='" + id + "']");
+                var quantityInput = row.find(".quantity");
+                var currentQuantity = parseInt(quantityInput.val());
+
+                if (currentQuantity <= 1) {
+                    return;
+                }
+
+                var newQuantity = currentQuantity - 1;
+                updateQuantity(id, newQuantity);
+            });
+
+            function updateQuantity(id, newQuantity) {
+                $.post("/CartAccessoriesItem/UpdateQuantity", { id: id, quantity: newQuantity }, function (data) {
                     if (data.success) {
                         var row = $("tr[data-id='" + id + "']");
-                        row.find(".quantity").val(data.quantity);
-                        row.find(".item-total").text("$" + data.itemTotal);
+                        row.find(".quantity").val(newQuantity);
+                        row.find(".item-total").text("$" + data.itemTotal.toFixed(2));
                         updateTotals(data.total);
+                    } else {
+                        alert(data.message);
                     }
                 });
-            });
+            }
 
             function updateTotals(total) {
-                $("#sub-total").text("$" + total);
-                $("#total").text("$" + total);
+                $("#sub-total").text("$" + total.toFixed(2));
+                $("#total").text("$" + total.toFixed(2));
             }
         });
     </script>

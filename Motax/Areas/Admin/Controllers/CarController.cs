@@ -279,6 +279,18 @@ namespace Motax.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            // Check for related records
+            bool hasRelatedOrders = await db.Orders.AnyAsync(o => o.CarId == Id);
+            bool hasRelatedOrderDetails = await db.OrderDetails.AnyAsync(od => od.CarId == Id);
+            bool hasRelatedBrand = await db.Brands.AnyAsync(b => b.Id == carToDelete.BrandId);
+
+            if (hasRelatedOrders || hasRelatedOrderDetails || hasRelatedBrand)
+            {
+                TempData["error"] = "Cannot delete car. This car is referenced by one or more dealers, orders, order details, or brands.";
+                return RedirectToAction("Index");
+            }
+
+            // Delete image if exists
             if (!string.IsNullOrEmpty(carToDelete.ImageSingle))
             {
                 string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Car/Single", carToDelete.ImageSingle);
@@ -288,6 +300,7 @@ namespace Motax.Areas.Admin.Controllers
                 }
             }
 
+            // Delete multiple images if exists
             if (!string.IsNullOrEmpty(carToDelete.ImageMultiple))
             {
                 var existingImages = carToDelete.ImageMultiple.Split(",");
@@ -306,8 +319,8 @@ namespace Motax.Areas.Admin.Controllers
             TempData["success"] = "Car deleted successfully!";
             return RedirectToAction("Index");
         }
-
         #endregion
+
 
         [Route("Details")]
         [HttpGet]

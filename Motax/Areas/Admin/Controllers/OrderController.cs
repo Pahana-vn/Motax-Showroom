@@ -73,7 +73,7 @@ namespace Motax.Areas.Admin.Controllers
                     Quantity = od.Quantity,
                     Price = od.Price,
                     Discount = od.Discount,
-                    TotalAmount = od.Price * od.Quantity + od.Price*0.01 - od.Discount,
+                    TotalAmount = od.Price * od.Quantity + od.Price * 0.01 - od.Discount,
                     Address = od.Order.Address,
                     Phone = od.Order.Phone,
                     OrderDate = od.Order.OrderDate,
@@ -193,5 +193,34 @@ namespace Motax.Areas.Admin.Controllers
             db.ServiceUnits.Add(serviceOrder);
             await db.SaveChangesAsync();
         }
+
+        #region Delete
+        [Route("Delete")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var orderToDelete = await db.Orders.FindAsync(id);
+            if (orderToDelete == null)
+            {
+                return NotFound();
+            }
+
+            // Check for related records in OrderDetails table
+            bool hasRelatedOrderDetails = await db.OrderDetails.AnyAsync(od => od.OrderId == id);
+
+            if (hasRelatedOrderDetails)
+            {
+                TempData["error"] = "Cannot delete order. This order is referenced by one or more order details.";
+                return RedirectToAction("Index");
+            }
+
+            db.Orders.Remove(orderToDelete);
+            await db.SaveChangesAsync();
+            TempData["success"] = "Order deleted successfully!";
+            return RedirectToAction("Index");
+        }
+        #endregion
+
     }
 }

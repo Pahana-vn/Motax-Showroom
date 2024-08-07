@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Motax.Models.Wishlist>
+﻿@model IEnumerable<Motax.ViewModels.WishlistStarViewModel>
 <style>
     .avatar-img {
         width: 110px; /* Thay đổi giá trị này để điều chỉnh chiều rộng */
@@ -105,7 +105,9 @@
                                     <div class="car-item">
                                         <div class="car-img">
                                             <span class="car-status @(item.Car.Condition == "New" ? "status-2" : "status-1")">@item.Car.Condition</span>
+                                            <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.CarId">
                                             <img src="~/Images/Car/Single/@item.Car.ImageSingle" alt="@item.Car.Name">
+                                            </a>
                                             <div class="car-btns">
                                                 <form asp-action="RemoveFromWishlist" asp-controller="Car" method="post" class="d-inline">
                                                     @Html.AntiForgeryToken()
@@ -118,12 +120,18 @@
                                             <div class="car-top">
                                                 <h4><a asp-action="Detail" asp-controller="Car" asp-route-id="@item.CarId">@item.Car.Name</a></h4>
                                                 <div class="car-rate">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <span>5.0 (58.5k Review)</span>
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        if (i <= Math.Ceiling(item.AverageRating))
+                                                        {
+                                                            <i class="fas fa-star"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="far fa-star"></i>
+                                                        }
+                                                    }
+                                                    <span>@item.AverageRating.ToString("0.0") (@item.ReviewCount Reviews)</span>
                                                 </div>
                                             </div>
                                             <ul class="car-list">

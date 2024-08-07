@@ -68,6 +68,7 @@ namespace Motax.Controllers
             var dealer = db.Dealers
                 .Include(d => d.DealerDetails)
                 .Include(d => d.Cars)
+                .ThenInclude(c => c.Comments)
                 .SingleOrDefault(d => d.Id == id);
 
             if (dealer == null)
@@ -99,12 +100,15 @@ namespace Motax.Controllers
                     Transmission = c.Transmission,
                     Year = c.Year,
                     Price = c.Price,
-                    ImageSingle = c.ImageSingle
+                    ImageSingle = c.ImageSingle,
+                    AverageRating = c.Comments.Any() ? c.Comments.Average(co => co.Rating) : 0,
+                    ReviewCount = c.Comments.Count()
                 }).ToList()
             };
 
             return View(dealerVM);
         }
+
 
         [HttpPost]
         public IActionResult Contact(int dealerId, string name, string email, string message)

@@ -186,7 +186,8 @@ namespace Motax.Controllers
                     Rating = c.Rating,
                     Comment1 = c.Comment1,
                     CommentDate = c.CommentDate,
-                    AccountName = c.Account.Username // Assuming Account has a Username property
+                    AccountName = c.Account.Username,
+                    AvatarUrl = c.Account.Image
                 }).ToList()
             };
 
@@ -238,6 +239,7 @@ namespace Motax.Controllers
         }
         #endregion
 
+        #region Compare
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -288,9 +290,8 @@ namespace Motax.Controllers
             return RedirectToAction("Login", "Secure");
         }
 
-
-
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Compare()
         {
             var user = User;
@@ -306,7 +307,15 @@ namespace Motax.Controllers
 
                 var carsToCompare = await db.Compares
                     .Include(c => c.Car)
+                    .ThenInclude(c => c.Comments)
                     .Where(c => c.UserId == int.Parse(userId))
+                    .Select(c => new CompareStarViewModel
+                    {
+                        Id = c.Id,
+                        Car = c.Car,
+                        AverageRating = c.Car.Comments.Any() ? c.Car.Comments.Average(com => com.Rating) : 0,
+                        ReviewCount = c.Car.Comments.Count
+                    })
                     .ToListAsync();
 
                 return View(carsToCompare);
@@ -317,6 +326,7 @@ namespace Motax.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> RemoveFromCompare(int compareId)
         {
             var compare = await db.Compares.FindAsync(compareId);
@@ -328,7 +338,9 @@ namespace Motax.Controllers
             TempData["success"] = "Car removed from Compare.";
             return RedirectToAction("Compare");
         }
+        #endregion
 
+        #region Wishlist
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -389,6 +401,15 @@ namespace Motax.Controllers
                 var wishlist = await db.Wishlists
                     .Where(w => w.UserId == userId)
                     .Include(w => w.Car)
+                    .ThenInclude(c => c.Comments)
+                    .Select(w => new WishlistStarViewModel
+                    {
+                        Id = w.Id,
+                        CarId = w.CarId, // Add this line
+                        Car = w.Car,
+                        AverageRating = w.Car.Comments.Any() ? w.Car.Comments.Average(c => c.Rating) : 0,
+                        ReviewCount = w.Car.Comments.Count()
+                    })
                     .ToListAsync();
 
                 return View(wishlist);
@@ -397,6 +418,8 @@ namespace Motax.Controllers
             TempData["error"] = "You need to be logged in to view your wishlist.";
             return RedirectToAction("Login", "Secure");
         }
+
+
 
 
         [HttpPost]
@@ -433,9 +456,10 @@ namespace Motax.Controllers
             TempData["error"] = "You need to be logged in to remove items from your wishlist.";
             return RedirectToAction("Login", "Secure");
         }
+        #endregion
 
 
-        public IActionResult AdvancedSearch(string? condition, string? brand, string? transmission, int? year, int? doors, string? price, string? bodyType)
+        public IActionResult AdvancedSearch(string? condition, string? brand, string? transmission, int? year, int? doors, string? bodyType)
         {
             var cars = db.Cars.Include(c => c.Brand).AsQueryable();
 
@@ -464,17 +488,6 @@ namespace Motax.Controllers
                 cars = cars.Where(p => p.Doors == doors.Value);
             }
 
-            if (!string.IsNullOrEmpty(price))
-            {
-                var priceRange = price.Split('-');
-                if (priceRange.Length == 2 &&
-                    double.TryParse(priceRange[0], out double minPrice) &&
-                    double.TryParse(priceRange[1], out double maxPrice))
-                {
-                    cars = cars.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
-                }
-            }
-
             if (!string.IsNullOrEmpty(bodyType) && bodyType != "All")
             {
                 cars = cars.Where(p => p.BodyType == bodyType);
@@ -497,5 +510,6 @@ namespace Motax.Controllers
 
             return View("Index", result);
         }
+
     }
 }

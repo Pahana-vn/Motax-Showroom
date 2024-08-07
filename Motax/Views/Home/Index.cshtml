@@ -58,7 +58,7 @@
                         <div class="hero-content">
                             <h6 class="hero-sub-title" data-animation="fadeInUp" data-delay=".25s">
                                 Welcome To
-                                Motex!
+                                Motax!
                             </h6>
                             <h1 class="hero-title" data-animation="fadeInRight" data-delay=".50s">
                                 Best Way To Find Your <span>Dream</span> Car
@@ -90,7 +90,7 @@
                         <div class="hero-content">
                             <h6 class="hero-sub-title" data-animation="fadeInUp" data-delay=".25s">
                                 Welcome To
-                                Motex!
+                                Motax!
                             </h6>
                             <h1 class="hero-title" data-animation="fadeInRight" data-delay=".50s">
                                 Best Way To Find Your <span>Dream</span> Car
@@ -122,7 +122,7 @@
                         <div class="hero-content">
                             <h6 class="hero-sub-title" data-animation="fadeInUp" data-delay=".25s">
                                 Welcome To
-                                Motex!
+                                Motax!
                             </h6>
                             <h1 class="hero-title" data-animation="fadeInRight" data-delay=".50s">
                                 Best Way To Find Your <span>Dream</span> Car
@@ -162,8 +162,10 @@
                             <label>Car Condition</label>
                             <select name="condition" class="select">
                                 <option value="All">All Condition</option>
-                                <option value="New">New Car</option>
-                                <option value="Used">Used Car</option>
+                                @foreach (var condition in ViewBag.Conditions)
+                                {
+                                    <option value="@condition">@condition</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -172,12 +174,10 @@
                             <label>Brand Name</label>
                             <select name="brand" class="select">
                                 <option value="All">All Brand</option>
-                                <option value="Ferrari">Ferrari</option>
-                                <option value="Hyundai">Hyundai</option>
-                                <option value="Mercedes Benz">Mercedes Benz</option>
-                                <option value="Toyota">Toyota</option>
-                                <option value="BMW">BMW</option>
-                                <option value="Nissan">Nissan</option>
+                                @foreach (var brand in ViewBag.Brands)
+                                {
+                                    <option value="@brand">@brand</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -186,8 +186,10 @@
                             <label>Transmission</label>
                             <select name="transmission" class="select">
                                 <option value="All">All Transmission</option>
-                                <option value="Automatic">Automatic</option>
-                                <option value="Manual">Manual</option>
+                                @foreach (var transmission in ViewBag.Transmissions)
+                                {
+                                    <option value="@transmission">@transmission</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -196,39 +198,22 @@
                             <label>Choose Year</label>
                             <select name="year" class="select">
                                 <option value="All">All Year</option>
-                                <option value="2023">2023</option>
-                                <option value="2022">2022</option>
-                                <option value="2021">2021</option>
-                                <option value="2020">2020</option>
-                                <option value="2019">2019</option>
-                                <option value="2018">2018</option>
+                                @foreach (var year in ViewBag.Years)
+                                {
+                                    <option value="@year">@year</option>
+                                }
                             </select>
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label>Choose Doors</label>
-                            <select name="Doors" class="select">
+                            <select name="doors" class="select">
                                 <option value="All">All Doors</option>
-                                <option value="2">2</option>
-                                <option value="4">4</option>
-                                <option value="6">6</option>
-                                <option value="8">8</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <label>Price Range</label>
-                            <select name="price" class="select">
-                                <option value="">All Price</option>
-                                <option value="1-5000">$1,000 - $5,000</option>
-                                <option value="5000-10000">$5,000 - $10,000</option>
-                                <option value="15000-20000">$15,000 - $20,000</option>
-                                <option value="20000-25000">$20,000 - $25,000</option>
-                                <option value="25000-30000">$25,000 - $30,000</option>
-                                <option value="30000-100000">$35,000 - $100,000</option>
-                                <option value="100000-1000000">$35,000 - $100,000</option>
+                                @foreach (var doors in ViewBag.Doors)
+                                {
+                                    <option value="@doors">@doors</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -237,13 +222,10 @@
                             <label>Body Type</label>
                             <select name="bodyType" class="select">
                                 <option value="All">All Body Type</option>
-                                <option value="Sedan">Sedan</option>
-                                <option value="Compact">Compact</option>
-                                <option value="Coupe">Coupe</option>
-                                <option value="Wagon">Wagon</option>
-                                <option value="Sports">Sports</option>
-                                <option value="Electric">Electric</option>
-                                <option value="Luxury">Electric</option>
+                                @foreach (var bodyType in ViewBag.BodyTypes)
+                                {
+                                    <option value="@bodyType">@bodyType</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -257,6 +239,7 @@
         </div>
     </div>
 </div>
+
 
 
 
@@ -879,7 +862,7 @@
                             <span class="site-title-tagline justify-content-start">
                                 <i class="flaticon-drive"></i> Get Our App
                             </span>
-                            <h2 class="site-title mb-10">Download <span>Our Motex</span> App For Free</h2>
+                            <h2 class="site-title mb-10">Download <span>Our Motax</span> App For Free</h2>
                             <p>
                                 There are many variations of passages available but the majority have suffered in some form going to use a passage by injected humour.
                             </p>

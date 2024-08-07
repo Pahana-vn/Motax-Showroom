@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Motax.Models;
 using Motax.ViewModels;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Motax.Controllers
 {
@@ -69,6 +70,13 @@ namespace Motax.Controllers
                     ExistingImage = p.Image
                 }).Take(12).ToList()
             };
+
+            ViewBag.Conditions = db.Cars.Select(c => c.Condition).Distinct().ToList();
+            ViewBag.Brands = db.Brands.Select(b => b.Name).Distinct().ToList();
+            ViewBag.Transmissions = db.Cars.Select(c => c.Transmission).Distinct().ToList();
+            ViewBag.Years = db.Cars.Select(c => c.Year).Distinct().ToList();
+            ViewBag.Doors = db.Cars.Select(c => c.Doors).Distinct().ToList();
+            ViewBag.BodyTypes = db.Cars.Select(c => c.BodyType).Distinct().ToList();
 
             return View(model);
         }

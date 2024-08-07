@@ -212,6 +212,116 @@ namespace Motax.Areas.Staff.Controllers
             return RedirectToAction("Detail", new { id = id });
         }
 
+        #region Update
+        [Route("Update")]
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            var registration = await db.CarRegistrations.FindAsync(id);
+            if (registration == null)
+            {
+                TempData["error"] = "Car registration not found.";
+                return RedirectToAction("Index");
+            }
+
+            var viewModel = new CarRegistrationVM
+            {
+                Id = registration.Id,
+                CarId = registration.CarId,
+                UserId = registration.UserId,
+                RegistrationDate = registration.RegistrationDate,
+                CustomerName = registration.CustomerName,
+                CustomerAddress = registration.CustomerAddress,
+                CustomerPhone = registration.CustomerPhone,
+                CustomerEmail = registration.CustomerEmail,
+                LicensePlate = registration.LicensePlate,
+                RegistrationNumber = registration.RegistrationNumber,
+                RegistrationFee = registration.RegistrationFee,
+                TaxAmount = registration.TaxAmount,
+                PaymentStatus = registration.PaymentStatus,
+                InsuranceDetails = registration.InsuranceDetails,
+                InspectionDate = registration.InspectionDate,
+                Notes = registration.Notes,
+                TotalAmount = registration.TotalAmount,
+                OrderStatusId = registration.OrderStatusId,
+                DriverLicenseNumber = registration.DriverLicenseNumber,
+                OrderStatusList = await db.OrderStatus.ToListAsync(),
+            };
+
+            return View(viewModel);
+        }
+
+        [Route("Update")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(CarRegistrationVM registrationVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var registrationToUpdate = await db.CarRegistrations.FindAsync(registrationVM.Id);
+                if (registrationToUpdate == null)
+                {
+                    TempData["error"] = "Car registration not found.";
+                    return RedirectToAction("Index");
+                }
+
+                registrationToUpdate.RegistrationDate = registrationVM.RegistrationDate;
+                registrationToUpdate.CustomerName = registrationVM.CustomerName;
+                registrationToUpdate.CustomerAddress = registrationVM.CustomerAddress;
+                registrationToUpdate.CustomerPhone = registrationVM.CustomerPhone;
+                registrationToUpdate.CustomerEmail = registrationVM.CustomerEmail;
+                registrationToUpdate.LicensePlate = registrationVM.LicensePlate;
+                registrationToUpdate.RegistrationNumber = registrationVM.RegistrationNumber;
+                registrationToUpdate.RegistrationFee = registrationVM.CarPrice * 0.02;
+                registrationToUpdate.TaxAmount = registrationVM.CarPrice * 0.10;
+                registrationToUpdate.PaymentStatus = registrationVM.PaymentStatus;
+                registrationToUpdate.InsuranceDetails = registrationVM.InsuranceDetails;
+                registrationToUpdate.InspectionDate = registrationVM.InspectionDate;
+                registrationToUpdate.Notes = registrationVM.Notes;
+                registrationToUpdate.TotalAmount = registrationVM.CarPrice + registrationVM.CarPrice * 0.01 + registrationVM.CarPrice * 0.02 + registrationVM.CarPrice * 0.10;
+                registrationToUpdate.OrderStatusId = registrationVM.OrderStatusId;
+                registrationToUpdate.DriverLicenseNumber = registrationVM.DriverLicenseNumber;
+
+                db.CarRegistrations.Update(registrationToUpdate);
+                await db.SaveChangesAsync();
+
+                TempData["success"] = "Car registration updated successfully!";
+                return RedirectToAction("Index");
+            }
+
+            registrationVM.OrderStatusList = await db.OrderStatus.ToListAsync();
+            return View(registrationVM);
+        }
+        #endregion
+
+        #region Delete
+        [Route("Delete")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var registrationToDelete = await db.CarRegistrations.FindAsync(id);
+            if (registrationToDelete == null)
+            {
+                TempData["error"] = "Car registration not found.";
+                return RedirectToAction("Index");
+            }
+
+
+            bool hasRelatedRecords = await db.ServiceUnits.AnyAsync(su => su.CarRegistrationId == id);
+
+            if (hasRelatedRecords)
+            {
+                TempData["error"] = "Cannot delete car registration as it has related records in other tables.";
+                return RedirectToAction("Index");
+            }
+
+            db.CarRegistrations.Remove(registrationToDelete);
+            await db.SaveChangesAsync();
+            TempData["success"] = "Car registration deleted successfully!";
+            return RedirectToAction("Index");
+        }
+        #endregion
 
 
     }

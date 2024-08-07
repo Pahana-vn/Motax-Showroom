@@ -1,4 +1,4 @@
-﻿@model Motax.ViewModels.AccountDetailAdminVM
+﻿@model Motax.ViewModels.AccountDetailStaffVM
 @{
     ViewData["Title"] = "Detail";
     Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
@@ -55,7 +55,7 @@
                         <td>@Model.Status</td>
                     </tr>
                 </table>
-                <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                <a asp-action="Index" asp-controller="Secure" asp-area="Staff" class="btn btn-primary">Back to List</a>
             </div>
         </div>
     </div>

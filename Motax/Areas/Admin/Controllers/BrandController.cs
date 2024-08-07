@@ -166,31 +166,42 @@ namespace Motax.Areas.Admin.Controllers
 
         #endregion
 
+        #region Delete
         [Route("Delete")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int Id)
         {
-            var BrandToDelete = await db.Brands.FindAsync(Id);
-            if (BrandToDelete == null)
+            var brandToDelete = await db.Brands.FindAsync(Id);
+            if (brandToDelete == null)
             {
                 return NotFound();
             }
 
-            // Xóa hình ảnh cũ nếu có
-            if (!string.IsNullOrEmpty(BrandToDelete.Image))
+            // Check for related records in Cars table
+            bool hasRelatedCars = await db.Cars.AnyAsync(c => c.BrandId == Id);
+
+            if (hasRelatedCars)
             {
-                string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Brand/Car", BrandToDelete.Image);
+                TempData["error"] = "Cannot delete brand. This brand is referenced by one or more cars.";
+                return RedirectToAction("Index");
+            }
+
+            // Delete image if exists
+            if (!string.IsNullOrEmpty(brandToDelete.Image))
+            {
+                string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Brand/Car", brandToDelete.Image);
                 if (System.IO.File.Exists(oldImagePath))
                 {
                     System.IO.File.Delete(oldImagePath);
                 }
             }
 
-            db.Brands.Remove(BrandToDelete);
+            db.Brands.Remove(brandToDelete);
             await db.SaveChangesAsync();
-            TempData["success"] = "sản phẩm đã được xóa thành công";
+            TempData["success"] = "Brand has been deleted successfully";
             return RedirectToAction("Index");
         }
+        #endregion
     }
 }

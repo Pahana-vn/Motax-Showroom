@@ -55,6 +55,7 @@
         public string? Comment1 { get; set; }
         public DateTime CommentDate { get; set; }
         public string? AccountName { get; set; }
+        public string AvatarUrl { get; set; }
     }
 
 }

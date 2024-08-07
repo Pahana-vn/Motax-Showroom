@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Motax.Models.Compare>
+﻿@model IEnumerable<Motax.ViewModels.CompareStarViewModel>
 
 <style>
     .avatar-img {
@@ -180,12 +180,18 @@
                                 {
                                     <td>
                                         <div class="compare-rate">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <span>5.0 (5k Review)</span>
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= Math.Ceiling(item.AverageRating))
+                                                {
+                                                    <i class="fas fa-star"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="far fa-star"></i>
+                                                }
+                                            }
+                                            <span>@item.AverageRating.ToString("0.0") (@item.ReviewCount Reviews)</span>
                                         </div>
                                     </td>
                                 }

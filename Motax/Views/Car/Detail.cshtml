@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <div class="site-breadcrumb" style="background: url(/Frontend/assets/img/breadcrumb/01.jpg)">
     <div class="container">
         <h2 class="breadcrumb-title">Detail Car</h2>
@@ -227,31 +228,17 @@
                             <div class="car-single-review">
                                 <div class="blog-comments mb-0">
                                     <h4>Reviews (@Model.Comments.Count)</h4>
+
                                     <div class="blog-comments-wrapper">
                                         @foreach (var comment in Model.Comments)
                                         {
                                             <div class="blog-comments-single">
 
-                                                @if (User.Identity.IsAuthenticated)
-                                                {
-                                                    var imagePath = ViewData["UserAvatar"] as string;
-                                                    if (!string.IsNullOrEmpty(imagePath))
-                                                    {
-                                                        <img src="@Url.Content("~/Images/Account/Avatar/" + imagePath)" alt="User Avatar" class="avatar-img">
-                                                    }
-                                                    else
-                                                    {
-                                                        <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <img src="~/Frontend/assets/img/account/user.jpg" alt="Default Avatar" class="avatar-img">
-                                                }
+                                                <img src="~/Images/Account/Avatar/@comment.AvatarUrl" alt="User Avatar" class="avatar-img">
 
                                                 <div class="blog-comments-content">
-                                                    <h5>@comment.AccountName</h5>
-                                                    <div class="comment-rating">
+                                                    <h5 >@comment.AccountName</h5>
+                                                    <div style="margin-top:10px" class="comment-rating">
                                                         @for (int i = 1; i <= 5; i++)
                                                         {
                                                             if (i <= comment.Rating)
@@ -270,6 +257,7 @@
                                             </div>
                                         }
                                     </div>
+
                                     <div class="blog-comments-form">
                                         <h4>Leave A Review</h4>
                                         <form asp-action="AddComment" method="post">
@@ -303,6 +291,7 @@
 
                     </div>
                 </div>
+
                 <div class="col-lg-4">
                     <div class="car-single-widget">
                         <h4 class="car-single-price">$@Model.Price</h4>
@@ -384,12 +373,18 @@
                                         <div class="car-top">
                                             <h4><a href="#">@item.Name</a></h4>
                                             <div class="car-rate">
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <span>5.0 (58.5k Review)</span>
+                                                @for (int i = 1; i <= 5; i++)
+                                                {
+                                                    if (i <= Math.Ceiling(item.AverageRating))
+                                                    {
+                                                        <i class="fas fa-star"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="far fa-star"></i>
+                                                    }
+                                                }
+                                                <span>@item.AverageRating.ToString("0.0") (@item.ReviewCount Reviews)</span>
                                             </div>
                                         </div>
                                         <ul class="car-list">
@@ -399,7 +394,7 @@
                                             <li><i class="far fa-gas-pump"></i>@item.FuelType</li>
                                         </ul>
                                         <div class="car-footer">
-                                            <span class="car-price">@item.Price</span>
+                                            <span class="car-price">$@item.Price</span>
                                             <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id" class="theme-btn"><span class="far fa-eye"></span>Details</a>
                                         </div>
                                     </div>

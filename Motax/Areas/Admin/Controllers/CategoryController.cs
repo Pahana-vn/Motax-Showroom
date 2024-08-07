@@ -146,6 +146,7 @@ namespace Motax.Areas.Admin.Controllers
             return View(cate);
         }
 
+        #region Delete
         [Route("Delete")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -157,7 +158,16 @@ namespace Motax.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // Xóa hình ảnh cũ nếu có
+            // Check for related records in Accessories table
+            bool hasRelatedAccessories = await db.Accessories.AnyAsync(a => a.CategoryId == Id);
+
+            if (hasRelatedAccessories)
+            {
+                TempData["error"] = "Cannot delete category. This category is referenced by one or more accessories.";
+                return RedirectToAction("Index");
+            }
+
+            // Delete image if exists
             if (!string.IsNullOrEmpty(categoryToDelete.Image))
             {
                 string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Category/Car", categoryToDelete.Image);
@@ -169,9 +179,10 @@ namespace Motax.Areas.Admin.Controllers
 
             db.Categories.Remove(categoryToDelete);
             await db.SaveChangesAsync();
-            TempData["success"] = "sản phẩm đã được xóa thành công";
+            TempData["success"] = "Category has been deleted successfully";
             return RedirectToAction("Index");
         }
 
+        #endregion
     }
 }

@@ -185,32 +185,57 @@ namespace Motax.Areas.Admin.Controllers
         }
         #endregion
 
+        #region Delete
         [Route("Delete")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int Id)
         {
-            var AccountToDelete = await db.Accounts.FindAsync(Id);
-            if (AccountToDelete == null)
+            var accountToDelete = await db.Accounts.FindAsync(Id);
+            if (accountToDelete == null)
             {
                 return NotFound();
             }
 
-            // Xóa hình ảnh cũ nếu có
-            if (!string.IsNullOrEmpty(AccountToDelete.Image))
+            // Check for related records
+            bool hasRelatedInvoices = await db.Invoices.AnyAsync(i => i.UserId == Id);
+            bool hasRelatedOrders = await db.Orders.AnyAsync(o => o.AccountId == Id);
+            bool hasRelatedCarRegistrations = await db.CarRegistrations.AnyAsync(cr => cr.UserId == Id);
+
+
+            bool hasRelatedCompares = await db.Compares.AnyAsync(c => c.UserId == Id);
+            bool hasRelatedWishlists = await db.Wishlists.AnyAsync(w => w.UserId == Id);
+
+            if (hasRelatedInvoices || hasRelatedOrders || hasRelatedCarRegistrations || hasRelatedCompares || hasRelatedWishlists)
             {
-                string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Account/Avatar", AccountToDelete.Image);
+                TempData["error"] = "Cannot delete account. This account has related records in other tables.";
+                return RedirectToAction("Index");
+            }
+
+            // Delete image if exists
+            if (!string.IsNullOrEmpty(accountToDelete.Image))
+            {
+                string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Account/Avatar", accountToDelete.Image);
                 if (System.IO.File.Exists(oldImagePath))
                 {
                     System.IO.File.Delete(oldImagePath);
                 }
             }
 
-            db.Accounts.Remove(AccountToDelete);
-            await db.SaveChangesAsync();
-            TempData["success"] = "Account has been deleted";
+            db.Accounts.Remove(accountToDelete);
+            try
+            {
+                await db.SaveChangesAsync();
+                TempData["success"] = "Account has been deleted successfully!";
+            }
+            catch (DbUpdateException ex)
+            {
+                TempData["error"] = $"Error deleting account: {ex.InnerException?.Message ?? ex.Message}";
+            }
+
             return RedirectToAction("Index");
         }
+        #endregion
 
         #region Detail
         [Route("Detail")]

@@ -244,24 +244,39 @@ namespace Motax.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int Id)
         {
-            var AccToDelete = await db.Accessories.FindAsync(Id);
-            if (AccToDelete == null)
+            var accessoryToDelete = await db.Accessories.FindAsync(Id);
+            if (accessoryToDelete == null)
             {
                 return NotFound();
             }
 
-            if (!string.IsNullOrEmpty(AccToDelete.ImageSingle))
+            // Check for related records in OrderAccessories table
+            bool hasRelatedOrders = await db.OrderDetailAccessories.AnyAsync(o => o.AccessoriesId == Id);
+            // Check for related records in Category table
+            bool hasRelatedCategory = await db.Categories.AnyAsync(c => c.Id == accessoryToDelete.CategoryId);
+            // Check for related records in Brand table
+            bool hasRelatedBrand = await db.Brands.AnyAsync(b => b.Id == accessoryToDelete.BrandId);
+
+            if (hasRelatedOrders || hasRelatedCategory || hasRelatedBrand)
             {
-                string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Accessories/Single", AccToDelete.ImageSingle);
+                TempData["error"] = "Cannot delete accessory. This accessory has related records in other tables.";
+                return RedirectToAction("Index");
+            }
+
+            // Delete image if exists
+            if (!string.IsNullOrEmpty(accessoryToDelete.ImageSingle))
+            {
+                string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Accessories/Single", accessoryToDelete.ImageSingle);
                 if (System.IO.File.Exists(oldImagePath))
                 {
                     System.IO.File.Delete(oldImagePath);
                 }
             }
 
-            if (!string.IsNullOrEmpty(AccToDelete.ImageMultiple))
+            // Delete multiple images if exists
+            if (!string.IsNullOrEmpty(accessoryToDelete.ImageMultiple))
             {
-                var existingImages = AccToDelete.ImageMultiple.Split(",");
+                var existingImages = accessoryToDelete.ImageMultiple.Split(",");
                 foreach (var image in existingImages)
                 {
                     string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Accessories/Multiple", image);
@@ -272,11 +287,13 @@ namespace Motax.Areas.Admin.Controllers
                 }
             }
 
-            db.Accessories.Remove(AccToDelete);
+            db.Accessories.Remove(accessoryToDelete);
             await db.SaveChangesAsync();
             TempData["success"] = "Accessory deleted successfully!";
             return RedirectToAction("Index");
         }
+
+
 
         #endregion
     }

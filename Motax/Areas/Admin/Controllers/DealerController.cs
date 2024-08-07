@@ -181,28 +181,39 @@ namespace Motax.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int Id)
         {
-            var DealerToDelete = await db.Dealers.FindAsync(Id);
-            if (DealerToDelete == null)
+            var dealerToDelete = await db.Dealers.FindAsync(Id);
+            if (dealerToDelete == null)
             {
                 return RedirectToAction("/404");
             }
 
-            // Xóa hình ảnh cũ nếu có
-            if (!string.IsNullOrEmpty(DealerToDelete.ImageBackground))
+            // Check for related records
+            bool hasRelatedCars = await db.Cars.AnyAsync(c => c.DealerId == Id);
+            bool hasRelatedDealerDetails = await db.DealerDetails.AnyAsync(dd => dd.DealerId == Id);
+
+            if (hasRelatedCars || hasRelatedDealerDetails)
             {
-                string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Dealers/Dealer", DealerToDelete.ImageBackground);
+                TempData["error"] = "Cannot delete dealer. This dealer is referenced by one or more cars or dealer details.";
+                return RedirectToAction("Index");
+            }
+
+            // Delete image if exists
+            if (!string.IsNullOrEmpty(dealerToDelete.ImageBackground))
+            {
+                string oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, "Images/Dealers/Dealer", dealerToDelete.ImageBackground);
                 if (System.IO.File.Exists(oldImagePath))
                 {
                     System.IO.File.Delete(oldImagePath);
                 }
             }
 
-            db.Dealers.Remove(DealerToDelete);
+            db.Dealers.Remove(dealerToDelete);
             await db.SaveChangesAsync();
             TempData["success"] = "Dealer has been successfully deleted";
             return RedirectToAction("Index");
         }
         #endregion
+
 
         [Route("Messages/{id}")]
         public async Task<IActionResult> Messages(int id)
