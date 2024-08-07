@@ -35,6 +35,15 @@ namespace Motax.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                // Check if the username already exists
+                var existingUser = await db.Accounts.FirstOrDefaultAsync(u => u.Username == acc.Username);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError("Username", "Username already exists. Please choose a different one.");
+                    return View(acc);
+                }
+
                 string filename = "";
                 if (acc.Image != null)
                 {
