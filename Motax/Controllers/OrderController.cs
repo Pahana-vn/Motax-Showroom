@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Motax.Helpers;
 using Motax.Models;
+using Motax.Services;
 using Motax.ViewModels;
 using System.Linq;
 using System.Security.Claims;
@@ -13,11 +16,15 @@ namespace Motax.Controllers
     {
         private readonly MotaxContext db;
         private readonly ILogger<OrderController> logger;
+        private readonly PaypalClient _paypalClient;
+        private readonly IVnPayService _vnPayservice;
 
-        public OrderController(MotaxContext context, ILogger<OrderController> logger)
+        public OrderController(MotaxContext context, ILogger<OrderController> logger, PaypalClient paypalClient, IVnPayService vnPayservice)
         {
             db = context;
             this.logger = logger;
+            _paypalClient = paypalClient;
+            _vnPayservice = vnPayservice;
         }
 
         [HttpPost]
@@ -234,10 +241,21 @@ namespace Motax.Controllers
                 return RedirectToAction("Invoices");
             }
 
+            ViewBag.PaypalClientId = _paypalClient.ClientId;
             return View(invoice);
         }
 
+        [Authorize]
+        public IActionResult PaymentSuccess()
+        {
+            return View();
+        }
 
+        [Authorize]
+        public IActionResult PaymentFail()
+        {
+            return View("");
+        }
 
         [HttpPost]
         public async Task<IActionResult> CancelOrder(int orderId)
@@ -276,5 +294,140 @@ namespace Motax.Controllers
             }
             return RedirectToAction("MyOrder");
         }
+
+        #region Payment Paypal
+        public class CreatePaypalOrderRequest
+        {
+            public int OrderId { get; set; }
+        }
+
+        [Authorize]
+        [HttpPost("/order/create-paypal-order")]
+        public async Task<IActionResult> CreatePaypalOrder([FromBody] CreatePaypalOrderRequest request, CancellationToken cancellationToken)
+        {
+            var invoice = await db.Invoices.FindAsync(request.OrderId);
+            if (invoice == null)
+            {
+                return BadRequest(new { message = "Invoice not found." });
+            }
+
+            var totalAmount = invoice.TotalAmount.ToString("F2"); // Assuming TotalAmount is a double or decimal
+            var currency = "USD";
+            var invoiceReference = invoice.Id.ToString(); // Use invoice ID as reference
+
+            try
+            {
+                var response = await _paypalClient.CreateOrder(totalAmount, currency, invoiceReference);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var error = new { ex.GetBaseException().Message };
+                return BadRequest(error);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("/order/capture-paypal-order")]
+        public async Task<IActionResult> CapturePaypalOrder(string orderID, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await _paypalClient.CaptureOrder(orderID);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var error = new { ex.GetBaseException().Message };
+                return BadRequest(error);
+            }
+        }
+
+
+
+        #endregion
+
+        #region Payment VNPay
+
+        [Authorize]
+        [HttpPost("/order/create-vnpay-order")]
+        public IActionResult CreateVnPayOrder(int invoiceId)
+        {
+            var invoice = db.Invoices.Include(i => i.CarRegistration).ThenInclude(cr => cr.Car).FirstOrDefault(i => i.Id == invoiceId);
+            if (invoice == null)
+            {
+                TempData["error"] = "Invoice not found.";
+                return RedirectToAction("InvoiceDetail", new { id = invoiceId });
+            }
+
+            var vnPayModel = new VnPaymentRequestModel
+            {
+                Amount = invoice.TotalAmount,
+                CreatedDate = DateTime.Now,
+                Description = $"Payment for invoice {invoice.Id}",
+                FullName = invoice.CarRegistration.CustomerName,
+                OrderId = invoice.Id // Ensure this is an integer
+            };
+
+            return Redirect(_vnPayservice.CreatePaymentUrl(HttpContext, vnPayModel));
+        }
+
+
+
+        [Authorize]
+        [HttpGet("/order/vnpay-callback")]
+        public IActionResult PaymentCallBack()
+        {
+            var response = _vnPayservice.PaymentExecute(Request.Query);
+
+            if (response == null || response.VnPayResponseCode != "00")
+            {
+                TempData["error"] = $"VNPay payment error: {response?.VnPayResponseCode}";
+                return RedirectToAction("PaymentFail");
+            }
+
+            // Retrieve the invoice using the order ID passed from VNPay
+            if (!int.TryParse(response.OrderId, out int invoiceId))
+            {
+                TempData["error"] = "Invalid Order ID.";
+                return RedirectToAction("PaymentFail");
+            }
+
+            var invoice = db.Invoices.FirstOrDefault(i => i.Id == invoiceId);
+            if (invoice != null)
+            {
+                invoice.Status = "Paid";
+                db.SaveChanges();
+            }
+
+            TempData["success"] = "VNPay payment successful";
+            return RedirectToAction("PaymentSuccess");
+        }
+
+        #endregion
+
+        #region COD
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> CreateCodOrder(int invoiceId)
+        {
+            var invoice = await db.Invoices.FindAsync(invoiceId);
+            if (invoice == null)
+            {
+                TempData["error"] = "Invoice not found.";
+                return RedirectToAction("InvoiceDetail", new { id = invoiceId });
+            }
+
+            // Update invoice status to Paid or COD, as needed
+            invoice.Status = "COD"; // Or any appropriate status
+            db.Invoices.Update(invoice);
+            await db.SaveChangesAsync();
+
+            TempData["success"] = "Payment successful.";
+            return RedirectToAction("PaymentSuccess");
+        }
+        #endregion
+
     }
 }
+

@@ -76,7 +76,6 @@ namespace Motax.Controllers
             }
             return View(acc);
         }
-
         #endregion
 
         #region Login

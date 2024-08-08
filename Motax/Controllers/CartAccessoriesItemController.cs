@@ -380,8 +380,6 @@ namespace Motax.Controllers
 
         #endregion
 
-
-
         #region PaymentCallBack VnPay
         [Authorize]
         public IActionResult PaymentCallBack()
