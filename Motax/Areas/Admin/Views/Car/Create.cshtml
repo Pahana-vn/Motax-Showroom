@@ -13,7 +13,7 @@
         </div>
         <div class="card-body" style="margin:10px;">
             <form asp-action="Create" asp-controller="Car" class="row g-3 mt-0" enctype="multipart/form-data">
-                <div asp-validation-summary="All" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="col-md-3">
                     <label class="form-label">Name Car</label>
@@ -169,7 +169,7 @@
                     <button type="submit" class="btn btn-primary">Create</button>
                 </div>
             </form>
-            <a class="btn btn-primary" style="color:blue; margin-top:5px;" asp-action="Index" asp-controller="Car">Back to list Brand</a>
+            <a class="btn btn-primary" style="color:blue; margin-top:5px;" asp-action="Index" asp-controller="Car">Back to list Car</a>
         </div>
     </div>
 </div>

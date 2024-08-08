@@ -1,4 +1,6 @@
-﻿namespace Motax.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Motax.ViewModels
 {
     public class DealerDetailAdminVM
     {
@@ -10,6 +12,7 @@
 
         public IFormFile? AvatarImage { get; set; }
 
+        [Required(ErrorMessage = "Please enter ConsultantName *")]
         public string? ConsultantName { get; set; }
 
         public IFormFile? ConsultantAvatar { get; set; }

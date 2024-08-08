@@ -1,10 +1,15 @@
-﻿namespace Motax.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Motax.ViewModels
 {
     public class AccessoriesAdminVM
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "Please enter Name *")]
         public string? Name { get; set; }
+        [Required(ErrorMessage = "Please enter Price *")]
         public double? Price { get; set; }
+        [Required(ErrorMessage = "Please enter Description *")]
         public string? Description { get; set; }
         public string? TypeCode { get; set; }
         public string? Slug { get; set; }
