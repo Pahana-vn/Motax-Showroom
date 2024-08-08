@@ -1,201 +1,32 @@
 ﻿@{
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Staff Dashboard";
     Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
 }
 
 <style>
-    .sales-card {
-        height: 150px;
-        color: #fff;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    .dashboard-container {
+        text-align: center;
+        margin-top: 50px;
     }
 
-    .bg-primary-gradient {
-        background: linear-gradient(45deg, #007bff, #6610f2);
+    .welcome-message {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
     }
 
-    .bg-danger-gradient {
-        background: linear-gradient(45deg, #dc3545, #f03e3e);
-    }
-
-    .bg-success-gradient {
-        background: linear-gradient(45deg, #28a745, #218838);
-    }
-
-    .bg-warning-gradient {
-        background: linear-gradient(45deg, #ffc107, #fd7e14);
+    .dashboard-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 </style>
 
-<div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-    <div>
-        <h4 class="mb-0">Hi, welcome back!</h4>
-        <p class="mb-0 text-muted">Sales monitoring dashboard template.</p>
+<div class="dashboard-container">
+    <div class="welcome-message">
+        <h2>Welcome to Your Staff Dashboard</h2>
+        <p>We are glad to have you on our team. Your dedication and hard work are greatly appreciated.</p>
     </div>
+    <img src="https://us.123rf.com/450wm/nd3000/nd30001711/nd3000171102471/90030558-colleagues-sitting-at-office-desk.jpg?ver=6" alt="Staff at Office Desk" class="dashboard-image" />
 </div>
-
-<!-- Summary Cards -->
-<div class="row">
-    <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-        <div class="card overflow-hidden sales-card bg-primary-gradient">
-            <div class="px-3 pt-3 pb-2 pt-0">
-                <div>
-                    <h6 class="mb-3 fs-12 text-fixed-white">TODAY ORDERS</h6>
-                </div>
-                <div class="pb-0 mt-0">
-                    <div class="d-flex">
-                        <div>
-                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">@ViewBag.TodayOrders</h4>
-                            <p class="mb-0 fs-12 text-fixed-white op-7">Orders placed today</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-        <div class="card overflow-hidden sales-card bg-danger-gradient">
-            <div class="px-3 pt-3 pb-2 pt-0">
-                <div>
-                    <h6 class="mb-3 fs-12 text-fixed-white">TODAY EARNINGS</h6>
-                </div>
-                <div class="pb-0 mt-0">
-                    <div class="d-flex">
-                        <div>
-                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">$@ViewBag.TodayEarnings</h4>
-                            <p class="mb-0 fs-12 text-fixed-white op-7">Earnings from today's orders</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-        <div class="card overflow-hidden sales-card bg-success-gradient">
-            <div class="px-3 pt-3 pb-2 pt-0">
-                <div>
-                    <h6 class="mb-3 fs-12 text-fixed-white">TOTAL EARNINGS</h6>
-                </div>
-                <div class="pb-0 mt-0">
-                    <div class="d-flex">
-                        <div>
-                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">$@ViewBag.TotalEarnings</h4>
-                            <p class="mb-0 fs-12 text-fixed-white op-7">Total earnings so far</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-        <div class="card overflow-hidden sales-card bg-warning-gradient">
-            <div class="px-3 pt-3 pb-2 pt-0">
-                <div>
-                    <h6 class="mb-3 fs-12 text-fixed-white">PRODUCT SOLD</h6>
-                </div>
-                <div class="pb-0 mt-0">
-                    <div class="d-flex">
-                        <div>
-                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">@ViewBag.ProductSold</h4>
-                            <p class="mb-0 fs-12 text-fixed-white op-7">Total products sold</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Chart Section -->
-<div class="row">
-    <div class="col-md-12 col-lg-12 col-xl-7" style="width:120%">
-        <div class="card">
-            <div class="card-header pb-0">
-                <div class="d-flex justify-content-between">
-                    <h4 class="card-title mb-0">Monthly Order and Earnings Statistics</h4>
-                </div>
-                <div>
-                    <label for="month">Select Month:</label>
-                    <select id="month" name="month" class="form-select">
-                        @for (int i = 1; i <= 12; i++)
-                        {
-                            <option value="@i">Month @i</option>
-                        }
-                    </select>
-                    <button type="button" id="fetchDataBtn" class="btn btn-primary mt-2">View</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <canvas id="monthlyChart" width="800" height="400"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        document.getElementById('fetchDataBtn').addEventListener('click', function () {
-            var month = document.getElementById('month').value;
-            fetch(`/Admin/Home/GetMonthlyOrderData?month=${month}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Data received from API:', data);
-                    drawChart(data);
-                })
-                .catch(error => console.error('Error fetching monthly data:', error));
-        });
-
-        function drawChart(data) {
-            console.log('Data used for chart:', data);
-
-            var ctx = document.getElementById('monthlyChart').getContext('2d');
-            var chartData = {
-                labels: ['Total Earnings'],
-                datasets: [{
-                    label: 'Monthly Statistics',
-                    data: [data.totalEarnings],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            };
-
-            if (window.monthlyChart && typeof window.monthlyChart.destroy === 'function') {
-                window.monthlyChart.destroy();
-            }
-
-            window.monthlyChart = new Chart(ctx, {
-                type: 'bar',
-                data: chartData,
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        // Fetch today's data on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            fetch('/Admin/Home/GetTodayOrderData')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('todayOrders').textContent = data.TodayOrders || 0;
-                    document.getElementById('todayEarnings').textContent = `$${data.TodayEarnings || 0}`;
-                    document.getElementById('totalEarnings').textContent = `$${data.TotalEarnings || 0}`;
-                    document.getElementById('productSold').textContent = data.ProductSold || 0;
-                })
-                .catch(error => console.error('Error fetching today\'s data:', error));
-        });
-    </script>
-}
