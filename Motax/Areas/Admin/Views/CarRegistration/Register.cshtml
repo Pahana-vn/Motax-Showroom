@@ -89,8 +89,8 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label">Car Price</label>
-                    <input value="@Model.CarPrice" class="form-control" readonly />
+                    <label class="form-label">Car Price + Warehouse fees 1% </label>
+                    <input value="@(Model.CarPrice+Model.CarPrice*0.01)" class="form-control" readonly />
                 </div>
 
                 <div class="col-md-3">

@@ -9,10 +9,10 @@
     <div class="card custom-card">
         <div class="card-header justify-content-between">
             <div class="card-title">
-                Edit Car Registration (CarId: @Model.CarId)
+                <h3>Edit Car Registration (CarId: @Model.CarId)</h3>
             </div>
         </div>
-        <h2>Edit Car Registration</h2>
+        
         <div class="card-body" style="margin:10px;">
             <form asp-action="Update" asp-controller="CarRegistration" asp-area="Admin" method="post" class="row g-3 mt-0">
                 <input type="hidden" asp-for="Id" />
@@ -91,8 +91,8 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label">Car Price</label>
-                    <input value="@Model.CarPrice" class="form-control" readonly />
+                    <label class="form-label">Car Price + Warehouse fees 1%</label>
+                    <input value="@(Model.CarPrice+Model.CarPrice*0.01)" class="form-control" readonly />
                 </div>
 
                 <div class="col-md-3">

@@ -217,7 +217,10 @@ namespace Motax.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            var registration = await db.CarRegistrations.FindAsync(id);
+            var registration = await db.CarRegistrations
+                                       .Include(cr => cr.Car)  // Bao gồm thông tin của Car
+                                       .FirstOrDefaultAsync(cr => cr.Id == id);
+
             if (registration == null)
             {
                 TempData["error"] = "Car registration not found.";
@@ -246,6 +249,7 @@ namespace Motax.Areas.Admin.Controllers
                 OrderStatusId = registration.OrderStatusId,
                 DriverLicenseNumber = registration.DriverLicenseNumber,
                 OrderStatusList = await db.OrderStatus.ToListAsync(),
+                CarPrice = registration.Car?.Price ?? 0  // Gán giá trị CarPrice từ đối tượng Car
             };
 
             return View(viewModel);
@@ -258,7 +262,9 @@ namespace Motax.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var registrationToUpdate = await db.CarRegistrations.FindAsync(registrationVM.Id);
+                var registrationToUpdate = await db.CarRegistrations
+                                                   .Include(cr => cr.Car)  // Bao gồm thông tin của Car
+                                                   .FirstOrDefaultAsync(cr => cr.Id == registrationVM.Id);
                 if (registrationToUpdate == null)
                 {
                     TempData["error"] = "Car registration not found.";
@@ -272,13 +278,13 @@ namespace Motax.Areas.Admin.Controllers
                 registrationToUpdate.CustomerEmail = registrationVM.CustomerEmail;
                 registrationToUpdate.LicensePlate = registrationVM.LicensePlate;
                 registrationToUpdate.RegistrationNumber = registrationVM.RegistrationNumber;
-                registrationToUpdate.RegistrationFee = registrationVM.CarPrice * 0.02;
-                registrationToUpdate.TaxAmount = registrationVM.CarPrice * 0.10;
+                registrationToUpdate.RegistrationFee = registrationToUpdate.Car.Price * 0.02;  // Sử dụng giá trị từ Car
+                registrationToUpdate.TaxAmount = registrationToUpdate.Car.Price * 0.10;  // Sử dụng giá trị từ Car
                 registrationToUpdate.PaymentStatus = registrationVM.PaymentStatus;
                 registrationToUpdate.InsuranceDetails = registrationVM.InsuranceDetails;
                 registrationToUpdate.InspectionDate = registrationVM.InspectionDate;
                 registrationToUpdate.Notes = registrationVM.Notes;
-                registrationToUpdate.TotalAmount = registrationVM.CarPrice + registrationVM.CarPrice * 0.01 + registrationVM.CarPrice * 0.02 + registrationVM.CarPrice * 0.10;
+                registrationToUpdate.TotalAmount = registrationToUpdate.Car.Price + registrationToUpdate.Car.Price * 0.01 + registrationToUpdate.Car.Price * 0.02 + registrationToUpdate.Car.Price * 0.10;  // Sử dụng giá trị từ Car
                 registrationToUpdate.OrderStatusId = registrationVM.OrderStatusId;
                 registrationToUpdate.DriverLicenseNumber = registrationVM.DriverLicenseNumber;
 
@@ -292,6 +298,7 @@ namespace Motax.Areas.Admin.Controllers
             registrationVM.OrderStatusList = await db.OrderStatus.ToListAsync();
             return View(registrationVM);
         }
+
         #endregion
 
         #region Delete

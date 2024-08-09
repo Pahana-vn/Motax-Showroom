@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +11,6 @@ namespace Motax.Areas.Staff.Controllers
 {
     [Area("Staff")]
     [Route("Staff/Secure")]
-    [Authorize(Policy = "CheckAdminOrStaff")]
     public class SecureController : Controller
     {
         private readonly MotaxContext db;
@@ -39,7 +37,7 @@ namespace Motax.Areas.Staff.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RegisterViewModel acc)
+        public async Task<IActionResult> Create(RegisterStaffViewModel acc)
         {
             if (ModelState.IsValid)
             {
@@ -71,7 +69,7 @@ namespace Motax.Areas.Staff.Controllers
                 };
                 db.Accounts.Add(user);
                 await db.SaveChangesAsync();
-                TempData["success"] = "Customer account created successfully!";
+                TempData["success"] = "Staff account created successfully!";
                 return RedirectToAction("Index");
             }
             return View(acc);

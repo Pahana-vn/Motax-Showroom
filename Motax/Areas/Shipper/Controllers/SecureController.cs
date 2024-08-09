@@ -37,7 +37,7 @@ namespace Motax.Areas.Shipper.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RegisterViewModel acc)
+        public async Task<IActionResult> Create(RegisterStaffViewModel acc)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace Motax.Areas.Shipper.Controllers
                 };
                 db.Accounts.Add(user);
                 await db.SaveChangesAsync();
-                TempData["success"] = "Staff account created successfully!";
+                TempData["success"] = "Shipper account created successfully!";
                 return RedirectToAction("Index");
             }
             return View(acc);
