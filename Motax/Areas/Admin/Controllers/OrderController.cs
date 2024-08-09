@@ -200,24 +200,31 @@ namespace Motax.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var orderToDelete = await db.Orders.FindAsync(id);
+            // Fetch the order to delete
+            var orderToDelete = await db.Orders
+                .Include(o => o.OrderDetails) // Include related OrderDetails
+                .FirstOrDefaultAsync(o => o.Id == id);
+
             if (orderToDelete == null)
             {
-                return NotFound();
-            }
-
-            // Check for related records in OrderDetails table
-            bool hasRelatedOrderDetails = await db.OrderDetails.AnyAsync(od => od.OrderId == id);
-
-            if (hasRelatedOrderDetails)
-            {
-                TempData["error"] = "Cannot delete order. This order is referenced by one or more order details.";
+                TempData["error"] = "Order not found.";
                 return RedirectToAction("Index");
             }
 
+            // Check for related records in OrderDetails table
+            if (orderToDelete.OrderDetails.Any())
+            {
+                // Remove related OrderDetails records
+                db.OrderDetails.RemoveRange(orderToDelete.OrderDetails);
+            }
+
+            // Remove the Order record
             db.Orders.Remove(orderToDelete);
+
+            // Save changes to the database
             await db.SaveChangesAsync();
-            TempData["success"] = "Order deleted successfully!";
+
+            TempData["success"] = "Order and its related details deleted successfully!";
             return RedirectToAction("Index");
         }
         #endregion

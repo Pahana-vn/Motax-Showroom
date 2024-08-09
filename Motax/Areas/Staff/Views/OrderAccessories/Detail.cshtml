@@ -1,0 +1,43 @@
+﻿@model IEnumerable<OrderDetailAccessories>
+
+@{
+    ViewData["Title"] = "Order Accessories Detail";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">Order Accessories Details</div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="order-details-table" class="table table-bordered text-nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Accessory Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Accessory?.Name</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.Price</td>
+                                    <td>@item.Discount</td>
+                                    <td>@(item.Price * item.Quantity * (1 - item.Discount / 100))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
