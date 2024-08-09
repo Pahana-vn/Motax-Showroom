@@ -10,7 +10,7 @@
         public string? PickupLocation { get; set; }
         public string? CustomerContact { get; set; }
         public bool IsConfirmed { get; set; }
-        public int CarRegistrationId { get; set; }
+        public int? CarRegistrationId { get; set; }
         public virtual Car? Car { get; set; }
         public virtual Dealer? Dealer { get; set; }
         public virtual ServiceUnit? ServiceUnit { get; set; }

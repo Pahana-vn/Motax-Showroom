@@ -1588,11 +1588,15 @@
                             <ul class="slide-menu child1">
 
                                 <li class="slide">
-                                    <a asp-action="Index" asp-controller="Order" class="side-menu__item">Orders</a>
+                                    <a asp-action="Index" asp-controller="Order" asp-area="Staff" class="side-menu__item">Orders</a>
                                 </li>
 
                                 <li class="slide">
-                                    <a asp-action="Index3" asp-controller="Order" class="side-menu__item">Orders - Customer Confirmed</a>
+                                    <a asp-action="Index3" asp-controller="Order" asp-area="Staff" class="side-menu__item">Orders - Customer Confirmed</a>
+                                </li>
+
+                                <li class="slide">
+                                    <a asp-action="Index3" asp-controller="ServiceUnit" asp-area="Staff" class="side-menu__item">List car preparation service </a>
                                 </li>
 
                             </ul>

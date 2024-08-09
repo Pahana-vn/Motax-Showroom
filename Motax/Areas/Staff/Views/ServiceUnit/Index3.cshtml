@@ -1,8 +1,7 @@
 ﻿@model IEnumerable<Motax.Models.ServiceUnit>
-
 @{
-    ViewData["Title"] = "Index 2 ServiceUnit";
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutBackend.cshtml";
+    ViewData["Title"] = "Index3 ServiceUnit";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutBackendStaff.cshtml";
 }
 
 <div class="row">
@@ -23,7 +22,6 @@
                                 <th>Service Details</th>
                                 <th>Pickup Date</th>
                                 <th>Is Completed</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,11 +34,6 @@
                                     <td>@item.ServiceDetails</td>
                                     <td>@item.PickupDate?.ToShortDateString()</td>
                                     <td>@item.IsCompleted</td>
-                                    <td>
-                                        <a asp-action="Create" asp-controller="GoodsReceipt" asp-route-serviceUnitId="@item.Id" class="btn btn-secondary">
-                                            Receive Vehicle
-                                        </a>
-                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -50,3 +43,4 @@
         </div>
     </div>
 </div>
+

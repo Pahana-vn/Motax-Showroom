@@ -9,6 +9,6 @@
         public string? PickupLocation { get; set; }
         public string? CustomerContact { get; set; }
         public bool IsConfirmed { get; set; }
-        public int CarRegistrationId { get; set; }
+        public int? CarRegistrationId { get; set; }
     }
 }

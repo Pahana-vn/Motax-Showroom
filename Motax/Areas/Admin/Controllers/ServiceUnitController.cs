@@ -43,6 +43,19 @@ namespace Motax.Areas.Admin.Controllers
             return View(serviceUnits);
         }
 
+        [Route("Index3")]
+        public async Task<IActionResult> Index3()
+        {
+            var serviceUnits = await db.ServiceUnits
+                .Include(su => su.Car)
+                .Include(su => su.Dealer)
+                .Where(su => su.ServiceDetails == "Prepare the vehicle for delivery.")
+                .OrderByDescending(su => su.Id)
+                .ToListAsync();
+
+            return View(serviceUnits);
+        }
+
 
         [Route("Create")]
         [HttpGet]
@@ -101,7 +114,7 @@ namespace Motax.Areas.Admin.Controllers
 
             return View(viewModel);
         }
-
+        #region Create 2
         [Route("Create2")]
         [HttpGet]
         public IActionResult Create2(int carId, int dealerId)
@@ -113,25 +126,18 @@ namespace Motax.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Order");
             }
 
-            var carRegistration = db.CarRegistrations.FirstOrDefault(cr => cr.CarId == carId);
-            if (carRegistration == null)
-            {
-                TempData["error"] = "Car registration not found.";
-                return RedirectToAction("Index", "Order");
-            }
-
             var viewModel = new ServiceUnitViewModel
             {
                 CarId = carId,
                 DealerId = dealerId,
                 ServiceDate = DateTime.Now,
-                PickupDate = DateTime.Now.AddDays(7), // Example pickup date
-                ServiceDetails = "Prepare the vehicle for delivery.",
-                CarRegistrationId = carRegistration.Id // Set the CarRegistrationId correctly
+                PickupDate = DateTime.Now.AddDays(7), // Ngày lấy xe ví dụ
+                ServiceDetails = "Prepare the vehicle for delivery."
             };
 
             return View(viewModel);
         }
+
 
         [Route("Create2")]
         [HttpPost]
@@ -147,13 +153,6 @@ namespace Motax.Areas.Admin.Controllers
                     return RedirectToAction("Create2", new { carId = viewModel.CarId, dealerId = viewModel.DealerId });
                 }
 
-                var carRegistration = await db.CarRegistrations.FindAsync(viewModel.CarRegistrationId);
-                if (carRegistration == null)
-                {
-                    TempData["error"] = "Car registration not found.";
-                    return RedirectToAction("Create2", new { carId = viewModel.CarId, dealerId = viewModel.DealerId });
-                }
-
                 var serviceUnit = new ServiceUnit
                 {
                     CarId = viewModel.CarId,
@@ -162,17 +161,18 @@ namespace Motax.Areas.Admin.Controllers
                     ServiceDetails = viewModel.ServiceDetails,
                     IsCompleted = viewModel.IsCompleted,
                     PickupDate = viewModel.PickupDate,
-                    CarRegistrationId = viewModel.CarRegistrationId
+                    CarRegistrationId = null
                 };
 
                 db.ServiceUnits.Add(serviceUnit);
                 await db.SaveChangesAsync();
 
                 TempData["success"] = "Service unit created successfully!";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index3");
             }
 
             return View(viewModel);
         }
+        #endregion
     }
 }
