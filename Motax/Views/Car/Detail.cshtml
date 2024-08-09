@@ -4,6 +4,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .avatar-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 15px;
+    }
+
+    .star-rating, .comment-rating {
+        display: flex;
+    }
+
+        .star-rating i, .comment-rating i {
+            font-size: 24px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+            .star-rating i.fas, .comment-rating i.fas {
+                color: #f39c12; /* Yellow color for filled stars */
+            }
+</style>
 
 <div class="site-breadcrumb" style="background: url(/Frontend/assets/img/breadcrumb/01.jpg)">
     <div class="container">
@@ -237,7 +259,7 @@
                                                 <img src="~/Images/Account/Avatar/@comment.AvatarUrl" alt="User Avatar" class="avatar-img">
 
                                                 <div class="blog-comments-content">
-                                                    <h5 >@comment.AccountName</h5>
+                                                    <h5>@comment.AccountName</h5>
                                                     <div style="margin-top:10px" class="comment-rating">
                                                         @for (int i = 1; i <= 5; i++)
                                                         {
@@ -409,6 +431,10 @@
 </div>
 
 @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
     <script>
         $(document).ready(function () {
             $('.star-rating i').on('mouseover', function () {
@@ -439,26 +465,5 @@
             }
         });
     </script>
-    <style>
-        .avatar-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
-        }
 
-        .star-rating, .comment-rating {
-            display: flex;
-        }
-
-            .star-rating i, .comment-rating i {
-                font-size: 24px;
-                color: #ccc;
-                cursor: pointer;
-            }
-
-                .star-rating i.fas, .comment-rating i.fas {
-                    color: #f39c12; /* Yellow color for filled stars */
-                }
-    </style>
 }

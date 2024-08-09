@@ -4,6 +4,115 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    /* General Styling */
+.calculator-result {
+    background-color: #f8f9fa;
+    padding: 120px 0;
+}
+
+.breadcrumb-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.result-widget {
+    background: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.result-widget:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.result-widget-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.result-widget ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.result-widget ul li {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e9ecef;
+    padding: 10px 0;
+}
+
+.result-widget ul li:last-child {
+    border-bottom: none;
+}
+
+.result-widget ul li strong {
+    font-weight: 600;
+    color: #333;
+}
+
+.result-widget ul li span {
+    font-weight: 700;
+    color: #007bff;
+}
+
+/* Button Styling */
+.theme-btn {
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.theme-btn i {
+    margin-left: 10px;
+    transition: margin-left 0.3s ease;
+}
+
+.theme-btn:hover {
+    text-decoration: none;
+}
+
+.theme-btn:hover i {
+    margin-left: 15px;
+}
+
+/* Responsive Design */
+media (max-width: 768px) {
+    .breadcrumb-title {
+        font-size: 28px;
+    }
+
+    .result-widget-title {
+        font-size: 22px;
+    }
+
+    .result-widget ul li {
+        font-size: 16px;
+    }
+
+    .theme-btn {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+}
+
+</style>
 <div class="calculator-result py-120">
     <div class="container">
         <h2 class="breadcrumb-title">Calculation Result</h2>

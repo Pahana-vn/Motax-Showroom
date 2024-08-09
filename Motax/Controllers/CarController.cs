@@ -115,6 +115,7 @@ namespace Motax.Controllers
                 db.Comments.Add(comment);
                 await db.SaveChangesAsync();
 
+                TempData["success"] = "You have successfully commented.";
                 return RedirectToAction("Detail", new { id = model.CarId });
             }
 
@@ -187,7 +188,7 @@ namespace Motax.Controllers
                     Comment1 = c.Comment1,
                     CommentDate = c.CommentDate,
                     AccountName = c.Account.Username,
-                    AvatarUrl = c.Account.Image
+                    AvatarUrl = c.Account?.Image ?? "/images/default-avatar.png"
                 }).ToList()
             };
 
