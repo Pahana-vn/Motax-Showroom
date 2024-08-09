@@ -121,19 +121,20 @@ namespace Motax.Areas.Admin.Controllers
                 .Include(o => o.Account)
                 .Include(o => o.Car)
                 .Include(o => o.OrderStatus)
-                .Where(o => o.Status == 1) // Assuming status 1 is 'Pending'
+                .Where(o => o.OrderStatus.Status == "Pending") // Ensure this matches the actual 'Pending' status description in your database
                 .Select(o => new WaitingListDetailsViewModel
                 {
                     Username = o.Account.Username,
                     CarName = o.Car.Name,
                     OrderDate = o.OrderDate,
                     DeliveryDate = o.DeliveryDate,
-                    StatusDescription = o.OrderStatus.Status // Assuming 'Status' is the description in OrderStatus
+                    StatusDescription = o.OrderStatus.Status
                 })
                 .ToListAsync();
 
             return View(waitingList);
         }
+
 
 
 
