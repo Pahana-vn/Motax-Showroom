@@ -460,7 +460,7 @@ namespace Motax.Controllers
         #endregion
 
 
-        public IActionResult AdvancedSearch(string? condition, string? brand, string? transmission, int? year, int? doors, string? bodyType)
+        public IActionResult AdvancedSearch(string? condition, string? brand, string? transmission, int? year, int? doors, string? bodyType, int? priceRange)
         {
             var cars = db.Cars.Include(c => c.Brand).AsQueryable();
 
@@ -494,6 +494,29 @@ namespace Motax.Controllers
                 cars = cars.Where(p => p.BodyType == bodyType);
             }
 
+            // Filter by price range
+            if (priceRange.HasValue)
+            {
+                switch (priceRange.Value)
+                {
+                    case 2:
+                        cars = cars.Where(p => p.Price >= 0 && p.Price <= 100000);
+                        break;
+                    case 3:
+                        cars = cars.Where(p => p.Price > 100000 && p.Price <= 500000);
+                        break;
+                    case 4:
+                        cars = cars.Where(p => p.Price > 500000 && p.Price <= 2000000);
+                        break;
+                    case 5:
+                        cars = cars.Where(p => p.Price > 2000000 && p.Price <= 10000000);
+                        break;
+                    case 6:
+                        cars = cars.Where(p => p.Price > 10000000 && p.Price <= 100000000);
+                        break;
+                }
+            }
+
             var result = cars.Select(p => new CarVM
             {
                 Id = p.Id,
@@ -511,6 +534,7 @@ namespace Motax.Controllers
 
             return View("Index", result);
         }
+
 
     }
 }
