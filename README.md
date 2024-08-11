@@ -27,6 +27,8 @@ Link demo video youtube Motax showroom: https://www.youtube.com/watch?v=w662z5sS
 
 Link database: https://drive.google.com/drive/folders/1m-W7GYKjrvsrbCJLCJwljrbHxOm2xDGx
 
+Link Instructions for importing and connecting sql and source code: https://drive.google.com/drive/folders/1qtWjkte1lD3TtUtu74YacS3dDgAmWJYv
+
 =======================================
 
 Thank you for visit our website.
