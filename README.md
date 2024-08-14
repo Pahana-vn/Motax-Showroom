@@ -23,9 +23,11 @@ Lữ Phát Đạt (Student1429113)
 
 Documentations : https://drive.google.com/drive/folders/1FsqM6YhM-12lc1imu5nFc_Hz0kdSO3t5
 
-Link demo video Motax showroom: ....
+Link demo video youtube Motax showroom: https://www.youtube.com/watch?v=w662z5sSaUc
 
 Link database: https://drive.google.com/drive/folders/1m-W7GYKjrvsrbCJLCJwljrbHxOm2xDGx
+
+Link Instructions for importing and connecting sql and source code: https://drive.google.com/drive/folders/1qtWjkte1lD3TtUtu74YacS3dDgAmWJYv
 
 =======================================
 
