@@ -70,14 +70,30 @@ namespace Motax.Controllers
         }
 
 
-        public IActionResult Search(string? query)
+        public IActionResult Search(string? query, int sortOption = 1, int page = 1, int pageSize = 9)
         {
             var dealers = db.Dealers.AsQueryable();
 
-            if (query != null)
+            if (!string.IsNullOrEmpty(query))
             {
-                dealers = dealers.Where(p => p.Name != null && p.Name.Contains(query));
+                dealers = dealers.Where(p => p.Name.Contains(query));
             }
+
+            // Sort options similar to the Index method
+            switch (sortOption)
+            {
+                case 3: // Sort by Popular
+                    dealers = dealers.OrderByDescending(p => p.Cars.Count());
+                    break;
+                case 4: // Sort by Most Rated
+                    dealers = dealers.OrderByDescending(p => p.Cars.SelectMany(c => c.Comments).Average(c => c.Rating));
+                    break;
+                default: // Sort by Default
+                    dealers = dealers.OrderBy(p => p.Name);
+                    break;
+            }
+
+            // Convert the result to a PagedList
             var result = dealers.Select(p => new DealerVM
             {
                 Id = p.Id,
@@ -87,9 +103,22 @@ namespace Motax.Controllers
                 Address = p.Address,
                 City = p.City,
                 Quantity = p.Cars.Count(),
-            });
+            }).ToPagedList(page, pageSize);
+
+            // Populate the SortOptions ViewBag
+            ViewBag.SortOptions = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Sort By Default", Selected = sortOption == 1 },
+        new SelectListItem { Value = "3", Text = "Sort By vehicles", Selected = sortOption == 3 },
+        new SelectListItem { Value = "4", Text = "Sort By Most Rated", Selected = sortOption == 4 }
+    };
+
+            ViewBag.CurrentSort = sortOption;
+
             return View(result);
         }
+
+
 
         public IActionResult Detail(int id, int sortOption = 1, int page = 1, int pageSize = 9)
         {

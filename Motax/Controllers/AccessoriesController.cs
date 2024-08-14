@@ -73,35 +73,106 @@ namespace Motax.Controllers
         }
 
 
-        public IActionResult Search(string? query)
+        public IActionResult Search(string? query, int sortOption = 1, int page = 1, int pageSize = 9)
         {
             var accs = db.Accessories.AsQueryable();
 
-            if (query != null)
+            if (!string.IsNullOrEmpty(query))
             {
                 accs = accs.Where(p => p.Name != null && p.Name.Contains(query));
             }
+
+            // Sorting logic
+            switch (sortOption)
+            {
+                case 2: // Sort by Latest
+                    accs = accs.OrderByDescending(p => p.Id);
+                    break;
+                case 3: // Sort by Low Price
+                    accs = accs.OrderBy(p => p.Price);
+                    break;
+                case 4: // Sort by High Price
+                    accs = accs.OrderByDescending(p => p.Price);
+                    break;
+                case 5: // Sort by Featured
+                    accs = accs.OrderByDescending(p => p.Name);
+                    break;
+                default: // Sort by Default
+                    accs = accs.OrderBy(p => p.Name);
+                    break;
+            }
+
             var result = accs.Select(p => new AccessoriesVM
             {
                 Id = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 ImageSingle = p.ImageSingle,
-            });
-            return View(result);
+            }).ToPagedList(page, pageSize);
+
+            // Passing sort options to the view
+            ViewBag.SortOptions = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Sort By Default", Selected = sortOption == 1 },
+        new SelectListItem { Value = "5", Text = "Sort By Featured", Selected = sortOption == 5 },
+        new SelectListItem { Value = "2", Text = "Sort By Latest", Selected = sortOption == 2 },
+        new SelectListItem { Value = "3", Text = "Sort By Low Price", Selected = sortOption == 3 },
+        new SelectListItem { Value = "4", Text = "Sort By High Price", Selected = sortOption == 4 }
+    };
+
+            ViewBag.CurrentSort = sortOption;
+
+            return View("Index", result);
         }
 
-        public IActionResult FindFilter(double max, double min)
+
+        public IActionResult FindFilter(double max, double min, int sortOption = 1, int page = 1, int pageSize = 9)
         {
-            var result = db.Accessories.Where(d => d.Price >= min && d.Price <= max).Select(p => new AccessoriesVM
+            var accs = db.Accessories.Where(d => d.Price >= min && d.Price <= max).AsQueryable();
+
+            // Sorting logic
+            switch (sortOption)
+            {
+                case 2: // Sort by Latest
+                    accs = accs.OrderByDescending(p => p.Id);
+                    break;
+                case 3: // Sort by Low Price
+                    accs = accs.OrderBy(p => p.Price);
+                    break;
+                case 4: // Sort by High Price
+                    accs = accs.OrderByDescending(p => p.Price);
+                    break;
+                case 5: // Sort by Featured
+                    accs = accs.OrderByDescending(p => p.Name);
+                    break;
+                default: // Sort by Default
+                    accs = accs.OrderBy(p => p.Name);
+                    break;
+            }
+
+            var result = accs.Select(p => new AccessoriesVM
             {
                 Id = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 ImageSingle = p.ImageSingle,
-            }).ToList();
+            }).ToPagedList(page, pageSize);
+
+            // Passing sort options to the view
+            ViewBag.SortOptions = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Sort By Default", Selected = sortOption == 1 },
+        new SelectListItem { Value = "5", Text = "Sort By Featured", Selected = sortOption == 5 },
+        new SelectListItem { Value = "2", Text = "Sort By Latest", Selected = sortOption == 2 },
+        new SelectListItem { Value = "3", Text = "Sort By Low Price", Selected = sortOption == 3 },
+        new SelectListItem { Value = "4", Text = "Sort By High Price", Selected = sortOption == 4 }
+    };
+
+            ViewBag.CurrentSort = sortOption;
+
             return View("Index", result);
         }
+
 
         public IActionResult Detail(int id)
         {

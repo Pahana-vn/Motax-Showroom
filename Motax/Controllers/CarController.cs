@@ -243,15 +243,35 @@ namespace Motax.Controllers
         #endregion
 
         #region Search and FindFilter
-        public IActionResult Search(string? query)
+        public IActionResult Search(string? query, int sortOption = 1, int page = 1, int pageSize = 9)
         {
             var cars = db.Cars
                 .Include(p => p.Comments)
                 .AsQueryable();
 
-            if (query != null)
+            if (!string.IsNullOrEmpty(query))
             {
                 cars = cars.Where(p => p.Name != null && p.Name.Contains(query));
+            }
+
+            // Sorting
+            switch (sortOption)
+            {
+                case 2: // Sort by Latest
+                    cars = cars.OrderByDescending(p => p.Year);
+                    break;
+                case 3: // Sort by Low Price
+                    cars = cars.OrderBy(p => p.Price);
+                    break;
+                case 4: // Sort by High Price
+                    cars = cars.OrderByDescending(p => p.Price);
+                    break;
+                case 5: // Sort by Featured
+                    cars = cars.OrderByDescending(p => p.Comments.Count());
+                    break;
+                default: // Sort by Default
+                    cars = cars.OrderBy(p => p.Name);
+                    break;
             }
 
             var result = cars.Select(p => new CarVM
@@ -265,18 +285,56 @@ namespace Motax.Controllers
                 Year = p.Year,
                 Price = p.Price,
                 ImageSingle = p.ImageSingle,
+                NameBrand = p.Brand != null ? p.Brand.Name : null,
                 IsAvailable = p.IsAvailable,
-                AverageRating = p.Comments.Any() ? p.Comments.Average(c => c.Rating) : 0,  // Tính toán AverageRating
-                ReviewCount = p.Comments.Count()  // Tính toán ReviewCount
-            }).ToList();
+                AverageRating = p.Comments.Any() ? p.Comments.Average(c => c.Rating) : 0,
+                ReviewCount = p.Comments.Count()
+            }).ToPagedList(page, pageSize);
 
-            return View(result);
+            // Create and pass SortOptions to the ViewBag
+            ViewBag.SortOptions = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Sort By Default", Selected = sortOption == 1 },
+        new SelectListItem { Value = "5", Text = "Sort By Featured", Selected = sortOption == 5 },
+        new SelectListItem { Value = "2", Text = "Sort By Latest", Selected = sortOption == 2 },
+        new SelectListItem { Value = "3", Text = "Sort By Low Price", Selected = sortOption == 3 },
+        new SelectListItem { Value = "4", Text = "Sort By High Price", Selected = sortOption == 4 }
+    };
+
+            ViewBag.CurrentSort = sortOption;
+
+            return View("Index", result); // Assuming you want to display the results in the Index view
         }
 
 
-        public IActionResult FindFilter(double max, double min)
+
+        public IActionResult FindFilter(double max, double min, int sortOption = 1, int page = 1, int pageSize = 9)
         {
-            var result = db.Cars.Where(d => d.Price >= min && d.Price <= max).Select(p => new CarVM
+            var cars = db.Cars
+                .Where(d => d.Price >= min && d.Price <= max)
+                .AsQueryable();
+
+            // Sorting
+            switch (sortOption)
+            {
+                case 2: // Sort by Latest
+                    cars = cars.OrderByDescending(p => p.Year);
+                    break;
+                case 3: // Sort by Low Price
+                    cars = cars.OrderBy(p => p.Price);
+                    break;
+                case 4: // Sort by High Price
+                    cars = cars.OrderByDescending(p => p.Price);
+                    break;
+                case 5: // Sort by Featured
+                    cars = cars.OrderByDescending(p => p.Comments.Count());
+                    break;
+                default: // Sort by Default
+                    cars = cars.OrderBy(p => p.Name);
+                    break;
+            }
+
+            var result = cars.Select(p => new CarVM
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -287,10 +345,23 @@ namespace Motax.Controllers
                 Year = p.Year,
                 Price = p.Price,
                 ImageSingle = p.ImageSingle,
-                IsAvailable = p.IsAvailable // Add this line
-            }).ToList();
+                IsAvailable = p.IsAvailable
+            }).ToPagedList(page, pageSize);
+
+            ViewBag.SortOptions = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Sort By Default", Selected = sortOption == 1 },
+        new SelectListItem { Value = "5", Text = "Sort By Featured", Selected = sortOption == 5 },
+        new SelectListItem { Value = "2", Text = "Sort By Latest", Selected = sortOption == 2 },
+        new SelectListItem { Value = "3", Text = "Sort By Low Price", Selected = sortOption == 3 },
+        new SelectListItem { Value = "4", Text = "Sort By High Price", Selected = sortOption == 4 }
+    };
+
+            ViewBag.CurrentSort = sortOption;
+
             return View("Index", result);
         }
+
         #endregion
 
         #region Compare
@@ -513,7 +584,7 @@ namespace Motax.Controllers
         #endregion
 
         #region AdvancedSearch
-        public IActionResult AdvancedSearch(string? condition, string? brand, string? transmission, int? year, int? doors, string? bodyType, int? priceRange)
+        public IActionResult AdvancedSearch(string? condition, string? brand, string? transmission, int? year, int? doors, string? bodyType, int? priceRange, int sortOption = 1, int page = 1, int pageSize = 9)
         {
             var cars = db.Cars.Include(c => c.Brand).AsQueryable();
 
@@ -570,6 +641,26 @@ namespace Motax.Controllers
                 }
             }
 
+            // Sorting
+            switch (sortOption)
+            {
+                case 2: // Sort by Latest
+                    cars = cars.OrderByDescending(p => p.Year);
+                    break;
+                case 3: // Sort by Low Price
+                    cars = cars.OrderBy(p => p.Price);
+                    break;
+                case 4: // Sort by High Price
+                    cars = cars.OrderByDescending(p => p.Price);
+                    break;
+                case 5: // Sort by Featured
+                    cars = cars.OrderByDescending(p => p.Comments.Count());
+                    break;
+                default: // Sort by Default
+                    cars = cars.OrderBy(p => p.Name);
+                    break;
+            }
+
             var result = cars.Select(p => new CarVM
             {
                 Id = p.Id,
@@ -583,10 +674,22 @@ namespace Motax.Controllers
                 ImageSingle = p.ImageSingle,
                 NameBrand = p.Brand != null ? p.Brand.Name : null,
                 IsAvailable = p.IsAvailable
-            }).ToList();
+            }).ToPagedList(page, pageSize);
+
+            ViewBag.SortOptions = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Sort By Default", Selected = sortOption == 1 },
+        new SelectListItem { Value = "5", Text = "Sort By Featured", Selected = sortOption == 5 },
+        new SelectListItem { Value = "2", Text = "Sort By Latest", Selected = sortOption == 2 },
+        new SelectListItem { Value = "3", Text = "Sort By Low Price", Selected = sortOption == 3 },
+        new SelectListItem { Value = "4", Text = "Sort By High Price", Selected = sortOption == 4 }
+    };
+
+            ViewBag.CurrentSort = sortOption;
 
             return View("Index", result);
         }
+
         #endregion
 
     }
