@@ -1,8 +1,68 @@
-﻿@model Motax.ViewModels.DealerDetailVM
+﻿@using X.Web.PagedList
+@model Motax.ViewModels.DealerDetailVM
 @{
     ViewData["Title"] = "Dealer Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<style>
+    /* Phan trang */
+    .custom-pagination-area {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .custom-pagination {
+        display: inline-flex;
+        padding-left: 0;
+        list-style: none;
+        border-radius: 0.25rem;
+    }
+
+    .custom-page-item {
+        margin: 0 5px;
+    }
+
+    .custom-page-link {
+        position: relative;
+        display: block;
+        padding: 10px 15px;
+        margin-left: -1px;
+        line-height: 1.25;
+        color: #ff0000; /* Màu đỏ chủ đạo */
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        text-decoration: none;
+        transition: background-color 0.3s, color 0.3s;
+        border-radius: 5px;
+    }
+
+        .custom-page-link:hover {
+            z-index: 2;
+            color: #000000; /* Màu đen khi hover */
+            text-decoration: none;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+    .custom-page-item.active .custom-page-link {
+        z-index: 3;
+        color: #fff;
+        background-color: #ff0000; /* Màu đỏ cho trang đang hoạt động */
+        border-color: #ff0000;
+    }
+
+    .custom-page-item.disabled .custom-page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
+    }
+
+    .custom-page-link i {
+        font-size: 12px;
+    }
+</style>
 
 <div class="site-breadcrumb" style="background: url(/Frontend/assets/img/breadcrumb/01.jpg)">
     <div class="container">
@@ -37,38 +97,33 @@
             <div class="col-lg-9 mt-5">
                 <div class="col-md-12">
                     <div class="car-sort">
-                        <h6>Showing 1-10 of 50 Results</h6>
+                        <h6>Showing @Model.Cars.FirstItemOnPage to @Model.Cars.LastItemOnPage of @Model.Cars.TotalItemCount Results</h6>
                         <div class="col-md-3 car-sort-box">
-                            <select class="select">
-                                <option value="1">Sort By Default</option>
-                                <option value="5">Sort By Featured</option>
-                                <option value="2">Sort By Latest</option>
-                                <option value="3">Sort By Low Price</option>
-                                <option value="4">Sort By High Price</option>
-                            </select>
+                            <form method="get" id="sortForm">
+                                @Html.DropDownList("sortOption", (IEnumerable<SelectListItem>)ViewBag.SortOptions, new { @class = "select", onchange = "document.getElementById('sortForm').submit();" })
+                            </form>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                @if (Model.Cars != null)
-                  {
-                    @foreach (var item in Model.Cars)
+                    @if (Model.Cars != null)
                     {
-                        <div class="col-md-6 col-lg-4">
-                            <div class="car-item">
-                                <div class="car-img">
-                                    <span class="car-status status-1">@item.Condition</span>
+                        @foreach (var item in Model.Cars)
+                        {
+                            <div class="col-md-6 col-lg-4">
+                                <div class="car-item">
+                                    <div class="car-img">
+                                        <span class="car-status status-1">@item.Condition</span>
                                         <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">
-                                    <img src="~/Images/Car/Single/@item.ImageSingle"
-                                    alt="@item.Name">
-                                    </a>
-                                    <div class="car-btns">
-                                        <a href="#"><i class="far fa-heart"></i></a>
-                                        <a href="#"><i class="far fa-arrows-repeat"></i></a>
+                                            <img src="~/Images/Car/Single/@item.ImageSingle" alt="@item.Name">
+                                        </a>
+                                        <div class="car-btns">
+                                            <a href="#"><i class="far fa-heart"></i></a>
+                                            <a href="#"><i class="far fa-arrows-repeat"></i></a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="car-content">
-                                    <div class="car-top">
+                                    <div class="car-content">
+                                        <div class="car-top">
                                             <h4><a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id">@item.Name</a></h4>
                                             <div class="car-rate">
                                                 @for (int i = 1; i <= 5; i++)
@@ -84,43 +139,45 @@
                                                 }
                                                 <span>@item.AverageRating.ToString("0.0") (@item.ReviewCount Reviews)</span>
                                             </div>
-                                    </div>
-                                    <ul class="car-list">
-                                        <li><i class="far fa-steering-wheel"></i>@item.Transmission</li>
-                                        <li><i class="far fa-road"></i>@item.Mileage KM</li>
-                                        <li><i class="far fa-car"></i>Model: @item.Year</li>
-                                        <li><i class="far fa-gas-pump"></i>@item.FuelType</li>
-                                    </ul>
-                                    <div class="car-footer">
-                                        <span class="car-price">$@item.Price</span>
-                                        <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id" class="theme-btn"><span class="far fa-eye"></span>Details</a>
+                                        </div>
+                                        <ul class="car-list">
+                                            <li><i class="far fa-steering-wheel"></i>@item.Transmission</li>
+                                            <li><i class="far fa-road"></i>@item.Mileage KM</li>
+                                            <li><i class="far fa-car"></i>Model: @item.Year</li>
+                                            <li><i class="far fa-gas-pump"></i>@item.FuelType</li>
+                                        </ul>
+                                        <div class="car-footer">
+                                            <span class="car-price">$@item.Price</span>
+                                            <a asp-action="Detail" asp-controller="Car" asp-route-id="@item.Id" class="theme-btn"><span class="far fa-eye"></span>Details</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         }
                     }
-                    <div class="pagination-area">
-                        <div aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true"><i class="far fa-angle-double-left"></i></span>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true"><i class="far fa-angle-double-right"></i></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
                 </div>
+
+                <div class="custom-pagination-area">
+                    @Html.PagedListPager(Model.Cars, page => Url.Action("Detail", new { id = Model.Id, sortOption = ViewBag.CurrentSort, page }), new PagedListRenderOptions
+               {
+                   UlElementClasses = new[] { "custom-pagination" },
+                   LiElementClasses = new[] { "custom-page-item" },
+                   PageClasses = new[] { "custom-page-link" },
+                   ActiveLiElementClass = "active",
+                   PreviousElementClass = "custom-page-item",
+                   NextElementClass = "custom-page-item",
+                   LinkToPreviousPageFormat = "<i class=\"far fa-arrow-left\"></i>",
+                   LinkToNextPageFormat = "<i class=\"far fa-arrow-right\"></i>",
+                   LinkToFirstPageFormat = "<<",
+                   LinkToLastPageFormat = ">>",
+                   LinkToIndividualPageFormat = "{0}",
+                   DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                   DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                   DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                   DisplayLinkToNextPage = PagedListDisplayMode.Always
+               })
+                </div>
+
             </div>
             <div class="col-lg-3 mt-5">
                 <div class="car-single-widget">
@@ -164,8 +221,8 @@
                         <form>
                             <input type="hidden" name="dealerId" value="@Model.Id" />
 
-                           @*  <div class="form-group">
-                                <button style="width:100%;background-color:darkblue" type="submit" class="theme-btn">Order Now<i class="fas fa-arrow-right-long"></i></button>
+                            @*  <div class="form-group">
+                            <button style="width:100%;background-color:darkblue" type="submit" class="theme-btn">Order Now<i class="fas fa-arrow-right-long"></i></button>
                             </div> *@
                         </form>
                     </div>
@@ -175,4 +232,3 @@
         </div>
     </div>
 </div>
-

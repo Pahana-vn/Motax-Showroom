@@ -17,6 +17,7 @@
                     <table id="file-export" class="table table-bordered text-nowrap w-100">
                         <thead>
                             <tr>
+                                <th>Id</th>
                                 <th>Car</th>
                                 <th>Dealer</th>
                                 <th>Vehicle Preparation Day</th>
@@ -30,6 +31,7 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td>@item.Id</td>
                                     <td>@item.Car?.Name</td>
                                     <td>@item.Dealer?.Name</td>
                                     <td>@item.ServiceDate.ToShortDateString()</td>

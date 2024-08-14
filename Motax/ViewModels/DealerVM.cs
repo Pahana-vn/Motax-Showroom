@@ -1,4 +1,6 @@
-﻿namespace Motax.ViewModels
+﻿using X.PagedList;
+
+namespace Motax.ViewModels
 {
     public class DealerVM
     {
@@ -17,7 +19,7 @@
         public string? Name { get; set; }
         public List<DealerDetailItemVM>? DealerDetails { get; set; }
         public int Quantity { get; set; }
-        public List<CarVM>? Cars { get; set; }
+        public IPagedList<CarVM>? Cars { get; set; }
     }
 
     public class DealerDetailItemVM

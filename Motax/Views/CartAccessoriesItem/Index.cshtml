@@ -57,7 +57,7 @@
 
                                 <td>
                                     <div class="cart-sub-total">
-                                        <span class="item-total">$@item.Total</span>
+                                        <span id="item-total" class="item-total">$@item.Total</span>
                                     </div>
                                 </td>
                                 <td>
@@ -75,7 +75,7 @@
                         <div class="cart-coupon">
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Your Coupon Code">
-                                <a class="coupon-btn" type="submit">Apply <i class="fas fa-arrow-right-long"></i></a>
+                                <a class="coupon-btn" type="">Apply <i class="fas fa-arrow-right-long"></i></a>
                             </div>
                         </div>
                     </div>
@@ -146,6 +146,12 @@
             function updateTotals(total) {
                 $("#sub-total").text("$" + total.toFixed(2));
                 $("#total").text("$" + total.toFixed(2));
+            }
+
+            function updateTotals(total) {
+                $("#sub-total").text("$" + Math.floor(total)); // Sử dụng Math.floor để loại bỏ phần thập phân
+                $("#total").text("$" + Math.floor(total)); // Sử dụng Math.floor để loại bỏ phần thập phân
+                $("#item-total").text("$" + Math.floor(total)); // Sử dụng Math.floor để loại bỏ phần thập phân
             }
         });
     </script>

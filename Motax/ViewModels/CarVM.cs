@@ -42,9 +42,15 @@
         public string? PriceType { get; set; }
         public bool IsAvailable { get; set; }
 
+        public string? DealerName { get; set; } // Add this property
+        public int? DealerId { get; set; } // Add this property
+        public string? DealerConsultantAvatar { get; set; } // Add this property
+        public string? DealerConsultantName { get; set; } // Add this property
+
         public List<CarVM>? RelatedCars { get; set; }
         public List<CommentViewModel>? Comments { get; set; }
     }
+
 
     public class CommentViewModel
     {

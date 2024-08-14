@@ -185,7 +185,7 @@ namespace Motax.Controllers
                     Address = model.Address ?? khachHang?.Address,
                     Phone = model.Phone ?? khachHang?.Phone,
                     OrderDate = DateTime.Now,
-                    HowToPay = payment == "Thanh toán VNPay" ? "VNPay" : "COD",
+                    HowToPay = payment == "Payment VNPay" ? "VNPay" : "COD",
                     HowToTransport = "GRAB",
                     Status = 1,
                     DeliveryDate = "3",
@@ -216,7 +216,7 @@ namespace Motax.Controllers
 
                     db.Database.CommitTransaction();
 
-                    if (payment == "Thanh toán VNPay")
+                    if (payment == "Payment VNPay")
                     {
                         var vnPayModel = new VnPaymentRequestModel
                         {
@@ -388,7 +388,7 @@ namespace Motax.Controllers
 
             if (response == null || response.VnPayResponseCode != "00")
             {
-                TempData["Message"] = $"Lỗi thanh toán VN Pay: {response.VnPayResponseCode}";
+                TempData["Message"] = $"Error Payment VNPay: {response.VnPayResponseCode}";
                 return RedirectToAction("PaymentFail");
             }
 
@@ -401,7 +401,7 @@ namespace Motax.Controllers
                 db.SaveChanges();
             }
 
-            TempData["Message"] = $"Thanh toán VNPay thành công";
+            TempData["Message"] = $"Payment VNPay success!";
             return RedirectToAction("PaymentSuccess");
         }
         #endregion

@@ -362,16 +362,17 @@
                     <div class="car-single-widget">
                         <h4 class="car-single-price">$@Model.Price</h4>
                         <ul class="car-single-meta">
-                            <li><i class="fa-regular fa-gauge-high"></i> @Model.PriceType</li>
+                            <li><i class="fa-regular fa-gauge-high"></i> 
+                                <a asp-action="Detail" asp-controller="Dealer" asp-route-id="@Model.DealerId"><h4>@Model.DealerName</h4></a>
+                            </li>
                             <li><i class="far fa-location-dot"></i> @Model.AddressDealer</li>
                         </ul>
                     </div>
                     <div class="car-single-widget">
                         <div class="car-single-author">
-
-                            <img src="~/Frontend/assets/img/car/author.jpg" alt="">
+                            <img src="~/Images/Dealers/DealerDetail/Consultant/@Model.DealerConsultantAvatar" alt="Consultant Avatar">
                             <div class="car-single-author-content">
-                                <h5>Marid Anderson</h5>
+                                <h5>@Model.DealerConsultantName</h5>
                                 <span>Customer Advisor</span>
                                 <div class="car-single-author-social">
                                     <a href="#"><i class="fab fa-facebook"></i></a>

@@ -63,7 +63,7 @@
                         <div class="header-top-link">
                             @if (User.Identity.IsAuthenticated)
                             {
-                                <a asp-action="Profile" asp-controller="Secure"> <span class="d-lg-show">Hello,@User.Identity.Name</span></a>
+                                <a asp-action="Profile" asp-controller="Secure"> <span class="d-lg-show">Hello, @User.Identity.Name</span></a>
                             }
                             else
                             {

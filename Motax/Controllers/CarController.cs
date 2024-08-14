@@ -162,62 +162,64 @@ namespace Motax.Controllers
         #region Detail
         public IActionResult Detail(int id)
         {
-            var data = db.Cars
+            var car = db.Cars
                 .Include(p => p.Brand)
                 .Include(p => p.Dealer)
                 .Include(p => p.Comments)
                 .ThenInclude(c => c.Account)
                 .SingleOrDefault(p => p.Id == id);
 
-            if (data == null)
+            if (car == null)
             {
                 TempData["error"] = "This product was not found";
                 return Redirect("/404");
             }
 
-            var relatedCars = db.Cars
-                .Where(p => p.BrandId == data.BrandId && p.Id != id)
-                .Select(p => new CarVM
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Condition = p.Condition,
-                    FuelType = p.FuelType,
-                    Mileage = p.Mileage,
-                    Transmission = p.Transmission,
-                    Year = p.Year,
-                    Price = p.Price,
-                    ImageSingle = p.ImageSingle,
-                    NameBrand = p.Brand != null ? p.Brand.Name : null,
-                    IsAvailable = p.IsAvailable
-                }).ToList();
+            var dealer = db.Dealers
+                .Include(d => d.DealerDetails) // Include DealerDetails to get the consultant info
+                .FirstOrDefault(d => d.Id == car.DealerId);
 
             var result = new DetailCarVM
             {
-                Id = data.Id,
-                Name = data.Name,
-                ImageSingle = data.ImageSingle,
-                ImageMultiple = data.ImageMultiple,
-                Price = data.Price,
-                NameBrand = data.Brand?.Name,
-                AddressDealer = data.Dealer?.Address,
-                BodyType = data.BodyType,
-                Condition = data.Condition,
-                FuelType = data.FuelType,
-                Mileage = data.Mileage,
-                Transmission = data.Transmission,
-                Year = data.Year,
-                Color = data.Color,
-                Doors = data.Doors,
-                Cylinders = data.Cylinders,
-                EngineSize = data.EngineSize,
-                Vin = data.Vin,
-                Title = data.Title,
-                CarFeatures = data.CarFeatures,
-                PriceType = data.PriceType,
-                IsAvailable = data.IsAvailable,
-                RelatedCars = relatedCars,
-                Comments = data.Comments.Select(c => new CommentViewModel
+                Id = car.Id,
+                Name = car.Name,
+                ImageSingle = car.ImageSingle,
+                ImageMultiple = car.ImageMultiple,
+                Price = car.Price,
+                NameBrand = car.Brand?.Name,
+                AddressDealer = car.Dealer?.Address,
+                BodyType = car.BodyType,
+                Condition = car.Condition,
+                FuelType = car.FuelType,
+                Mileage = car.Mileage,
+                Transmission = car.Transmission,
+                Year = car.Year,
+                Color = car.Color,
+                Doors = car.Doors,
+                Cylinders = car.Cylinders,
+                EngineSize = car.EngineSize,
+                Vin = car.Vin,
+                Title = car.Title,
+                IsAvailable = car.IsAvailable,
+                RelatedCars = db.Cars
+                    .Where(p => p.BrandId == car.BrandId && p.Id != id)
+                    .Select(p => new CarVM
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Condition = p.Condition,
+                        FuelType = p.FuelType,
+                        Mileage = p.Mileage,
+                        Transmission = p.Transmission,
+                        Year = p.Year,
+                        Price = p.Price,
+                        ImageSingle = p.ImageSingle,
+                        NameBrand = p.Brand.Name,
+                        IsAvailable = p.IsAvailable,
+                        AverageRating = p.Comments.Any() ? p.Comments.Average(c => c.Rating) : 0,
+                        ReviewCount = p.Comments.Count()
+                    }).ToList(),
+                Comments = car.Comments.Select(c => new CommentViewModel
                 {
                     CarId = c.CarId,
                     Rating = c.Rating,
@@ -225,11 +227,19 @@ namespace Motax.Controllers
                     CommentDate = c.CommentDate,
                     AccountName = c.Account.Username,
                     AvatarUrl = c.Account?.Image ?? "/images/default-avatar.png"
-                }).ToList()
+                }).ToList(),
+
+                // Populate dealer information
+                DealerId = car.DealerId,
+                DealerName = dealer?.Name,
+                DealerConsultantName = dealer?.DealerDetails?.FirstOrDefault()?.ConsultantName,
+                DealerConsultantAvatar = dealer?.DealerDetails?.FirstOrDefault()?.ConsultantAvatar
             };
 
             return View(result);
         }
+
+
         #endregion
 
         #region Search and FindFilter
