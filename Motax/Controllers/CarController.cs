@@ -199,12 +199,15 @@ namespace Motax.Controllers
         #region Search and FindFilter
         public IActionResult Search(string? query)
         {
-            var cars = db.Cars.AsQueryable();
+            var cars = db.Cars
+                .Include(p => p.Comments)
+                .AsQueryable();
 
             if (query != null)
             {
                 cars = cars.Where(p => p.Name != null && p.Name.Contains(query));
             }
+
             var result = cars.Select(p => new CarVM
             {
                 Id = p.Id,
@@ -216,10 +219,14 @@ namespace Motax.Controllers
                 Year = p.Year,
                 Price = p.Price,
                 ImageSingle = p.ImageSingle,
-                IsAvailable = p.IsAvailable // Add this line
-            });
+                IsAvailable = p.IsAvailable,
+                AverageRating = p.Comments.Any() ? p.Comments.Average(c => c.Rating) : 0,  // Tính toán AverageRating
+                ReviewCount = p.Comments.Count()  // Tính toán ReviewCount
+            }).ToList();
+
             return View(result);
         }
+
 
         public IActionResult FindFilter(double max, double min)
         {
@@ -459,7 +466,7 @@ namespace Motax.Controllers
         }
         #endregion
 
-
+        #region AdvancedSearch
         public IActionResult AdvancedSearch(string? condition, string? brand, string? transmission, int? year, int? doors, string? bodyType, int? priceRange)
         {
             var cars = db.Cars.Include(c => c.Brand).AsQueryable();
@@ -534,7 +541,7 @@ namespace Motax.Controllers
 
             return View("Index", result);
         }
-
+        #endregion
 
     }
 }
