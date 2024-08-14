@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Motax.Models;
 using Motax.ViewModels;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using X.PagedList.Extensions;
 
 namespace Motax.Controllers
 {
@@ -19,11 +21,9 @@ namespace Motax.Controllers
         }
 
         #region Index
-        public IActionResult Index(int? brand, int? dealer)
+        public IActionResult Index(int? brand, int? dealer, int sortOption = 1, int page = 1, int pageSize = 9)
         {
-            var cars = db.Cars
-                .Include(p => p.Comments)
-                .AsQueryable();
+            var cars = db.Cars.Include(p => p.Comments).AsQueryable();
 
             if (brand.HasValue && brand.Value != 0)
             {
@@ -33,6 +33,26 @@ namespace Motax.Controllers
             if (dealer.HasValue)
             {
                 cars = cars.Where(p => p.DealerId == dealer.Value);
+            }
+
+            // Xử lý sắp xếp
+            switch (sortOption)
+            {
+                case 2: // Sort by Latest
+                    cars = cars.OrderByDescending(p => p.Year);
+                    break;
+                case 3: // Sort by Low Price
+                    cars = cars.OrderBy(p => p.Price);
+                    break;
+                case 4: // Sort by High Price
+                    cars = cars.OrderByDescending(p => p.Price);
+                    break;
+                case 5: // Sort by Featured
+                    cars = cars.OrderByDescending(p => p.Comments.Count());
+                    break;
+                default: // Sort by Default
+                    cars = cars.OrderBy(p => p.Name);
+                    break;
             }
 
             var result = cars.Select(p => new CarVM
@@ -50,10 +70,26 @@ namespace Motax.Controllers
                 IsAvailable = p.IsAvailable,
                 AverageRating = p.Comments.Any() ? p.Comments.Average(c => c.Rating) : 0,
                 ReviewCount = p.Comments.Count()
-            });
+            }).ToPagedList(page, pageSize);
+
+            // Tạo danh sách SelectListItem và truyền qua ViewBag
+            ViewBag.SortOptions = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Sort By Default", Selected = sortOption == 1 },
+        new SelectListItem { Value = "5", Text = "Sort By Featured", Selected = sortOption == 5 },
+        new SelectListItem { Value = "2", Text = "Sort By Latest", Selected = sortOption == 2 },
+        new SelectListItem { Value = "3", Text = "Sort By Low Price", Selected = sortOption == 3 },
+        new SelectListItem { Value = "4", Text = "Sort By High Price", Selected = sortOption == 4 }
+    };
+
+            ViewBag.CurrentSort = sortOption;
 
             return View(result);
         }
+
+
+
+
 
         public IActionResult Index2(int? brand, int? dealer)
         {

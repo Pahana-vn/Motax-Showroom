@@ -1,4 +1,6 @@
-﻿
+﻿@using X.PagedList
+@using X.Web.PagedList
+@model IPagedList<Motax.ViewModels.CarVM>
 @{
     ViewData["Title"] = "_ListCar";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -31,6 +33,64 @@
     .car-sort-box {
         margin-top: 10px;
     }
+
+    /* Phan trang */
+    .custom-pagination-area {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .custom-pagination {
+        display: inline-flex;
+        padding-left: 0;
+        list-style: none;
+        border-radius: 0.25rem;
+    }
+
+    .custom-page-item {
+        margin: 0 5px;
+    }
+
+    .custom-page-link {
+        position: relative;
+        display: block;
+        padding: 10px 15px;
+        margin-left: -1px;
+        line-height: 1.25;
+        color: #ff0000; /* Màu đỏ chủ đạo */
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        text-decoration: none;
+        transition: background-color 0.3s, color 0.3s;
+        border-radius: 5px;
+    }
+
+        .custom-page-link:hover {
+            z-index: 2;
+            color: #000000; /* Màu đen khi hover */
+            text-decoration: none;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+    .custom-page-item.active .custom-page-link {
+        z-index: 3;
+        color: #fff;
+        background-color: #ff0000; /* Màu đỏ cho trang đang hoạt động */
+        border-color: #ff0000;
+    }
+
+    .custom-page-item.disabled .custom-page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
+    }
+
+    .custom-page-link i {
+        font-size: 12px;
+    }
+
 
 </style>
 @RenderSection("BreadCum",required:false)
@@ -92,15 +152,15 @@
                             <a class="car-sort-list" asp-action="Index2" asp-controller="Car"><i class="far fa-list-ul"></i></a>
                         </div>
 
+                        @* soft filter *@
                         <div class="col-md-3 car-sort-box">
-                            <select class="select">
-                                <option value="1">Sort By Default</option>
-                                <option value="5">Sort By Featured</option>
-                                <option value="2">Sort By Latest</option>
-                                <option value="3">Sort By Low Price</option>
-                                <option value="4">Sort By High Price</option>
-                            </select>
+                            <form method="get" id="sortForm">
+                                @Html.DropDownList("sortOption", (IEnumerable<SelectListItem>)ViewBag.SortOptions, new { @class = "select", onchange = "document.getElementById('sortForm').submit();" })
+                            </form>
                         </div>
+
+
+
                     </div>
                 </div>
 
@@ -108,24 +168,25 @@
                    @RenderBody()
                 </div>
 
-                <div class="pagination-area">
-                    <div aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true"><i class="far fa-arrow-left"></i></span>
-                                </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true"><i class="far fa-arrow-right"></i></span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="custom-pagination-area">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
+               {
+                   UlElementClasses = new[] { "custom-pagination" },
+                   LiElementClasses = new[] { "custom-page-item" },
+                   PageClasses = new[] { "custom-page-link" },
+                   ActiveLiElementClass = "active",
+                   PreviousElementClass = "custom-page-item",
+                   NextElementClass = "custom-page-item",
+                   LinkToPreviousPageFormat = "<i class=\"far fa-arrow-left\"></i>",
+                   LinkToNextPageFormat = "<i class=\"far fa-arrow-right\"></i>",
+                   LinkToFirstPageFormat = "<<",
+                   LinkToLastPageFormat = ">>",
+                   LinkToIndividualPageFormat = "{0}",
+                   DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                   DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                   DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                   DisplayLinkToNextPage = PagedListDisplayMode.Always
+               })
                 </div>
 
             </div>
