@@ -59,6 +59,14 @@ namespace Motax.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Kiểm tra xem tên danh mục đã tồn tại chưa
+                bool exists = await db.Cars.AnyAsync(b => b.Name == carVM.Name);
+                if (exists)
+                {
+                    ModelState.AddModelError("", "Vehicle name already in database.");
+                    return View(carVM);
+                }
+
                 string singleImagePath = "";
                 if (carVM.ImageSingle != null)
                 {

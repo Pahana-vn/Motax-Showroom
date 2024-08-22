@@ -59,7 +59,7 @@ namespace Motax.Areas.Admin.Controllers
                 bool exists = await db.Brands.AnyAsync(b => b.Name == br.Name);
                 if (exists)
                 {
-                    ModelState.AddModelError("", "Danh mục đã có trong cơ sở dữ liệu.");
+                    ModelState.AddModelError("", "Brand name already in database.");
                     return View(br);
                 }
 

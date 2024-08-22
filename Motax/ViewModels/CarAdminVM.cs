@@ -34,7 +34,13 @@ namespace Motax.ViewModels
         public string? CarFeatures { get; set; }
         [Required(ErrorMessage = "Please enter Title *")]
         public string? Title { get; set; }
+
+        [Required(ErrorMessage = "Please select a Brand *")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid Brand *")]
         public int? BrandId { get; set; }
+
+        [Required(ErrorMessage = "Please select a Dealer *")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid Dealer *")]
         public int? DealerId { get; set; }
         [Required(ErrorMessage = "Please enter Price *")]
         public double? Price { get; set; }

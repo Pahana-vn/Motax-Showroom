@@ -14,6 +14,7 @@
                     <table id="file-export" class="table table-bordered text-nowrap w-100">
                         <thead>
                             <tr>
+                                <th>Id</th>
                                 <th>Customer Name</th>
                                 <th>Registration Number</th>
                                 <th>License Plate</th>
@@ -27,6 +28,7 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td>@item.Id</td>
                                     <td>@item.CustomerName</td>
                                     <td>@item.RegistrationNumber</td>
                                     <td>@item.LicensePlate</td>

@@ -28,6 +28,7 @@ namespace Motax.Controllers
             if (brand.HasValue && brand.Value != 0)
             {
                 cars = cars.Where(p => p.BrandId == brand.Value);
+                ViewBag.CurrentBrand = brand.Value; // Lưu brand hiện tại vào ViewBag
             }
 
             if (dealer.HasValue)
@@ -72,7 +73,6 @@ namespace Motax.Controllers
                 ReviewCount = p.Comments.Count()
             }).ToPagedList(page, pageSize);
 
-            // Tạo danh sách SelectListItem và truyền qua ViewBag
             ViewBag.SortOptions = new List<SelectListItem>
     {
         new SelectListItem { Value = "1", Text = "Sort By Default", Selected = sortOption == 1 },
@@ -86,6 +86,7 @@ namespace Motax.Controllers
 
             return View(result);
         }
+
 
 
 
