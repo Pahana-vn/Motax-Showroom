@@ -23,7 +23,7 @@ Lữ Phát Đạt (Student1429113)
 
 Documentations : https://drive.google.com/drive/folders/1FsqM6YhM-12lc1imu5nFc_Hz0kdSO3t5
 
-Link demo video youtube Motax showroom: https://www.youtube.com/watch?v=w662z5sSaUc
+Link demo video youtube Motax showroom: https://www.youtube.com/watch?v=M5v2m0BkP64
 
 Link database: https://drive.google.com/drive/folders/1m-W7GYKjrvsrbCJLCJwljrbHxOm2xDGx
 
